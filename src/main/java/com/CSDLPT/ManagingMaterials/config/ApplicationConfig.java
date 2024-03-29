@@ -1,6 +1,9 @@
 package com.CSDLPT.ManagingMaterials.config;
 
+import com.CSDLPT.ManagingMaterials.auth.SecurityInterceptor;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +13,11 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
+
+    @Bean
+    public Logger logger() {
+        return LoggerFactory.getLogger(SecurityInterceptor.class);
+    }
 
     @Bean
     public Map<String, String> responseMessages() {

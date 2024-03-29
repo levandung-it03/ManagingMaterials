@@ -17,9 +17,15 @@ public class SecurityInterceptorConfig implements WebMvcConfigurer {
         registry
             .addInterceptor(interceptorConfig)
             .addPathPatterns(List.of(
+                //--GET
                 "/company/**",
                 "/branch/**",
-                "/user/**"
+                "/user/**",
+
+                //--POST
+                "/service/v1/company/**",
+                "/service/v1/branch/**",
+                "/service/v1/user/**"
             ));
     }
 }

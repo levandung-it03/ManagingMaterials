@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityInterceptor implements HandlerInterceptor {
-    private final Logger LOG = LoggerFactory.getLogger(SecurityInterceptor.class);
+    private final Logger logger;
 
     @Override
     public boolean preHandle(
@@ -29,7 +29,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
             @NonNull HttpServletResponse response,
             @NonNull Object handler
     ) throws Exception {
-        LOG.info("[===LOGGER===] URL: " + request.getRequestURI() + ", method: " + request.getMethod());
+        logger.info("[===LOGGER===] URL: " + request.getRequestURI() + ", method: " + request.getMethod());
 
         try {
             HttpSession session = request.getSession();
@@ -38,10 +38,10 @@ public class SecurityInterceptor implements HandlerInterceptor {
                     .password((String) session.getAttribute("key"))
                     .branch((String) session.getAttribute("branch"))
                     .build();
-            DBConnectionHolder.setConnection(DBConnection.getConnection(account));
+            DBConnectionHolder.setConnection(DBConnection.getInstance().getConnection(account));
             return true;
         } catch (SQLException e) {
-            LOG.info("[===LOGGER===] PreHandlerInterceptorException: " + e.getMessage());
+            logger.info("[===LOGGER===] PreHandlerInterceptorException: " + e.getMessage());
             response.sendRedirect("/login");
             return false;
         }
@@ -63,7 +63,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
             @NonNull Object handler,
             Exception ex
     ) throws Exception {
-        if (ex != null) LOG.info("[===LOGGER===] CaughtException: " + ex.getMessage());
+        if (ex != null) logger.info("[===LOGGER===] CaughtException: " + ex.getMessage());
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }
