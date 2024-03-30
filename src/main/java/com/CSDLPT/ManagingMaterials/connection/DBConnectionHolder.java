@@ -22,6 +22,9 @@ public class DBConnectionHolder {
             case "CN2" -> this.mssqlSite2;
             default -> throw new SQLException("Branch not found");
         };
+        System.out.println(mssqlSite1);
+        System.out.println(mssqlSite2);
+        System.out.println(databaseName);
 
         String connectionString = String.format(
             "jdbc:sqlserver://%s;DatabaseName=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=true",
