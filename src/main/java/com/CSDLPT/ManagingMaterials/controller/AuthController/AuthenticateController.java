@@ -59,7 +59,7 @@ public class AuthenticateController {
             authenticateService.authenticate(account, request);
             return "redirect:/management/home";
         } catch (NoSuchElementException | SQLException ignored) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_account_03");
+            redirectAttributes.addFlashAttribute("errorCode", "error_account_01");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
             logger.info(String.valueOf(e));

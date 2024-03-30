@@ -49,8 +49,8 @@
             <input name="password" type="password" required/>
             <div class="form_text-input_err-message"></div>
             <div class="password_toggle-hidden">
-                <i class="password" class="show-pass fa-solid fa-eye"></i>
-                <i class="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
+                <i id="password" class="show-pass fa-solid fa-eye"></i>
+                <i id="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
             </div>
         </div>
         <input type="submit" value="Đăng nhập">

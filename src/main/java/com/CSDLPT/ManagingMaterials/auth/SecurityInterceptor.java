@@ -5,7 +5,6 @@ import com.CSDLPT.ManagingMaterials.dto.ResDtoEmployeeInfo;
 import com.CSDLPT.ManagingMaterials.model.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
@@ -54,6 +53,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
         } catch (NullPointerException | SQLException e) {
             //--Clear everything to stop Application if there's any error.
             request.setAttribute("connectionHolder", null);
+            request.getSession().invalidate();
 
             logger.info("PreHandlerInterceptorException: " + e);
             response.sendRedirect("/login");

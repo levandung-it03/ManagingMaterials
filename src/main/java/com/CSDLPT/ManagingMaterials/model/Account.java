@@ -14,6 +14,6 @@ public class Account {
     @NotEmpty(message = "error_account_01")
     private String username;
 
-    @NotEmpty(message = "error_account_03")
+    @NotEmpty(message = "error_account_01")
     private String password;
 }

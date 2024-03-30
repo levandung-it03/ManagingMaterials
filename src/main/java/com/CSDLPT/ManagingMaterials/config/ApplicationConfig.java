@@ -1,6 +1,5 @@
 package com.CSDLPT.ManagingMaterials.config;
 
-//import com.CSDLPT.ManagingMaterials.auth.SecurityInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +33,8 @@ public class ApplicationConfig {
         messagePairs.put("error_entity_02", "Trường dữ liệu không thể xoá, thay vào đó hãy đổi trạng thái để bảo toàn dữ liệu!");
         messagePairs.put("error_entity_03", "Dữ liệu không hợp lệ, hãy kiểm tra lại!");
 
-        messagePairs.put("error_account_01", "Username không đúng!");
+        messagePairs.put("error_account_01", "Thông tin đăng nhập không đúng!");
         messagePairs.put("error_account_02", "Username đã tồn tại!");
-        messagePairs.put("error_account_03", "Mật khẩu không đúng!");
 
         return messagePairs;
     }
