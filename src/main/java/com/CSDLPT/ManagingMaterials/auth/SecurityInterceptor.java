@@ -51,9 +51,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
             request.setAttribute("connectionHolder", connectionHolder);
 
             return true;
-        } catch (SQLException e) {
+        } catch (NullPointerException | SQLException e) {
             //--Clear everything to stop Application if there's any error.
-            request.getSession().invalidate();
             request.setAttribute("connectionHolder", null);
 
             logger.info("PreHandlerInterceptorException: " + e);

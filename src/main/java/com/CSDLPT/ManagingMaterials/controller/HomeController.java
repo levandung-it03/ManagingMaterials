@@ -19,7 +19,6 @@ public class HomeController {
             .getSession()
             .getAttribute("employeeInfo");
 
-        employeeInfo.setPassword(null);
         modelAndView.addObject("employeeInfo", employeeInfo);
 
         return modelAndView;

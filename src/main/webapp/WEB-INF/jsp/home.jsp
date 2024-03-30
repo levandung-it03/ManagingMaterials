@@ -21,7 +21,7 @@
     <p>Username: ${employeeInfo.username}</p>
     <p>ChiNhanh: ${employeeInfo.branch}</p>
     <p>MaNV: ${employeeInfo.employeeId}</p>
-    <p>HoTen: ${employeeInfo.employeeId}</p>
+    <p>HoTen: ${employeeInfo.fullName}</p>
     <p>Nhom: ${employeeInfo.role}</p>
 </body>
 

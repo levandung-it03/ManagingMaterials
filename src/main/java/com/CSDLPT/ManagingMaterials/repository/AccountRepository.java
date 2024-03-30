@@ -19,7 +19,7 @@ public class AccountRepository {
         DBConnectionHolder connectionHolder = new DBConnectionHolder();
         connectionHolder.buildConnection(account);
 
-        CallableStatement statement = connectionHolder.getConnection().prepareCall("{call SP_LayThongTinNhanVien(?)}");
+        CallableStatement statement = connectionHolder.getConnection().prepareCall("{call SP_GET_USER_INFO_BY_LOGIN(?)}");
         statement.setString(1, account.getUsername());
 
         ResultSet resultSet = statement.executeQuery();
