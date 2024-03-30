@@ -1,4 +1,4 @@
-package com.CSDLPT.ManagingMaterials.dto;
+package com.CSDLPT.ManagingMaterials.model;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReqDtoAccount {
+public class Account {
     @NotEmpty(message = "error_entity_03")
     private String branch;
 

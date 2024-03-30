@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ResDtoEmployeeInfo {
+    private String username;
+    private String password;
+    private String branch;
     private String employeeId;
     private String fullName;
     private Role role;

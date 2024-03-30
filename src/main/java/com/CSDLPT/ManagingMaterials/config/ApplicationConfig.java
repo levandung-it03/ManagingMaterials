@@ -1,6 +1,6 @@
 package com.CSDLPT.ManagingMaterials.config;
 
-import com.CSDLPT.ManagingMaterials.auth.SecurityInterceptor;
+//import com.CSDLPT.ManagingMaterials.auth.SecurityInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ public class ApplicationConfig {
 
     @Bean
     public Logger logger() {
-        return LoggerFactory.getLogger(SecurityInterceptor.class);
+        return LoggerFactory.getLogger(Logger.class);
     }
 
     @Bean

@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.springframework.ui.Model;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
-import com.CSDLPT.ManagingMaterials.dto.ReqDtoAccount;
+import com.CSDLPT.ManagingMaterials.model.Account;
 import com.CSDLPT.ManagingMaterials.service.AuthService.AuthenticateService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class AuthenticateController {
 
     @PostMapping("/service/v1/auth/authenticate")
     public String authenticate(
-            @Valid @ModelAttribute("account") ReqDtoAccount account,
+            @Valid @ModelAttribute("account") Account account,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes,
             BindingResult bindingResult
@@ -45,12 +45,15 @@ public class AuthenticateController {
 
         try {
             authenticateService.authenticate(account, request);
-            return "redirect:/home";
+            return "redirect:/management/home";
         } catch (NoSuchElementException ignored) {
             redirectAttributes.addFlashAttribute("errorCode", "error_account_03");
         } catch (SQLException e) {
-//            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-            logger.info(e.getMessage());
+            redirectAttributes.addFlashAttribute("errorCode", "error_account_03");
+            logger.info(String.valueOf(e));
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            logger.info(String.valueOf(e));
         }
         return "redirect:/login";
     }

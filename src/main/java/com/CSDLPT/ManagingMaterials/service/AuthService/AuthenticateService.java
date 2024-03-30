@@ -1,7 +1,7 @@
 package com.CSDLPT.ManagingMaterials.service.AuthService;
 
 import com.CSDLPT.ManagingMaterials.dto.ResDtoEmployeeInfo;
-import com.CSDLPT.ManagingMaterials.dto.ReqDtoAccount;
+import com.CSDLPT.ManagingMaterials.model.Account;
 import com.CSDLPT.ManagingMaterials.repository.AccountRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -16,14 +16,10 @@ import java.util.NoSuchElementException;
 public class AuthenticateService {
     private final AccountRepository accountRepository;
 
-    public void authenticate(ReqDtoAccount account, HttpServletRequest request) throws SQLException, NoSuchElementException {
+    public void authenticate(Account account, HttpServletRequest request) throws SQLException, NoSuchElementException {
         ResDtoEmployeeInfo employeeInfo = accountRepository.authenticate(account);
 
         HttpSession session = request.getSession();
-        session.setAttribute("id", employeeInfo.getEmployeeId());
-        session.setAttribute("fullName", employeeInfo.getFullName());
-        session.setAttribute("role", employeeInfo.getRole());
-        session.setAttribute("branch", account.getBranch());
-        session.setAttribute("key", account.getPassword());
+        session.setAttribute("employeeInfo", employeeInfo);
     }
 }

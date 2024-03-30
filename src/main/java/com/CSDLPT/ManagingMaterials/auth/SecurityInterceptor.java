@@ -1,8 +1,8 @@
 package com.CSDLPT.ManagingMaterials.auth;
 
-import com.CSDLPT.ManagingMaterials.connection.DBConnection;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.dto.ReqDtoAccount;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoEmployeeInfo;
+import com.CSDLPT.ManagingMaterials.model.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity
@@ -29,19 +28,35 @@ public class SecurityInterceptor implements HandlerInterceptor {
             @NonNull HttpServletResponse response,
             @NonNull Object handler
     ) throws Exception {
-        logger.info("[===LOGGER===] URL: " + request.getRequestURI() + ", method: " + request.getMethod());
+        logger.info("URL: " + request.getRequestURI() + ", method: " + request.getMethod());
 
         try {
-            HttpSession session = request.getSession();
-            ReqDtoAccount account = ReqDtoAccount.builder()
-                    .username((String) session.getAttribute("username"))
-                    .password((String) session.getAttribute("key"))
-                    .branch((String) session.getAttribute("branch"))
-                    .build();
-            DBConnectionHolder.setConnection(DBConnection.getInstance().getConnection(account));
+            ResDtoEmployeeInfo employeeInfo = (ResDtoEmployeeInfo) request
+                .getSession()
+                .getAttribute("employeeInfo");
+
+            //--Use DBConnectionHolder to serve Spring Services.
+            DBConnectionHolder connectionHolder = new DBConnectionHolder();
+
+            //--May throw SQLException.
+            connectionHolder.buildConnection(
+                Account.builder()
+                    .username(employeeInfo.getUsername())
+                    .password(employeeInfo.getPassword())
+                    .branch(employeeInfo.getBranch())
+                    .build()
+            );
+
+            //--Redirect connectionHolder to matched ActionMethod.
+            request.setAttribute("connectionHolder", connectionHolder);
+
             return true;
         } catch (SQLException e) {
-            logger.info("[===LOGGER===] PreHandlerInterceptorException: " + e.getMessage());
+            //--Clear everything to stop Application if there's any error.
+            request.getSession().invalidate();
+            request.setAttribute("connectionHolder", null);
+
+            logger.info("PreHandlerInterceptorException: " + e);
             response.sendRedirect("/login");
             return false;
         }
@@ -63,7 +78,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
             @NonNull Object handler,
             Exception ex
     ) throws Exception {
-        if (ex != null) logger.info("[===LOGGER===] CaughtException: " + ex.getMessage());
+        if (ex != null) logger.info("CaughtException: " + ex);
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 }
