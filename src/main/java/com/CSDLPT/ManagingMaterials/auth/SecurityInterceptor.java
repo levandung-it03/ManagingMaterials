@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 @RequiredArgsConstructor
 public class SecurityInterceptor implements HandlerInterceptor {
     private final Logger logger;
+    private final DBConnectionHolder connectionHolder;
 
     @Override
     public boolean preHandle(
@@ -33,9 +34,6 @@ public class SecurityInterceptor implements HandlerInterceptor {
             ResDtoEmployeeInfo employeeInfo = (ResDtoEmployeeInfo) request
                 .getSession()
                 .getAttribute("employeeInfo");
-
-            //--Use DBConnectionHolder to serve Spring Services.
-            DBConnectionHolder connectionHolder = new DBConnectionHolder();
 
             //--May throw SQLException.
             connectionHolder.buildConnection(
