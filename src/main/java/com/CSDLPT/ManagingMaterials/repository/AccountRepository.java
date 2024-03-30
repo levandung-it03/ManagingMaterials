@@ -13,10 +13,10 @@ import java.util.NoSuchElementException;
 @Repository
 @RequiredArgsConstructor
 public class AccountRepository {
+    private final DBConnectionHolder connectionHolder;
 
     public ResDtoEmployeeInfo authenticate(Account account) throws SQLException, NoSuchElementException {
         //--Connection from authenticated User.
-        DBConnectionHolder connectionHolder = new DBConnectionHolder();
         connectionHolder.buildConnection(account);
 
         CallableStatement statement = connectionHolder.getConnection().prepareCall("{call SP_GET_USER_INFO_BY_LOGIN(?)}");

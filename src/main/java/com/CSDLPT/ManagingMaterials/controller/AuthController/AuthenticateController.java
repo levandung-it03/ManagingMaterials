@@ -1,6 +1,5 @@
 package com.CSDLPT.ManagingMaterials.controller.AuthController;
 
-import com.CSDLPT.ManagingMaterials.dto.ResDtoEmployeeInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
