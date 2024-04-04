@@ -49,4 +49,5 @@ public class DBConnectionHolder {
         this.getConnection().close();
         threadLocal.remove();
     }
+
 }

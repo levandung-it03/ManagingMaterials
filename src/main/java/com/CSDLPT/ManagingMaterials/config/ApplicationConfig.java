@@ -36,6 +36,9 @@ public class ApplicationConfig {
         messagePairs.put("error_account_01", "Thông tin đăng nhập không đúng!");
         messagePairs.put("error_account_02", "Username đã tồn tại!");
 
+        messagePairs.put("error_employee_01", "Mã nhân viên, hoặc CMND đã tồn tại!");
+
+
         return messagePairs;
     }
 }

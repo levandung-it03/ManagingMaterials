@@ -18,7 +18,8 @@ public class SecurityInterceptorConfig implements WebMvcConfigurer {
             .addInterceptor(interceptorConfig)
             .addPathPatterns(List.of(
                 //--GET
-                "/management/**",
+                "/home",
+                "/branch/**",
 
                 //--POST
                 "/service/v1/company/**",

@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,26 +24,13 @@ import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Controller
+@RequestMapping("${url.post.auth.prefix.v1}")
 public class AuthenticateController {
     private final AuthenticateService authenticateService;
-    private final StaticUtilMethods staticUtilMethods;
     private final Logger logger;
 
-    @GetMapping("/login")
-    public ModelAndView getLoginPage(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        Model model
-    ) throws IOException {
-        if (request.getSession().getAttribute("employeeInfo") == null) {
-            return staticUtilMethods.customResponseModelView(model.asMap(), "login");
-        } else {
-            response.sendRedirect("/management/home");
-            return null;
-        }
-    }
 
-    @PostMapping("/service/v1/auth/authenticate")
+    @PostMapping("/authenticate")
     public String authenticate(
             @Valid @ModelAttribute("account") Account account,
             HttpServletRequest request,
@@ -56,7 +44,7 @@ public class AuthenticateController {
 
         try {
             authenticateService.authenticate(account, request);
-            return "redirect:/management/home";
+            return "redirect:/home";
         } catch (NoSuchElementException | SQLException ignored) {
             redirectAttributes.addFlashAttribute("errorCode", "error_account_01");
         } catch (Exception e) {

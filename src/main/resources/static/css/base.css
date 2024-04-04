@@ -65,7 +65,7 @@ img {
 }
 body {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     font-family: 'Muli', sans-serif;
     color: var(--black);
     font-weight: 400;

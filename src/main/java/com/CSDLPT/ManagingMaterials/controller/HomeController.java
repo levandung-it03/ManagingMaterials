@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(value = "/management")
 public class HomeController {
 
-    @GetMapping(path = "/home")
+    @GetMapping("/home")
     public ModelAndView getHomePage(HttpServletRequest request, Model model) {
         ModelAndView modelAndView = new ModelAndView("home");
         ResDtoEmployeeInfo employeeInfo = (ResDtoEmployeeInfo) request
