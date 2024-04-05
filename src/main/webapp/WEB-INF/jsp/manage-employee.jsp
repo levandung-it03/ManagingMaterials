@@ -86,12 +86,11 @@
                 <div class="form-input" id="branch">
                     <label for="branch">Chi nhánh</label>
                     <select data="${branch.branchId}" name="branchId">
-                        <select name="branchId">
-                            <option value="" disabled hidden selected>Chọn chi nhánh</option>
-                            <c:forEach var="branch" items="${branchList}">
-                                <option value="${branch.branchId}">${branch.branchId}</option>
-                            </c:forEach>
-                        </select>
+                        <option value="" disabled hidden selected>Chọn chi nhánh</option>
+                        <c:forEach var="branch" items="${branchList}">
+                            <option value="${branch.branchId}">${branch.branchId}</option>
+                        </c:forEach>
+                    </select>
                 </div>
             </c:if>
             <input name="pageNumber" value="${pageNumber}" hidden/>
