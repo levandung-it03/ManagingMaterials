@@ -22,7 +22,7 @@ public class AccountController {
         HttpServletResponse response,
         Model model
     ) throws IOException {
-        if (request.getSession().getAttribute("employeeInfo") == null) {
+        if (request.getSession().getAttribute("userInfo") == null) {
             return staticUtilMethods.customResponseModelView(request, model.asMap(), "login");
         } else {
             response.sendRedirect("/home");

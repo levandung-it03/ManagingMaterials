@@ -2,7 +2,9 @@ package com.CSDLPT.ManagingMaterials.service;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Employee;
+import com.CSDLPT.ManagingMaterials.repository.BranchRepository;
 import com.CSDLPT.ManagingMaterials.repository.EmployeeRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,41 +14,67 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeService {
     private final StaticUtilMethods staticUtilMethods;
     private final EmployeeRepository employeeRepository;
+    private final BranchRepository branchRepository;
 
     public ModelAndView getManageEmployee(HttpServletRequest request, Model model) {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        //--Prepare common-components of ModelAndView if we need.
         ModelAndView modelAndView = staticUtilMethods.customResponseModelView(request, model.asMap(), "manage-employee");
 
-        Employee employee = (Employee) model.asMap().get("employee");
+        //--If there's an error when handle data with DB, take the submitted-employee-info and give it back to this page
+        Employee employee = (Employee) model.asMap().get("submittedEmployee");
+        if (employee != null) {
+            modelAndView.addObject("employee", employee);
+        }
+        //--If the redirected employee-info doesn't exist, so this is the plain (empty) adding-form.
+        else {
+            Integer lastEmployeeId = employeeRepository.findTheLastEmployeeId(connectionHolder);
+            Integer branchesQuantity = branchRepository.countAll(connectionHolder);
 
-        if (employee != null)
-            modelAndView.addObject(employee);
+            //--Give the auto-generated employee-id to user.
+            modelAndView.addObject("employee", Employee.builder()
+                .employeeId(lastEmployeeId + branchesQuantity)
+                .build()
+            );
+            modelAndView.addObject("lastEmployeeId", lastEmployeeId);
+            modelAndView.addObject("branchesQuantity", branchesQuantity);
+        }
+
+        //--Branches-quantity for several jobs of JSP.
+        modelAndView.addObject("branchQuantity", branchRepository.countAll(connectionHolder));
+
         return modelAndView;
     }
 
     public void addEmployee(HttpServletRequest request, Employee employee) throws DuplicateKeyException, SQLException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
         //--Get Current_Login_User from Session.
-        Employee currentAccountInfo = (Employee) request.getSession().getAttribute("employeeInfo");
+        ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
         //--Check If 'MANV' is already existing or not.
-        Optional<Employee> existedResult = employeeRepository.findById(connectHolder, employee.getEmployeeId());
-        if (existedResult.isPresent())  throw new DuplicateKeyException("Can't add an existing employee!");
+        if (employeeRepository.isExistingEmployee(connectionHolder, employee)) {
+            throw new DuplicateKeyException("Can't add an existing employee!");
+        }
 
         //--Employee must have the same 'branch' with Current_Login_User.
-        employee.setBranch(currentAccountInfo.getBranch());
+        employee.setBranch(userInfo.getBranch());
 
         //--May throw DuplicateKeyException with ('CNMD', 'TrangThaiXoa') pair of fields.
-        if (employeeRepository.save(connectHolder, employee) == 0) {
-            throw new SQLException("There's an error with SQL Server!");
+        if (employeeRepository.save(connectionHolder, employee) == 0) {
+            throw new DuplicateKeyException("There's an error with SQL Server!");
         }
+
+        //--Close Connection.
+        connectionHolder.removeConnection();
     }
 }

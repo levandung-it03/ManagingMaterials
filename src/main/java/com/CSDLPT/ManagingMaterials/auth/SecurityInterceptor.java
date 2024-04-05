@@ -1,7 +1,7 @@
 package com.CSDLPT.ManagingMaterials.auth;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.dto.ResDtoEmployeeInfo;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Account;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,16 +31,16 @@ public class SecurityInterceptor implements HandlerInterceptor {
         logger.info("URL: " + request.getRequestURI() + ", method: " + request.getMethod());
 
         try {
-            ResDtoEmployeeInfo employeeInfo = (ResDtoEmployeeInfo) request
+            ResDtoUserInfo userInfo = (ResDtoUserInfo) request
                 .getSession()
-                .getAttribute("employeeInfo");
+                .getAttribute("userInfo");
 
             //--May throw SQLException.
             connectionHolder.buildConnection(
                 Account.builder()
-                    .username(employeeInfo.getUsername())
-                    .password(employeeInfo.getPassword())
-                    .branch(employeeInfo.getBranch())
+                    .username(userInfo.getUsername())
+                    .password(userInfo.getPassword())
+                    .branch(userInfo.getBranch())
                     .build()
             );
 

@@ -1,9 +1,11 @@
-(function main() {
+(function AddEmployeeComponent() {
+    const hiddenDataFields = {}
     const validatingBlocks = {
         employeeId: {
             tag: $('input[name=employeeId]'),
             confirm: function (value) {
                 this.isValid = (/^[0-9]$/).test(value);
+                this.isValid = Math.abs(value - hiddenDataFields["lastEmployeeId"]) % hiddenDataFields["branchesQuantity"] === 0;
                 return this.isValid;
             },
             errorMessage: "Mã nhân viên không hợp lệ.",
@@ -12,7 +14,7 @@
         identifier: {
             tag: $('input[name=identifier]'),
             confirm: function (value) {
-                this.isValid = (/^[0-9]$/).test(value) && value.length >= 9;
+                this.isValid = (/^[0-9]{9,20}$/).test(value);
                 return this.isValid;
             },
             errorMessage: "CMND không hợp lệ.",
@@ -40,9 +42,9 @@
             tag: $('input[name=birthday]'),
             confirm: function (value) {                
                 const isNotNaN = !isNaN(new Date(value));
-                const isInThePast = (new Date(value) < new Date());
-                const isNotTooFar = (new Date().getFullYear() - new Date(value).getFullYear()) < 150;
-                this.isValid = isNotNaN && isInThePast && isNotTooFar
+                const isAdults = (new Date().getFullYear() - new Date(value).getFullYear()) >= 18;
+                const isNotTooOld = (new Date().getFullYear() - new Date(value).getFullYear()) < 150;
+                this.isValid = isNotNaN && isAdults && isNotTooOld
                 return this.isValid;
             },
             errorMessage: "Ngày sinh không hợp lệ.",
@@ -63,11 +65,23 @@
                 this.isValid = value >= 4000000;
                 return this.isValid;
             },
-            errorMessage: "Lương không hợp lệ.",
+            errorMessage: "Lương phải >= 4.000.000",
             isValid: false,
         },
     };
 
+    function collectHiddenDataFields(hiddenDataFields) {
+        [...$$('span.hidden-data-fields')].forEach(tag => {
+            if (tag.getAttribute("type") === 'number') {
+                hiddenDataFields[tag.getAttribute("name")] = Number.parseInt(tag.innerText);
+            } else if (tag.getAttribute("type") === 'text') {
+                hiddenDataFields[tag.getAttribute("name")] = tag.innerText;
+            }
+            tag.outerHTML = "";
+        })
+    }
+
+    collectHiddenDataFields(hiddenDataFields);
     customizeAllAvatarColor();
     customizeClosingNoticeMessageEvent();
     createErrBlocksOfInputTags(validatingBlocks);
@@ -77,23 +91,3 @@
     // mappingCategoryNameWithCurrentPage();
     customizeAutoFormatStrongInputTextEvent();
 })();
-
-function customizeAllAvatarColor() {
-    [...$$('span.mock-avatar')].forEach(avatarTag => {
-        const avatarColor = colorMap[avatarTag.innerText.trim().toUpperCase()];
-
-        // Convert background color to RGB
-        let r = parseInt(avatarColor.slice(1, 3), 16);
-        let g = parseInt(avatarColor.slice(3, 5), 16);
-        let b = parseInt(avatarColor.slice(5, 7), 16);
-
-        // Calculate luminance
-        let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-
-        // Get the right letter's color
-        const letterColor = (luminance > 0.5) ? "#000000" : "#FFFFFF";
-
-        avatarTag.style.backgroundColor = avatarColor;
-        avatarTag.style.color = letterColor;
-    })
-}

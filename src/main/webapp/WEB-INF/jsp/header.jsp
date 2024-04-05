@@ -3,7 +3,7 @@
 <div id="header">
     <div class="header-wrapper center">
         <ul id="nav" class="center">
-            <li><a href="">NHÂN VIÊN</a></li>
+            <li><a href="/branch/employee/manage-employee">NHÂN VIÊN</a></li>
             <li><a href="">VẬT TƯ</a></li>
             <li><a href="">KHO</a></li>
             <li>
@@ -37,15 +37,15 @@
             </li>
         </ul>
         <div class="avatar">
-            <span class="mock-avatar center">L</span>
+            <span class="mock-avatar center">${userInfo.fullName.charAt(0)}</span>
             <!-- Hiển thị khung thông tin tài khoản -->
             <div class="account-wrapper">
                 <div class="account-info">
                     <div class="info center">
-                        <span>Mã nhân viên: ${employeeInfo.employeeId}</span>
-                        <span>Họ tên: ${employeeInfo.fullName}</span>
-                        <span>Chi Nhanh: ${employeeInfo.branch}</span>
-                        <span>Vai trò: ${employeeInfo.role}</span>
+                        <span id="employee-id">Mã nhân viên: ${userInfo.employeeId}</span>
+                        <span id="full-name">Họ tên: ${userInfo.fullName}</span>
+                        <span id="branch">Chi Nhanh: ${userInfo.branch}</span>
+                        <span id="role">Vai trò: ${userInfo.role}</span>
                     </div>
                 </div>
                 <div class="account-btn">

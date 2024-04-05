@@ -29,7 +29,6 @@ public class AuthenticateController {
     private final AuthenticateService authenticateService;
     private final Logger logger;
 
-
     @PostMapping("/authenticate")
     public String authenticate(
             @Valid @ModelAttribute("account") Account account,

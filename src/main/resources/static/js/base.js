@@ -29,22 +29,21 @@ const colorMap = {
     Y: "#FFFF00",
     Z: "#0014A8"
 };
-  
 
 function customizeClosingNoticeMessageEvent() {
-    const errMessageCloseBtn = $('div.error-service-message i#error-service-message_close-btn');
-    const succeedMessageCloseBtn = $('div.succeed-service-message i#succeed-service-message_close-btn');
+    const errMessageCloseBtn = $('div#message-block div.error-service-message i#error-service-message_close-btn');
+    const succeedMessageCloseBtn = $('div#message-block div.succeed-service-message i#succeed-service-message_close-btn');
 
     if (errMessageCloseBtn != null) {
-        setTimeout(() => $('div.error-service-message').classList.add("hide"), 6000);
+        setTimeout(() => $('div#message-block div.error-service-message').classList.add("hide"), 6000);
         errMessageCloseBtn.addEventListener("click", (e) => {
-            $('div.error-service-message').classList.add("hide");
+            $('div#message-block div.error-service-message').classList.add("hide");
         });
     }
     if (succeedMessageCloseBtn != null) {
-        setTimeout(() => $('div.succeed-service-message').classList.add("hide"), 6000);
+        setTimeout(() => $('div#message-block div.succeed-service-message').classList.add("hide"), 6000);
         succeedMessageCloseBtn.addEventListener("click", (e) => {
-            $('div.succeed-service-message').classList.add("hide");
+            $('div#message-block div.succeed-service-message').classList.add("hide");
         });
     }
     return;
@@ -63,6 +62,12 @@ function customizeValidateEventInputTags(validatingBlocks) {
     Object.entries(validatingBlocks).forEach(elem => {
         let ignoredResult = elem[1].confirm(elem[1].tag.value);
         elem[1].tag.addEventListener("keyup", e => {
+            if (elem[1].confirm(elem[1].tag.value))
+                $('span#' + elem[0]).style.display = "none";
+            else
+                $('span#' + elem[0]).style.display = "inline";
+        })
+        elem[1].tag.addEventListener("change", e => {
             if (elem[1].confirm(elem[1].tag.value))
                 $('span#' + elem[0]).style.display = "none";
             else
@@ -182,7 +187,7 @@ function customizeAutoFormatStrongInputTextEvent() {
         inputTag.addEventListener("blur", e => {
             inputTag.value = inputTag.value.trim().split(" ")
                 .filter(word => word != "")
-                .map(word => word.slice(0, 1).toUpperCase() + word.slice(1))
+                .map(word => word.slice(0, 1).toUpperCase() + word.slice(1).toLowerCase())
                 .join(" ");
         });
     });
@@ -191,4 +196,24 @@ function customizeAutoFormatStrongInputTextEvent() {
 function convertStrDateToDateObj(strDate) {
     const startDateAsArr = strDate.split("/");
     return new Date(startDateAsArr[2], startDateAsArr[1] - 1, startDateAsArr[0])
+}
+
+function customizeAllAvatarColor() {
+    [...$$('table tbody tr td.base-profile span.mock-avatar')].forEach(avatarTag => {
+        const avatarColor = colorMap[avatarTag.innerText.trim().toUpperCase()];
+
+        // Convert background color to RGB
+        let r = parseInt(avatarColor.slice(1, 3), 16);
+        let g = parseInt(avatarColor.slice(3, 5), 16);
+        let b = parseInt(avatarColor.slice(5, 7), 16);
+
+        // Calculate luminance
+        let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+        // Get the right letter's color
+        const letterColor = (luminance > 0.5) ? "#000000" : "#FFFFFF";
+
+        avatarTag.style.backgroundColor = avatarColor;
+        avatarTag.style.color = letterColor;
+    })
 }

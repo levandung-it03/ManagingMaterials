@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -19,9 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-    @GetMapping("/add-employee")
+    @PostMapping("/add-employee")
     public String addEmployee(
-        @Valid @ModelAttribute("employee") Employee employeeInfo,
+        @Valid @ModelAttribute("employee") Employee employee,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes,
         BindingResult bindingResult
@@ -33,13 +33,13 @@ public class EmployeeController {
         }
 
         try {
-            employeeService.addEmployee(request, employeeInfo);
+            employeeService.addEmployee(request, employee);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException ignored) {
-            redirectAttributes.addFlashAttribute("employeeInfo", employeeInfo);
+            redirectAttributes.addFlashAttribute("submittedEmployee", employee);
             redirectAttributes.addFlashAttribute("errorCode", "error_employee_01");
         } catch (Exception ignored) {
-            redirectAttributes.addFlashAttribute("employeeInfo", employeeInfo);
+            redirectAttributes.addFlashAttribute("submittedEmployee", employee);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
         }
         return "redirect:" + standingUrl;

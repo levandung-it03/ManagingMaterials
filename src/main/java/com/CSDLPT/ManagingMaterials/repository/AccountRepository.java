@@ -1,7 +1,7 @@
 package com.CSDLPT.ManagingMaterials.repository;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.dto.ResDtoEmployeeInfo;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Account;
 import com.CSDLPT.ManagingMaterials.model.Enums.Role;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 public class AccountRepository {
     private final DBConnectionHolder connectionHolder;
 
-    public ResDtoEmployeeInfo authenticate(Account account) throws SQLException, NoSuchElementException {
+    public ResDtoUserInfo authenticate(Account account) throws SQLException, NoSuchElementException {
         //--Connection from authenticated User.
         connectionHolder.buildConnection(account);
 
@@ -23,10 +23,10 @@ public class AccountRepository {
         statement.setString(1, account.getUsername());
 
         ResultSet resultSet = statement.executeQuery();
-        ResDtoEmployeeInfo employeeInfo;
+        ResDtoUserInfo userInfo;
 
         if (resultSet.next()) {
-            employeeInfo = ResDtoEmployeeInfo.builder()
+            userInfo = ResDtoUserInfo.builder()
                 .username(account.getUsername())
                 .password(account.getPassword())
                 .branch(account.getBranch())
@@ -41,6 +41,6 @@ public class AccountRepository {
         //--Close Connection from authenticated User.
         connectionHolder.removeConnection();
 
-        return employeeInfo;
+        return userInfo;
     }
 }

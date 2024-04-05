@@ -1,6 +1,6 @@
 package com.CSDLPT.ManagingMaterials.config;
 
-import com.CSDLPT.ManagingMaterials.dto.ResDtoEmployeeInfo;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class StaticUtilMethods {
     private final Map<String, String> responseMessages;
 
-    /**Spring MVC: Customize returned ModelAndView to show ErrMessage or SucceedMessages.**/
+    /**Spring MVC: Customize returned ModelAndView to show Header-info and ErrMessage or SucceedMessages.**/
     public ModelAndView customResponseModelView(
         @NonNull HttpServletRequest request,
         @NonNull Map<String, Object> model,
@@ -31,9 +31,9 @@ public class StaticUtilMethods {
             modelAndView.addObject("succeedMessage", responseMessages.get(succeedCode.toString()));
 
         //--Information for Header.
-        ResDtoEmployeeInfo employeeInfo = (ResDtoEmployeeInfo) request.getSession().getAttribute("employeeInfo");
-        if (employeeInfo != null)
-            modelAndView.addObject("employeeInfo",  employeeInfo);
+        ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
+        if (userInfo != null)
+            modelAndView.addObject("userInfo",  userInfo);
 
         return modelAndView;
     }

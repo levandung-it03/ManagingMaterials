@@ -1,15 +1,11 @@
 package com.CSDLPT.ManagingMaterials.model;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -36,6 +32,7 @@ public class Employee {
 
     private String address;
 
+    @DateTimeFormat(iso= DateTimeFormat.ISO.DATE)
     @NotNull(message = "error_entity_03")
     @Past(message = "error_entity_03")
     private Date birthday;
@@ -47,7 +44,7 @@ public class Employee {
 
     private String branch = null;
 
-    @NotEmpty(message = "error_entity_03")
+    @NotNull(message = "error_entity_03")
     @Min(value = 0, message = "error_entity_03")
     @Max(value = 1, message = "error_entity_03")
     private int deletedStatus = 0;

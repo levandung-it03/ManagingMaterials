@@ -32,43 +32,57 @@
 </div>
 <div id="center-page">
     <div id="add-employee">
-        <form method="POST" action="/service/v1/branch/add-employee" modelAttribute="employee">
+        <form action="/service/v1/branch/add-employee" method="post" modelAttribute="employee">
             <div class="form-input" id="employeeId">
-                <label for="employeeId">Mã nhân viên</label>
-                <input name="employeeId" type="number" value="" maxlength="20" required/>
+                <fieldset>
+                    <legend>Mã nhân viên</legend>
+                    <input name="employeeId" type="number" value="${employee.employeeId}" maxlength="20" required/>
+                </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input" id="identifier">
-                <label for="identifier">CMND</label>
-                <input name="identifier" type="text" value="" maxlength="20" required/>
+                <fieldset>
+                    <legend>CMND</legend>
+                    <input name="identifier" type="text" value="${employee.identifier}" maxlength="20" required/>
+                </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input strong-text" id="lastName">
-                <label for="lastName">Họ nhân viên</label>
-                <input name="lastName" type="text" value="" maxlength="40" required/>
+                <fieldset>
+                    <legend>Họ nhân viên</legend>
+                    <input name="lastName" type="text" value="${employee.lastName}" maxlength="40" required/>
+                </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input strong-text" id="firstName">
-                <label for="firstName">Tên nhân viên</label>
-                <input name="firstName" type="text" value="" maxlength="10" required/>
+                <fieldset>
+                    <legend>Tên nhân viên</legend>
+                    <input name="firstName" type="text" value="${employee.firstName}" maxlength="10" required/>
+                </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input strong-text" id="address">
-                <label for="address">Địa chỉ</label>
-                <input name="address" type="text" value="" maxlength="100" required/>
+                <fieldset>
+                    <legend>Địa chỉ</legend>
+                    <input name="address" type="text" value="${employee.address}" maxlength="100" required/>
+                </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input" id="birthday">
-                <label for="birthday">Ngày sinh</label>
-                <input name="birthday" type="date" value="" required/>
+                <fieldset>
+                    <legend>Ngày sinh</legend>
+                    <input name="birthday" type="date" value="${employee.birthday}" required/>
+                </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input" id="salary">
-                <label for="salary">Lương</label>
-                <input name="salary" type="number" value="" required/>
+                <fieldset>
+                    <legend>Lương</legend>
+                    <input name="salary" type="number" value="${employee.salary}" required/>
+                </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <c:if test="${employeeUpdated!= null}">
+            <c:if test="${employee.branch != null}">
                 <div class="form-input" id="branch">
                     <label for="branch">Chi nhánh</label>
                     <select data="${branch.branchId}" name="branchId">
@@ -83,6 +97,8 @@
             <input name="pageNumber" value="${pageNumber}" hidden/>
             <input type="submit" value="Thêm nhân viên">
         </form>
+        <span type="number" class="hidden-data-fields" name="branchesQuantity">${branchesQuantity}</span>
+        <span type="number" class="hidden-data-fields" name="lastEmployeeId">${lastEmployeeId}</span>
     </div>
     <div id="employee-list">
 

@@ -4,7 +4,7 @@
             tag: $('input[name=username]'),
             confirm: function (value) {
                 this.tag.value = value.trim().toUpperCase();
-                this.isValid = (/^[A-Z]+$/).test(value);
+                this.isValid = (/^[A-Za-z]+$/).test(value);
                 return this.isValid;
             },
             errorMessage: "Nhập đúng định dạng",
