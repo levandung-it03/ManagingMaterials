@@ -169,14 +169,15 @@ function customizeSortingListEvent() {
     [...$$('table thead th i')].forEach(btn => {
         btn.addEventListener("click", e => {
             const fieldId = e.target.parentElement.id;
-            const firstCellOfSearchingColumn = $('table tbody td.' + fieldId).getAttribute('plain-value');
+            const cellOfFields = [...$$('table tbody td.' + fieldId)];
+            const firstCellOfSearchingColumn = cellOfFields[0].getAttribute('plain-value');
             let searchingDataFieldType = null;
 
             if (Number.parseInt(firstCellOfSearchingColumn) !== null)   searchingDataFieldType = "Number";
             else if (new Date(firstCellOfSearchingColumn) !== null)     searchingDataFieldType = "Date";
             else    searchingDataFieldType = "String";
 
-            const cellsOfFieldId = [...$$('table tbody td.' + fieldId)].sort((a, b) => {
+            cellOfFields.sort((a, b) => {
                 const firstCell = a.getAttribute('plain-value');
                 const secondCell = b.getAttribute('plain-value');
 
@@ -185,7 +186,7 @@ function customizeSortingListEvent() {
                 else    return firstCell.localeCompare(secondCell);
             });
             alert("Sắp xếp thành công!");
-            $('table tbody').innerHTML = cellsOfFieldId.reduce((accumulator, cell) => {
+            $('table tbody').innerHTML = cellOfFields.reduce((accumulator, cell) => {
                 return accumulator + cell.parentElement.outerHTML;
             }, "");
         })
