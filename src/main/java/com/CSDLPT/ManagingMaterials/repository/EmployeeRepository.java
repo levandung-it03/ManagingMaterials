@@ -2,6 +2,7 @@ package com.CSDLPT.ManagingMaterials.repository;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.model.Employee;
+import com.CSDLPT.ManagingMaterials.model.PageObject;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,6 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -63,13 +63,15 @@ public class EmployeeRepository {
         return result;
     }
 
-    public List<Employee> findAll(DBConnectionHolder connectHolder) {
+    public List<Employee> findAll(DBConnectionHolder connectHolder, PageObject pageObj) {
         //--Using a 'List<Employee>' var as our result.
         List<Employee> result = new ArrayList<>();
 
         try {
             //--Prepare data to execute Query Statement.
-            PreparedStatement statement = connectHolder.getConnection().prepareStatement("{call SP_LIST_ALL_EMPLOYEES()}");
+            PreparedStatement statement = connectHolder.getConnection().prepareStatement(
+                String.format("{call SP_LIST_ALL_EMPLOYEES(%s, %s)}", pageObj.getPage(), pageObj.getSize())
+            );
             ResultSet resultSet = statement.executeQuery();
 
             //--Mapping all data into 'List<Employee>' result var.

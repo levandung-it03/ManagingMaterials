@@ -115,7 +115,6 @@ function cuttingStringValueOfInputTag(tag, len) {
         tag.value = tag.value.slice(0, len);
 }
 
-
 function recoveryAllSelectTagDataInForm() {
     [...$$('form select')].forEach(selectTag => {
         const data = selectTag.getAttribute('data');
@@ -136,7 +135,7 @@ function customizeSearchingListEvent(plainTableRows) {
 
         //--Reset table data.
         if (searchingInputTag.value == "") {
-            tableBody.innerHTML = plainTableRows.reduce((accumulator, elem) => accumulator += elem.innerHTML, "");
+            tableBody.innerHTML = plainTableRows.reduce((accumulator, elem) => accumulator + elem.innerHTML, "");
             return;
         }
 

@@ -4,6 +4,7 @@ import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Employee;
+import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.repository.BranchRepository;
 import com.CSDLPT.ManagingMaterials.repository.EmployeeRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,9 +50,14 @@ public class EmployeeService {
                 .build()
             );
         }
-        List<Employee> employeeList = employeeRepository.findAll(connectionHolder);
+
+        //--Prepare data of employee-list.
+        PageObject pageObj = new PageObject(request);
+        List<Employee> employeeList = employeeRepository.findAll(connectionHolder, pageObj);
+
         //--Data for EmployeeList component.
         modelAndView.addObject("employeeList", employeeList);
+        modelAndView.addObject("currentPage", pageObj.getPage());
 
         return modelAndView;
     }
