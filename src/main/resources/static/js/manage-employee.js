@@ -1,16 +1,6 @@
 (function AddEmployeeComponent() {
     const hiddenDataFields = {}
     const validatingBlocks = {
-        employeeId: {
-            tag: $('input[name=employeeId]'),
-            confirm: function (value) {
-                this.isValid = (/^[0-9]$/).test(value);
-                this.isValid = Math.abs(value - hiddenDataFields["lastEmployeeId"]) % hiddenDataFields["branchesQuantity"] === 0;
-                return this.isValid;
-            },
-            errorMessage: "Mã nhân viên không hợp lệ.",
-            isValid: false,
-        },
         identifier: {
             tag: $('input[name=identifier]'),
             confirm: function (value) {

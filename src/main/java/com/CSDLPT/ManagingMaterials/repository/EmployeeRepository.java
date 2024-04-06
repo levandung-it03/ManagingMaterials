@@ -18,15 +18,14 @@ public class EmployeeRepository {
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Logger logger;
 
-    public boolean isExistingEmployee(DBConnectionHolder conHolder, Employee employee) {
+    public boolean isExistingEmployee(DBConnectionHolder conHolder, String identifier) {
         //--Using a 'result' var to make our logic easily to control.
         boolean result = false;
 
         try {
             //--Prepare data to execute Stored Procedure.
-            CallableStatement statement = conHolder.getConnection().prepareCall("{call SP_CHECK_EXIST_CMND(?, ?)}");
-            statement.setInt(1, employee.getEmployeeId());
-            statement.setString(2, employee.getIdentifier());
+            CallableStatement statement = conHolder.getConnection().prepareCall("{call SP_CHECK_EXIST_CMND(?)}");
+            statement.setString(1, identifier);
             ResultSet resultSet = statement.executeQuery();
 
             //--If at least one Employee is existing.
@@ -37,30 +36,6 @@ public class EmployeeRepository {
             statement.close();
         } catch (SQLException e) {
             logger.info("Error In 'existingEmployeeIdentifier' of EmployeeRepository: " + e);
-        }
-        return result;
-    }
-
-    public Optional<Employee> findById(DBConnectionHolder connectHolder, int id) {
-        //--Using a 'Optional' var to make our logic easily to control.
-        Optional<Employee> result = Optional.empty();
-
-        try {
-            //--Prepare data to execute Query Statement.
-            PreparedStatement statement = connectHolder.getConnection()
-                .prepareStatement("SELECT * FROM NhanVien WHERE MANV = ?");
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            //--May throw NullPointerException.
-            if (resultSet.next())
-                result = Optional.of(this.getEmployeeFromResultSet(resultSet));
-
-            //--Close all connection.
-            resultSet.close();
-            statement.close();
-        } catch (SQLException | NullPointerException e) {
-            logger.info("Error In 'findById' of EmployeeRepository: " + e);
         }
         return result;
     }
@@ -94,12 +69,22 @@ public class EmployeeRepository {
 
         try {
             //--Prepare data to execute Query Statement.
-            PreparedStatement statement = connectHolder.getConnection().prepareStatement("SELECT * FROM Employee");
+            PreparedStatement statement = connectHolder.getConnection().prepareStatement("{call SP_LIST_ALL_EMPLOYEES()}");
             ResultSet resultSet = statement.executeQuery();
 
             //--Mapping all data into 'List<Employee>' result var.
             while (resultSet.next()) {
-                result.add(this.getEmployeeFromResultSet(resultSet));
+                result.add(
+                    Employee.builder()
+                        .employeeId(resultSet.getInt("MANV"))
+                        .identifier(resultSet.getString("CMND"))
+                        .lastName(resultSet.getString("HO"))
+                        .firstName(resultSet.getString("TEN"))
+                        .address(resultSet.getString("DIACHI"))
+                        .birthday(resultSet.getDate("NGAYSINH"))
+                        .salary(resultSet.getInt("LUONG"))
+                        .build()
+                );
             }
 
             //--Close all connection.
@@ -107,7 +92,7 @@ public class EmployeeRepository {
             statement.close();
             connectHolder.removeConnection();
         } catch (SQLException e) {
-            logger.info("Error In 'findById' of EmployeeRepository: " + e);
+            logger.info("Error In 'findAll' of EmployeeRepository: " + e);
         }
         return result;
     }
@@ -132,21 +117,6 @@ public class EmployeeRepository {
         }
     }
 
-    /**SQL Server: This method is used to retrieve each data inside ResultSet.**/
-    public Employee getEmployeeFromResultSet(ResultSet resultSet) throws SQLException {
-        return Employee.builder()
-            .employeeId(resultSet.getInt("MAVN"))
-            .identifier(resultSet.getString("CMND"))
-            .lastName(resultSet.getString("HO"))
-            .firstName(resultSet.getString("TEN"))
-            .address(resultSet.getString("DIACHI"))
-            .birthday(resultSet.getDate("NGAYSINH"))
-            .salary(resultSet.getInt("LUONG"))
-            .branch(resultSet.getString("MACN"))
-            .deletedStatus(resultSet.getInt("TrangThaiXoa"))
-            .build();
-    }
-
     /**SQL Server: This method is used to map data into the common PreparedStatement, which has all fields of Employee.**/
     public PreparedStatement mapDataIntoCommonStatement(Connection connection, String queryFormat, Employee employee
     ) throws SQLException {
@@ -163,5 +133,30 @@ public class EmployeeRepository {
         statement.setString(8, employee.getBranch());
         statement.setInt(9, 0);
         return statement;
-    }
+    };
 }
+
+
+//    public Optional<Employee> findById(DBConnectionHolder connectHolder, int id) {
+//        //--Using a 'Optional' var to make our logic easily to control.
+//        Optional<Employee> result = Optional.empty();
+//
+//        try {
+//            //--Prepare data to execute Query Statement.
+//            PreparedStatement statement = connectHolder.getConnection()
+//                .prepareStatement("SELECT * FROM NhanVien WHERE MANV = ?");
+//            statement.setInt(1, id);
+//            ResultSet resultSet = statement.executeQuery();
+//
+//            //--May throw NullPointerException.
+//            if (resultSet.next())
+//                result = Optional.of(this.getEmployeeFromResultSet(resultSet));
+//
+//            //--Close all connection.
+//            resultSet.close();
+//            statement.close();
+//        } catch (SQLException | NullPointerException e) {
+//            logger.info("Error In 'findById' of EmployeeRepository: " + e);
+//        }
+//        return result;
+//    }

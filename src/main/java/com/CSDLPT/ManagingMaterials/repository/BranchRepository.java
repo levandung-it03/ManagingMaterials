@@ -17,7 +17,7 @@ public class BranchRepository {
     public int countAll(DBConnectionHolder conHolder) {
         try {
             PreparedStatement statement = conHolder.getConnection()
-                .prepareStatement("SELECT SoLuongChiNhanh = COUNT(MACN) FROM LINK0.QLVT_DATHANG.DBO.ChiNhanh");
+                .prepareStatement("SELECT SoLuongChiNhanh = COUNT(MACN) FROM LINK2.QLVT_DATHANG.DBO.ChiNhanh");
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next())

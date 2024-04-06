@@ -16,7 +16,7 @@ public class HeaderPagesController {
     private final EmployeeService employeeService;
 
     @GetMapping("/employee/manage-employee")
-    public ModelAndView getAddEmployeePage(HttpServletRequest request, Model model) {
-        return employeeService.getManageEmployee(request, model);
+    public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) {
+        return employeeService.getManageEmployeePage(request, model);
     }
 }

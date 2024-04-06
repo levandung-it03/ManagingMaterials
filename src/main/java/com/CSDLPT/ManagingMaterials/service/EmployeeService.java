@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final BranchRepository branchRepository;
 
-    public ModelAndView getManageEmployee(HttpServletRequest request, Model model) {
+    public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
@@ -39,17 +40,18 @@ public class EmployeeService {
             Integer lastEmployeeId = employeeRepository.findTheLastEmployeeId(connectionHolder);
             Integer branchesQuantity = branchRepository.countAll(connectionHolder);
 
+            //--Save auto-generated into session for AddEmployeeAction.
+            request.getSession().setAttribute("addingEmployeeId", lastEmployeeId + branchesQuantity);
+
             //--Give the auto-generated employee-id to user.
             modelAndView.addObject("employee", Employee.builder()
                 .employeeId(lastEmployeeId + branchesQuantity)
                 .build()
             );
-            modelAndView.addObject("lastEmployeeId", lastEmployeeId);
-            modelAndView.addObject("branchesQuantity", branchesQuantity);
         }
-
-        //--Branches-quantity for several jobs of JSP.
-        modelAndView.addObject("branchQuantity", branchRepository.countAll(connectionHolder));
+        List<Employee> employeeList = employeeRepository.findAll(connectionHolder);
+        //--Data for EmployeeList component.
+        modelAndView.addObject("employeeList", employeeList);
 
         return modelAndView;
     }
@@ -58,11 +60,15 @@ public class EmployeeService {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
+        //--Get the auto-generated employee-id from Session (from getManageEmployeePage()).
+        String autoEmployeeIdFromSession = request.getSession().getAttribute("addingEmployeeId").toString();
+        employee.setEmployeeId(Integer.parseInt(autoEmployeeIdFromSession));
+
         //--Get Current_Login_User from Session.
         ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
         //--Check If 'MANV' is already existing or not.
-        if (employeeRepository.isExistingEmployee(connectionHolder, employee)) {
+        if (employeeRepository.isExistingEmployee(connectionHolder, employee.getIdentifier())) {
             throw new DuplicateKeyException("Can't add an existing employee!");
         }
 

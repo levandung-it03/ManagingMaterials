@@ -31,14 +31,13 @@
     </c:if>
 </div>
 <div id="center-page">
-    <div id="add-employee">
+    <div id="center-page_adding-form">
         <form action="/service/v1/branch/add-employee" method="post" modelAttribute="employee">
             <div class="form-input" id="employeeId">
                 <fieldset>
                     <legend>Mã nhân viên</legend>
-                    <input name="employeeId" type="number" value="${employee.employeeId}" maxlength="20" required/>
+                    <input name="employeeId" type="number" value="${employee.employeeId}" readonly/>
                 </fieldset>
-                <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input" id="identifier">
                 <fieldset>
@@ -99,8 +98,122 @@
         <span type="number" class="hidden-data-fields" name="branchesQuantity">${branchesQuantity}</span>
         <span type="number" class="hidden-data-fields" name="lastEmployeeId">${lastEmployeeId}</span>
     </div>
-    <div id="employee-list">
-
+    <div id="center-page_list">
+        <div id="table-tools">
+            <div id="table-description">
+                <b>Danh sách</b>
+                <span id="quantity">${employeeList.size()} người</span>
+            </div>
+            <div id="table-search-box">
+                <select id="search">
+                    <option value="" selected disabled hidden>Chọn trường cần tìm</option>
+                    <option value="0">Thông tin cơ bản</option>
+                    <option value="1">Mã</option>
+                    <option value="3">Ngày sinh</option>
+                    <option value="4">Giới tính</option>
+                    <option value="5">Điện thoại</option>
+                    <option value="6">Trạng thái</option>
+                </select>
+                <input type="text" id="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
+        <form action="/service/v1/branch/delete-employee" method="POST">
+            <table>
+                <thead>
+                <tr>
+                    <th id="employee-id">
+                        Mã
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="base-profile">
+                        Thông tin cơ bản
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="birthday">
+                        Ngày sinh
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="address">
+                        Địa chỉ
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="salary">
+                        Lương
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="update">Cập nhật</th>
+                    <th id="delete">Xoá</th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${employeeList}" var="eachEmployeeInfo">
+                    <tr id="${eachEmployeeInfo.employeeId}">
+                        <td plain-value="${eachEmployeeInfo.employeeId}" class="employee-id">
+                                ${eachEmployeeInfo.employeeId}
+                        </td>
+                        <td plain-value="${eachEmployeeInfo.identifier} ${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}"
+                            class="base-profile">
+                            <span class="mock-avatar">${eachEmployeeInfo.firstName.charAt(0)}</span>
+                            <div class="employee-info">
+                                <b class="employee-name">${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}</b>
+                                <p class="identifier">${eachEmployeeInfo.identifier}</p>
+                            </div>
+                        </td>
+                        <td plain-value="${eachEmployeeInfo.birthday}" class="birthday">
+                                ${eachEmployeeInfo.birthday}
+                        </td>
+                        <td plain-value="${eachEmployeeInfo.salary}" class="address">
+                                ${eachEmployeeInfo.address}
+                        </td>
+                        <td plain-value="${eachEmployeeInfo.salary}" class="salary">
+                                ${eachEmployeeInfo.salary}
+                        </td>
+                        <td class="table-row-btn update">
+                            <a href="/branch/employee/update-employee?employeeId=${eachEmployeeInfo.employeeId}">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </a>
+                        </td>
+                        <td class="table-row-btn delete">
+                            <button name="deleteBtn" value="${eachEmployeeInfo.employeeId}">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </form>
+        <div id="table-footer">
+            <c:set var="prefixUrl" value="/branch/employee/manage-employee?page=" scope="page"/>
+            <div id="table-footer_main">
+                    <span class="interact-page-btn">
+                        <a href="${prefixUrl}${(currentPage == 1) ? currentPage : (currentPage - 1)}">
+                            <i class="fa-solid fa-angle-left"></i>
+                        </a>
+                    </span>
+                <div id="pages-content">
+                    <c:if test="${currentPage > 1}">
+                            <span class="index-btn">
+                                <a href="${prefixUrl}${currentPage - 1}">${currentPage - 1}</a>
+                            </span>
+                    </c:if>
+                    <span class="index-btn">
+                            <a href="${prefixUrl}${currentPage}">${currentPage}</a>
+                        </span>
+                    <c:if test="${employeeList.size() != 0}">
+                            <span class="index-btn">
+                                <a href="${prefixUrl}${currentPage + 1}">${currentPage + 1}</a>
+                            </span>
+                    </c:if>
+                </div>
+                <span class="interact-page-btn">
+                        <a href="${prefixUrl}${(employeeList.size() == 0) ? currentPage : (currentPage + 1)}">
+                            <i class="fa-solid fa-angle-right"></i>
+                        </a>
+                    </span>
+            </div>
+        </div>
     </div>
 </div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>

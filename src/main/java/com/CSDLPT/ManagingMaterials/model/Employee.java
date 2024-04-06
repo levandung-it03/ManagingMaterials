@@ -15,7 +15,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class Employee {
-    @Min(value = 1, message = "error_entity_03")
     private Integer employeeId;
 
     @NotEmpty(message = "error_entity_03")
@@ -38,8 +37,7 @@ public class Employee {
     private Date birthday;
 
     @NotNull(message = "error_entity_03")
-    @Min(value = 0, message = "error_entity_03")
-    @Max(value = 4000000, message = "error_entity_03")
+    @Min(value = 4000000, message = "error_entity_03")
     private Integer salary;
 
     private String branch = null;
