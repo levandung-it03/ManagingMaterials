@@ -72,12 +72,22 @@
     }
 
     collectHiddenDataFields(hiddenDataFields);
-    customizeAllAvatarColor();
-    customizeClosingNoticeMessageEvent();
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
-    customizeSubmitFormAction(validatingBlocks);
+    customizeSubmitFormAction('div#center-page_adding-form form', validatingBlocks);
     // recoveryAllSelectTagDataInForm();
-    // mappingCategoryNameWithCurrentPage();
     customizeAutoFormatStrongInputTextEvent();
+})();
+
+const plainTableRows = [...$$('div#center-page_list table tbody tr')];
+(function ListComponent() {
+    customizeSearchingListEvent(plainTableRows);
+    customizeSortingListEvent();
+    customizeSubmitFormAction('div#center-page_list form', {mockTag: {isValid: true}});
+})();
+
+(function GeneralMethods() {
+    customizeAllAvatarColor();
+    removePathAttributes();
+    customizeClosingNoticeMessageEvent();
 })();
