@@ -169,10 +169,20 @@ function customizeSortingListEvent() {
     [...$$('table thead th i')].forEach(btn => {
         btn.addEventListener("click", e => {
             const fieldId = e.target.parentElement.id;
+            const firstCellOfSearchingColumn = $('table tbody td.' + fieldId).getAttribute('plain-value');
+            let searchingDataFieldType = null;
+
+            if (Number.parseInt(firstCellOfSearchingColumn) !== null)   searchingDataFieldType = "Number";
+            else if (new Date(firstCellOfSearchingColumn) !== null)     searchingDataFieldType = "Date";
+            else    searchingDataFieldType = "String";
+
             const cellsOfFieldId = [...$$('table tbody td.' + fieldId)].sort((a, b) => {
                 const firstCell = a.getAttribute('plain-value');
                 const secondCell = b.getAttribute('plain-value');
-                return firstCell.localeCompare(secondCell);
+
+                if (searchingDataFieldType === "Number") return Number.parseInt(firstCell) - Number.parseInt(secondCell);
+                else if (searchingDataFieldType === "Date")   return new Date(firstCell) < new Date(secondCell);
+                else    return firstCell.localeCompare(secondCell);
             });
             alert("Sắp xếp thành công!");
             $('table tbody').innerHTML = cellsOfFieldId.reduce((accumulator, cell) => {
