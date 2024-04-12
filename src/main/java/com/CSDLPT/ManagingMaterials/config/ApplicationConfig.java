@@ -12,6 +12,12 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
+    @Bean
+    public org.springframework.validation.Validator hibernateValidator() {
+        return (org.springframework.validation.Validator) jakarta.validation.Validation
+            .buildDefaultValidatorFactory()
+            .getValidator();
+    }
 
     @Bean
     public Logger logger() {
