@@ -1,5 +1,7 @@
 package com.CSDLPT.ManagingMaterials.config;
 
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,10 +15,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ApplicationConfig {
     @Bean
-    public org.springframework.validation.Validator hibernateValidator() {
-        return (org.springframework.validation.Validator) jakarta.validation.Validation
-            .buildDefaultValidatorFactory()
-            .getValidator();
+    public Validator hibernateValidator() {
+        return Validation.buildDefaultValidatorFactory().getValidator();
     }
 
     @Bean

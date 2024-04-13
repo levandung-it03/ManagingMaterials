@@ -3,15 +3,17 @@ package com.CSDLPT.ManagingMaterials.controller.BranchController;
 import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.service.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.validation.Validator;
+
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,10 +26,9 @@ public class EmployeeController {
     @ModelAttribute("employee")
     public String addEmployee(Employee employee, HttpServletRequest request, RedirectAttributes redirectAttributes) {
         final String standingUrl = request.getHeader("Referer");
-        Errors validationErr = hibernateValidator.validateObject(employee);
-        if (validationErr.hasErrors()) {
-            redirectAttributes.addFlashAttribute("errorCode", validationErr.getFieldErrors().getFirst().
-                getDefaultMessage());
+        Set<ConstraintViolation<Employee>> violations = hibernateValidator.validate(employee);
+        if (!violations.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
             return "redirect:" + standingUrl;
         }
 
