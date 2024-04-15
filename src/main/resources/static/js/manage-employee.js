@@ -79,9 +79,87 @@
     customizeAutoFormatStrongInputTextEvent();
 })();
 
-const plainTableRows = [...$$('div#center-page_list table tbody tr')];
+function displayEmployeeList(tableBody){
+    const searchingInputTag = $('#table-search-box input#search');
+    const selectedOption = $('#table-search-box select#search');
+    //Get search field to put it into the sql query
+    let searchField
+    switch (selectedOption.value) {
+        case "0":
+            searchField = "MANV";
+            break;
+        case "1":
+            searchField = "CONCAT(CMND, ' ', HO, ' ', TEN)";
+            break;
+        case "2":
+            searchField = "NGAYSINH";
+            break;
+        case "3":
+            searchField = "DIACHI";
+            break;
+        case "4":
+            searchField = "LUONG";
+            break;
+        default:
+            searchField = "MANV";
+            break;
+    }
+    fetch("http://localhost:9999/service/v1/branch/find-information?searchField=" + searchField +
+        "&searchValue=" + searchingInputTag.value)
+        .then(response => {
+            if (!response.ok) {throw new Error('Có lỗi xảy ra khi gửi yêu cầu.');}
+            return response.json();
+        })
+        .then(data => {
+            $('#quantity').textContent = data.length + " người"
+            tableBody.innerHTML = ''
+            data.forEach((row)=>{
+                const tr = document.createElement('tr')
+                tr.id = row.employeeId
+                tr.innerHTML = `
+                        <tr id="${row.employeeId}">
+                        <td plain-value="${row.employeeId}" class="employee-id">
+                                ${row.employeeId}
+                        </td>
+                        <td plain-value="${row.identifier} ${row.lastName} ${row.firstName}"
+                            class="base-profile">
+                            <span class="mock-avatar">${row.firstName.charAt(0)}</span>
+                            <div class="employee-info">
+                                <b class="employee-name">${row.lastName} ${row.firstName}</b>
+                                <p class="identifier">${row.identifier}</p>
+                            </div>
+                        </td>
+                        <td plain-value="${row.birthday}" class="birthday">
+                                ${row.birthday}
+                        </td>
+                        <td plain-value="${row.salary}" class="address">
+                                ${row.address}
+                        </td>
+                        <td plain-value="${row.salary}" class="salary">
+                                ${row.salary}
+                        </td>
+                        <td class="table-row-btn update">
+                            <a href="/branch/employee/update-employee?employeeId=${row.employeeId}">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </a>
+                        </td>
+                        <td class="table-row-btn delete">
+                            <button name="deleteBtn" value="${row.employeeId}">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    `
+                tableBody.appendChild(tr)
+            })
+            customizeAllAvatarColor()
+        })
+        .catch(error => {
+            console.error('Đã có lỗi xảy ra:', error);
+        })
+}
 (function ListComponent() {
-    customizeSearchingListEvent(plainTableRows);
+    customizeSearchingListEvent(displayEmployeeList);
     customizeSortingListEvent();
     customizeSubmitFormAction('div#center-page_list form', {mockTag: {isValid: true}});
 })();

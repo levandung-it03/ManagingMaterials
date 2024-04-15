@@ -6,13 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Validator;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -43,6 +43,14 @@ public class EmployeeController {
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
         }
         return "redirect:" + standingUrl;
+    }
+
+    @GetMapping("/find-information")
+    public ResponseEntity<List<Employee>> getLatestEmployeeList(
+            HttpServletRequest request,
+            @RequestParam("searchField") String searchField,
+            @RequestParam("searchValue") String searchValue){
+        return ResponseEntity.ok(employeeService.findInformationEmployee(request,searchField,searchValue));
     }
 
 }

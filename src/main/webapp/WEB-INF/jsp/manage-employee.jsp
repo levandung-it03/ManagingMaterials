@@ -145,7 +145,42 @@
                     <th id="delete">Xoá</th>
                 </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                <c:forEach items="${employeeList}" var="eachEmployeeInfo">
+                    <tr id="${eachEmployeeInfo.employeeId}">
+                        <td plain-value="${eachEmployeeInfo.employeeId}" class="employee-id">
+                                ${eachEmployeeInfo.employeeId}
+                        </td>
+                        <td plain-value="${eachEmployeeInfo.identifier} ${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}"
+                            class="base-profile">
+                            <span class="mock-avatar">${eachEmployeeInfo.firstName.charAt(0)}</span>
+                            <div class="employee-info">
+                                <b class="employee-name">${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}</b>
+                                <p class="identifier">${eachEmployeeInfo.identifier}</p>
+                            </div>
+                        </td>
+                        <td plain-value="${eachEmployeeInfo.birthday}" class="birthday">
+                                ${eachEmployeeInfo.birthday}
+                        </td>
+                        <td plain-value="${eachEmployeeInfo.salary}" class="address">
+                                ${eachEmployeeInfo.address}
+                        </td>
+                        <td plain-value="${eachEmployeeInfo.salary}" class="salary">
+                                ${eachEmployeeInfo.salary}
+                        </td>
+                        <td class="table-row-btn update">
+                            <a href="/branch/employee/update-employee?employeeId=${eachEmployeeInfo.employeeId}">
+                                <i class="fa-regular fa-pen-to-square"></i>
+                            </a>
+                        </td>
+                        <td class="table-row-btn delete">
+                            <button name="deleteBtn" value="${eachEmployeeInfo.employeeId}">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
             </table>
         </form>
         <div id="table-footer">
@@ -184,5 +219,3 @@
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-employee.js"></script>
 </body>
 </html>
-
-

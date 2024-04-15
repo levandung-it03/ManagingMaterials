@@ -99,6 +99,47 @@ public class EmployeeRepository {
         return result;
     }
 
+    public List<Employee> findByField(DBConnectionHolder connectHolder, PageObject pageObj,
+                                      String columnName, String searchValue) {
+        //--Using a 'List<Employee>' var as our result.
+        List<Employee> result = new ArrayList<>();
+
+        try {
+            int size = pageObj.getSize();
+            int offset = (pageObj.getPage() - 1) * size;
+            PreparedStatement statement = connectHolder.getConnection()
+                    .prepareStatement("SELECT * FROM NhanVien " +
+                            "WHERE TRANGTHAIXOA = 0 AND " + columnName + " LIKE '%'+?+'%' " +
+                            "ORDER BY MANV DESC, TEN ASC, HO DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+            statement.setString(1, searchValue);
+            statement.setInt(2, offset);
+            statement.setInt(3, size);
+            ResultSet resultSet = statement.executeQuery();
+
+            //--Mapping all data into 'List<Employee>' result var.
+            while (resultSet.next()) {
+                result.add(
+                        Employee.builder()
+                                .employeeId(resultSet.getInt("MANV"))
+                                .identifier(resultSet.getString("CMND"))
+                                .lastName(resultSet.getString("HO"))
+                                .firstName(resultSet.getString("TEN"))
+                                .address(resultSet.getString("DIACHI"))
+                                .birthday(resultSet.getDate("NGAYSINH"))
+                                .salary(resultSet.getInt("LUONG"))
+                                .build()
+                );
+            }
+            //--Close all connection.
+            resultSet.close();
+            statement.close();
+            connectHolder.removeConnection();
+        } catch (SQLException e) {
+            logger.info("Error In 'findByField' of EmployeeRepository: " + e);
+        }
+        return result;
+    }
+
     public int save(DBConnectionHolder connectHolder, Employee employee) {
         try {
             //--Prepare data to execute Query Statement.

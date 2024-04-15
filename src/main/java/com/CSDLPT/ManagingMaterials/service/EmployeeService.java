@@ -89,4 +89,12 @@ public class EmployeeService {
         //--Close Connection.
         connectionHolder.removeConnection();
     }
+
+    public List<Employee> findInformationEmployee(HttpServletRequest request,String columnName, String searchValue){
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+        //--Prepare data of employee-list.
+        PageObject pageObj = new PageObject(request);
+        return employeeRepository.findByField(connectionHolder, pageObj,columnName,searchValue);
+    }
 }

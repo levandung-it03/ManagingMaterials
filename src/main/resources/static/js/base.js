@@ -127,35 +127,20 @@ function recoveryAllSelectTagDataInForm() {
     });
 }
 
-function customizeSearchingListEvent(plainTableRows) {
+function customizeSearchingListEvent(displayList) {
     const searchingInputTag = $('#table-search-box input#search');
     const selectedOption = $('#table-search-box select#search');
     const handleSearchingListEvent = e => {
         const tableBody = $('table tbody');
+        displayList(tableBody);
 
-        //--Reset table data.
-        if (searchingInputTag.value === "") {
-            tableBody.innerHTML = plainTableRows.reduce((accumulator, elem) => accumulator + elem.innerHTML, "");
-            return;
-        }
-
-        if (selectedOption.value === "") {
+        if (selectedOption.value == "") {
             alert("Bạn hãy chọn trường cần tìm kiếm trước!");
             return;
         }
-
-        let searchingResult = plainTableRows.reduce((accumulator, row) => {
-            let currentCellElement = row.querySelectorAll('td')[selectedOption.value];
-            let currentCellValue = currentCellElement.getAttribute("plain-value").trim().toUpperCase();
-            let isBeingFoundValue = currentCellValue.search(searchingInputTag.value.trim().toUpperCase()) !== -1;
-
-            return accumulator + (isBeingFoundValue ? row.outerHTML : "");
-        }, "");
-
-        if (searchingResult === "")
+        console.log(tableBody)
+        if (tableBody == "")
             tableBody.innerHTML = '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
-        else
-            tableBody.innerHTML = searchingResult;
 
         return null;
     }
