@@ -46,7 +46,7 @@ function customizeClosingNoticeMessageEvent() {
             $('div#message-block div.succeed-service-message').classList.add("hide");
         });
     }
-    return;
+
 }
 
 function createErrBlocksOfInputTags(validatingBlocks) {
@@ -78,7 +78,7 @@ function customizeValidateEventInputTags(validatingBlocks) {
 
 function customizeSubmitFormAction(formSelector, validatingBlocks) {
     $(formSelector).onsubmit = e => {
-        if (confirm("Bạn chắc chắn muốn thực hiện thao tác?") == true) {
+        if (confirm("Bạn chắc chắn muốn thực hiện thao tác?") === true) {
             let isValid = Object.entries(validatingBlocks).every((elem) => elem[1].isValid);
             if (!isValid) alert("Thông tin đầu vào bị lỗi!");
             return isValid;
@@ -97,7 +97,7 @@ function removePathAttributes() {
 function customizeToggleDisplayPasswordEvent() {
     $$('.password_toggle-hidden i').forEach((eye) => {
         eye.onclick = (e) => {
-            if ([...e.target.classList].some((e) => e == "show-pass")) {
+            if ([...e.target.classList].some((e) => e === "show-pass")) {
                 e.target.classList.add("hidden");
                 e.target.parentElement.querySelector(".hide-pass").classList.remove("hidden");
                 $(`input[name=${e.target.id}]`).type = "text";
@@ -120,7 +120,7 @@ function recoveryAllSelectTagDataInForm() {
         const data = selectTag.getAttribute('data');
         if (data != null) {
             [...selectTag.querySelectorAll('option')].forEach(optionTag => {
-                if (optionTag.value == data)
+                if (optionTag.value === data)
                     optionTag.selected = "true";
             });
         }
@@ -134,12 +134,12 @@ function customizeSearchingListEvent(plainTableRows) {
         const tableBody = $('table tbody');
 
         //--Reset table data.
-        if (searchingInputTag.value == "") {
+        if (searchingInputTag.value === "") {
             tableBody.innerHTML = plainTableRows.reduce((accumulator, elem) => accumulator + elem.innerHTML, "");
             return;
         }
 
-        if (selectedOption.value == "") {
+        if (selectedOption.value === "") {
             alert("Bạn hãy chọn trường cần tìm kiếm trước!");
             return;
         }
@@ -147,12 +147,12 @@ function customizeSearchingListEvent(plainTableRows) {
         let searchingResult = plainTableRows.reduce((accumulator, row) => {
             let currentCellElement = row.querySelectorAll('td')[selectedOption.value];
             let currentCellValue = currentCellElement.getAttribute("plain-value").trim().toUpperCase();
-            let isBeingFoundValue = currentCellValue.search(searchingInputTag.value.trim().toUpperCase()) != -1;
-            
+            let isBeingFoundValue = currentCellValue.search(searchingInputTag.value.trim().toUpperCase()) !== -1;
+
             return accumulator + (isBeingFoundValue ? row.outerHTML : "");
         }, "");
 
-        if (searchingResult == "")
+        if (searchingResult === "")
             tableBody.innerHTML = '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
         else
             tableBody.innerHTML = searchingResult;
@@ -196,7 +196,7 @@ function customizeAutoFormatStrongInputTextEvent() {
     [...$$('div.strong-text input')].forEach(inputTag => {
         inputTag.addEventListener("blur", e => {
             inputTag.value = inputTag.value.trim().split(" ")
-                .filter(word => word != "")
+                .filter(word => word !== "")
                 .map(word => word.slice(0, 1).toUpperCase() + word.slice(1).toLowerCase())
                 .join(" ");
         });

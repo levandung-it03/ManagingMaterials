@@ -46,8 +46,8 @@ public class EmployeeService {
 
             //--Give the auto-generated employee-id to user.
             modelAndView.addObject("employee", Employee.builder()
-                .employeeId(lastEmployeeId + branchesQuantity)
-                .build()
+                    .employeeId(lastEmployeeId + branchesQuantity)
+                    .build()
             );
         }
 

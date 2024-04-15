@@ -30,7 +30,7 @@
         },
         birthday: {
             tag: $('input[name=birthday]'),
-            confirm: function (value) {                
+            confirm: function (value) {
                 const isNotNaN = !isNaN(new Date(value));
                 const isAdults = (new Date().getFullYear() - new Date(value).getFullYear()) >= 18;
                 const isNotTooOld = (new Date().getFullYear() - new Date(value).getFullYear()) < 150;

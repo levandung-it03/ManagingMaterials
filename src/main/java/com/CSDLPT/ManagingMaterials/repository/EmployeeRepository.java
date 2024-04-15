@@ -47,7 +47,7 @@ public class EmployeeRepository {
         try {
             //--Prepare data to execute Query Statement.
             PreparedStatement statement = connectHolder.getConnection()
-                .prepareStatement("SELECT TOP 1 MANV FROM NhanVien ORDER BY MANV DESC");
+                    .prepareStatement("SELECT TOP 1 MANV FROM NhanVien ORDER BY MANV DESC");
             ResultSet resultSet = statement.executeQuery();
 
             //--May throw NullPointerException.
@@ -70,22 +70,22 @@ public class EmployeeRepository {
         try {
             //--Prepare data to execute Query Statement.
             PreparedStatement statement = connectHolder.getConnection().prepareStatement(
-                String.format("{call SP_LIST_ALL_EMPLOYEES(%s, %s)}", pageObj.getPage(), pageObj.getSize())
+                    String.format("{call SP_LIST_ALL_EMPLOYEES(%s, %s)}", pageObj.getPage(), pageObj.getSize())
             );
             ResultSet resultSet = statement.executeQuery();
 
             //--Mapping all data into 'List<Employee>' result var.
             while (resultSet.next()) {
                 result.add(
-                    Employee.builder()
-                        .employeeId(resultSet.getInt("MANV"))
-                        .identifier(resultSet.getString("CMND"))
-                        .lastName(resultSet.getString("HO"))
-                        .firstName(resultSet.getString("TEN"))
-                        .address(resultSet.getString("DIACHI"))
-                        .birthday(resultSet.getDate("NGAYSINH"))
-                        .salary(resultSet.getInt("LUONG"))
-                        .build()
+                        Employee.builder()
+                                .employeeId(resultSet.getInt("MANV"))
+                                .identifier(resultSet.getString("CMND"))
+                                .lastName(resultSet.getString("HO"))
+                                .firstName(resultSet.getString("TEN"))
+                                .address(resultSet.getString("DIACHI"))
+                                .birthday(resultSet.getDate("NGAYSINH"))
+                                .salary(resultSet.getInt("LUONG"))
+                                .build()
                 );
             }
 
@@ -103,8 +103,8 @@ public class EmployeeRepository {
         try {
             //--Prepare data to execute Query Statement.
             PreparedStatement statement = this.mapDataIntoCommonStatement(
-                connectHolder.getConnection(),
-                "INSERT INTO NhanVien (%s) VALUES (%s)", employee
+                    connectHolder.getConnection(),
+                    "INSERT INTO NhanVien (%s) VALUES (%s)", employee
             );
 
             //--Retrieve affected rows to know if our Query worked correctly.

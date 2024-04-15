@@ -107,12 +107,11 @@
             <div id="table-search-box">
                 <select id="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                    <option value="0">Thông tin cơ bản</option>
-                    <option value="1">Mã</option>
-                    <option value="3">Ngày sinh</option>
-                    <option value="4">Giới tính</option>
-                    <option value="5">Điện thoại</option>
-                    <option value="6">Trạng thái</option>
+                    <option value="0">Mã</option>
+                    <option value="1">Thông tin cơ bản</option>
+                    <option value="2">Ngày sinh</option>
+                    <option value="3">Địa chỉ</option>
+                    <option value="4">Lương</option>
                 </select>
                 <input type="text" id="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -146,42 +145,7 @@
                     <th id="delete">Xoá</th>
                 </tr>
                 </thead>
-                <tbody>
-                <c:forEach items="${employeeList}" var="eachEmployeeInfo">
-                    <tr id="${eachEmployeeInfo.employeeId}">
-                        <td plain-value="${eachEmployeeInfo.employeeId}" class="employee-id">
-                                ${eachEmployeeInfo.employeeId}
-                        </td>
-                        <td plain-value="${eachEmployeeInfo.identifier} ${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}"
-                            class="base-profile">
-                            <span class="mock-avatar">${eachEmployeeInfo.firstName.charAt(0)}</span>
-                            <div class="employee-info">
-                                <b class="employee-name">${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}</b>
-                                <p class="identifier">${eachEmployeeInfo.identifier}</p>
-                            </div>
-                        </td>
-                        <td plain-value="${eachEmployeeInfo.birthday}" class="birthday">
-                                ${eachEmployeeInfo.birthday}
-                        </td>
-                        <td plain-value="${eachEmployeeInfo.salary}" class="address">
-                                ${eachEmployeeInfo.address}
-                        </td>
-                        <td plain-value="${eachEmployeeInfo.salary}" class="salary">
-                                ${eachEmployeeInfo.salary}
-                        </td>
-                        <td class="table-row-btn update">
-                            <a href="/branch/employee/update-employee?employeeId=${eachEmployeeInfo.employeeId}">
-                                <i class="fa-regular fa-pen-to-square"></i>
-                            </a>
-                        </td>
-                        <td class="table-row-btn delete">
-                            <button name="deleteBtn" value="${eachEmployeeInfo.employeeId}">
-                                <i class="fa-regular fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
+                <tbody></tbody>
             </table>
         </form>
         <div id="table-footer">
