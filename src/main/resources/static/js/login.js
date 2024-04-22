@@ -25,6 +25,6 @@
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
     customizeToggleDisplayPasswordEvent();
-    customizeSubmitFormAction(validatingBlocks);
+    customizeSubmitFormAction('form', validatingBlocks);
     removePathAttributes();
 })();

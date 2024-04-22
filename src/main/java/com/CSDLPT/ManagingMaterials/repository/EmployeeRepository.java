@@ -47,7 +47,7 @@ public class EmployeeRepository {
         try {
             //--Prepare data to execute Query Statement.
             PreparedStatement statement = connectHolder.getConnection()
-                    .prepareStatement("SELECT TOP 1 MANV FROM NhanVien ORDER BY MANV DESC");
+                .prepareStatement("SELECT TOP 1 MANV FROM NhanVien ORDER BY MANV DESC");
             ResultSet resultSet = statement.executeQuery();
 
             //--May throw NullPointerException.
@@ -70,22 +70,22 @@ public class EmployeeRepository {
         try {
             //--Prepare data to execute Query Statement.
             PreparedStatement statement = connectHolder.getConnection().prepareStatement(
-                    String.format("{call SP_LIST_ALL_EMPLOYEES(%s, %s)}", pageObj.getPage(), pageObj.getSize())
+                String.format("{call SP_LIST_ALL_EMPLOYEES(%s, %s)}", pageObj.getPage(), pageObj.getSize())
             );
             ResultSet resultSet = statement.executeQuery();
 
             //--Mapping all data into 'List<Employee>' result var.
             while (resultSet.next()) {
                 result.add(
-                        Employee.builder()
-                                .employeeId(resultSet.getInt("MANV"))
-                                .identifier(resultSet.getString("CMND"))
-                                .lastName(resultSet.getString("HO"))
-                                .firstName(resultSet.getString("TEN"))
-                                .address(resultSet.getString("DIACHI"))
-                                .birthday(resultSet.getDate("NGAYSINH"))
-                                .salary(resultSet.getInt("LUONG"))
-                                .build()
+                    Employee.builder()
+                        .employeeId(resultSet.getInt("MANV"))
+                        .identifier(resultSet.getString("CMND"))
+                        .lastName(resultSet.getString("HO"))
+                        .firstName(resultSet.getString("TEN"))
+                        .address(resultSet.getString("DIACHI"))
+                        .birthday(resultSet.getDate("NGAYSINH"))
+                        .salary(resultSet.getDouble("LUONG"))
+                        .build()
                 );
             }
 
@@ -99,53 +99,12 @@ public class EmployeeRepository {
         return result;
     }
 
-    public List<Employee> findByField(DBConnectionHolder connectHolder, PageObject pageObj,
-                                      String columnName, String searchValue) {
-        //--Using a 'List<Employee>' var as our result.
-        List<Employee> result = new ArrayList<>();
-
-        try {
-            int size = pageObj.getSize();
-            int offset = (pageObj.getPage() - 1) * size;
-            PreparedStatement statement = connectHolder.getConnection()
-                    .prepareStatement("SELECT * FROM NhanVien " +
-                            "WHERE TRANGTHAIXOA = 0 AND " + columnName + " LIKE '%'+?+'%' " +
-                            "ORDER BY MANV DESC, TEN ASC, HO DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
-            statement.setString(1, searchValue);
-            statement.setInt(2, offset);
-            statement.setInt(3, size);
-            ResultSet resultSet = statement.executeQuery();
-
-            //--Mapping all data into 'List<Employee>' result var.
-            while (resultSet.next()) {
-                result.add(
-                        Employee.builder()
-                                .employeeId(resultSet.getInt("MANV"))
-                                .identifier(resultSet.getString("CMND"))
-                                .lastName(resultSet.getString("HO"))
-                                .firstName(resultSet.getString("TEN"))
-                                .address(resultSet.getString("DIACHI"))
-                                .birthday(resultSet.getDate("NGAYSINH"))
-                                .salary(resultSet.getInt("LUONG"))
-                                .build()
-                );
-            }
-            //--Close all connection.
-            resultSet.close();
-            statement.close();
-            connectHolder.removeConnection();
-        } catch (SQLException e) {
-            logger.info("Error In 'findByField' of EmployeeRepository: " + e);
-        }
-        return result;
-    }
-
     public int save(DBConnectionHolder connectHolder, Employee employee) {
         try {
             //--Prepare data to execute Query Statement.
             PreparedStatement statement = this.mapDataIntoCommonStatement(
-                    connectHolder.getConnection(),
-                    "INSERT INTO NhanVien (%s) VALUES (%s)", employee
+                connectHolder.getConnection(),
+                "INSERT INTO NhanVien (%s) VALUES (%s)", employee
             );
 
             //--Retrieve affected rows to know if our Query worked correctly.
@@ -160,7 +119,9 @@ public class EmployeeRepository {
         }
     }
 
-    /**SQL Server: This method is used to map data into the common PreparedStatement, which has all fields of Employee.**/
+    /**
+     * SQL Server: This method is used to map data into the common PreparedStatement, which has all fields of Employee.
+     **/
     public PreparedStatement mapDataIntoCommonStatement(Connection connection, String queryFormat, Employee employee
     ) throws SQLException {
         String orderedFields = "MANV ,CMND ,HO ,TEN ,DIACHI ,NGAYSINH ,LUONG ,MACN ,TrangThaiXoa";
@@ -172,34 +133,9 @@ public class EmployeeRepository {
         statement.setString(4, employee.getFirstName());
         statement.setString(5, employee.getAddress());
         statement.setDate(6, Date.valueOf(simpleDateFormat.format(employee.getBirthday())));
-        statement.setInt(7, employee.getSalary());
+        statement.setDouble(7, employee.getSalary());
         statement.setString(8, employee.getBranch());
         statement.setInt(9, 0);
         return statement;
-    };
+    }
 }
-
-
-//    public Optional<Employee> findById(DBConnectionHolder connectHolder, int id) {
-//        //--Using a 'Optional' var to make our logic easily to control.
-//        Optional<Employee> result = Optional.empty();
-//
-//        try {
-//            //--Prepare data to execute Query Statement.
-//            PreparedStatement statement = connectHolder.getConnection()
-//                .prepareStatement("SELECT * FROM NhanVien WHERE MANV = ?");
-//            statement.setInt(1, id);
-//            ResultSet resultSet = statement.executeQuery();
-//
-//            //--May throw NullPointerException.
-//            if (resultSet.next())
-//                result = Optional.of(this.getEmployeeFromResultSet(resultSet));
-//
-//            //--Close all connection.
-//            resultSet.close();
-//            statement.close();
-//        } catch (SQLException | NullPointerException e) {
-//            logger.info("Error In 'findById' of EmployeeRepository: " + e);
-//        }
-//        return result;
-//    }

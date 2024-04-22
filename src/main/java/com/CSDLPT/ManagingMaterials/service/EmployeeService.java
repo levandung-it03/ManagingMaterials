@@ -2,11 +2,13 @@ package com.CSDLPT.ManagingMaterials.service;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.repository.BranchRepository;
 import com.CSDLPT.ManagingMaterials.repository.EmployeeRepository;
+import com.CSDLPT.ManagingMaterials.service.GeneralService.FindingActionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -23,6 +25,7 @@ public class EmployeeService {
     private final StaticUtilMethods staticUtilMethods;
     private final EmployeeRepository employeeRepository;
     private final BranchRepository branchRepository;
+    private final FindingActionService findingActionService;
 
     public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
@@ -46,8 +49,8 @@ public class EmployeeService {
 
             //--Give the auto-generated employee-id to user.
             modelAndView.addObject("employee", Employee.builder()
-                    .employeeId(lastEmployeeId + branchesQuantity)
-                    .build()
+                .employeeId(lastEmployeeId + branchesQuantity)
+                .build()
             );
         }
 
@@ -90,11 +93,11 @@ public class EmployeeService {
         connectionHolder.removeConnection();
     }
 
-    public List<Employee> findInformationEmployee(HttpServletRequest request,String columnName, String searchValue){
-        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-        //--Prepare data of employee-list.
-        PageObject pageObj = new PageObject(request);
-        return employeeRepository.findByField(connectionHolder, pageObj,columnName,searchValue);
+    public List<Employee> findEmployee(HttpServletRequest request, ReqDtoFindingAction<Employee> searchingObject) {
+        searchingObject.setObjectType(Employee.class);
+        searchingObject.setSearchingTable("NHANVIEN");
+        searchingObject.setMoreCondition("TrangThaiXoa = 0");
+        searchingObject.setSortingCondition("ORDER BY MANV DESC, TEN ASC, HO DESC");
+        return findingActionService.findingDataWithPaging(request, searchingObject);
     }
 }

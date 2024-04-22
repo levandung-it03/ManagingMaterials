@@ -37,4 +37,23 @@ public class StaticUtilMethods {
 
         return modelAndView;
     }
+
+    /**Spring JdbcTemplate: this static dictionary help us find the column name of any entity**/
+    public String columnNameStaticDictionary(String fieldName) throws NoSuchFieldException{
+        return switch (fieldName) {
+            //--Employee(NhanVien) Entity
+            case "employeeId" -> "MANV";
+            case "identifier" -> "CMND";
+            case "lastName" -> "HO";
+            case "firstName" -> "TEN";
+            case "address" -> "DIACHI";
+            case "birthday" -> "NGAYSINH";
+            case "salary" -> "LUONG";
+            case "branch" -> "MACN";
+            case "deletedStatus" -> "TrangThaiXoa";
+            //--More....
+
+            default -> throw new NoSuchFieldException("Field not found");
+        };
+    }
 }

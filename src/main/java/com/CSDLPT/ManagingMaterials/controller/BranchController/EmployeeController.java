@@ -1,11 +1,13 @@
 package com.CSDLPT.ManagingMaterials.controller.BranchController;
 
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
 import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.service.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -45,12 +47,19 @@ public class EmployeeController {
         return "redirect:" + standingUrl;
     }
 
-    @GetMapping("/find-information")
+    @PostMapping("/find-employee-by-values")
     public ResponseEntity<List<Employee>> getLatestEmployeeList(
-            HttpServletRequest request,
-            @RequestParam("searchField") String searchField,
-            @RequestParam("searchValue") String searchValue){
-        return ResponseEntity.ok(employeeService.findInformationEmployee(request,searchField,searchValue));
+        @RequestBody ReqDtoFindingAction<Employee> searchingObject,
+        HttpServletRequest request
+    ){
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(employeeService.findEmployee(request, searchingObject));
+        } catch (Exception e) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(List.of());
+        }
     }
-
 }

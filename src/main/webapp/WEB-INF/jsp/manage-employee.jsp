@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -101,17 +102,17 @@
     <div id="center-page_list">
         <div id="table-tools">
             <div id="table-description">
-                <b>Danh sách</b>
-                <span id="quantity">${employeeList.size()} người</span>
+                <b>Số lượng người</b>
+                <span id="quantity">${employeeList.size()}</span>
             </div>
             <div id="table-search-box">
                 <select id="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                    <option value="0">Mã</option>
-                    <option value="1">Thông tin cơ bản</option>
-                    <option value="2">Ngày sinh</option>
-                    <option value="3">Địa chỉ</option>
-                    <option value="4">Lương</option>
+                    <option value="MANV">Mã nhân viên</option>
+                    <option value="CONCAT(CMND, ' ', HO, ' ', TEN)">Thông tin cơ bản</option>
+                    <option value="NGAYSINH">Ngày sinh</option>
+                    <option value="DIACHI">Địa chỉ</option>
+                    <option value="LUONG">Lương</option>
                 </select>
                 <input type="text" id="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -159,14 +160,16 @@
                                 <p class="identifier">${eachEmployeeInfo.identifier}</p>
                             </div>
                         </td>
-                        <td plain-value="${eachEmployeeInfo.birthday}" class="birthday">
-                                ${eachEmployeeInfo.birthday}
+                        <fmt:formatDate value="${eachEmployeeInfo.birthday}" pattern="yyyy-MM-dd" var="formattedBirthday"/>
+                        <td plain-value="${formattedBirthday}" class="birthday">
+                                ${formattedBirthday}
                         </td>
                         <td plain-value="${eachEmployeeInfo.salary}" class="address">
                                 ${eachEmployeeInfo.address}
                         </td>
-                        <td plain-value="${eachEmployeeInfo.salary}" class="salary">
-                                ${eachEmployeeInfo.salary}
+                        <c:set var="salary" value="${eachEmployeeInfo.salary.intValue()}" />
+                        <td plain-value="${salary}" class="salary">
+                                ${salary}
                         </td>
                         <td class="table-row-btn update">
                             <a href="/branch/employee/update-employee?employeeId=${eachEmployeeInfo.employeeId}">

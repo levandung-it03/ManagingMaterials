@@ -127,20 +127,56 @@ function recoveryAllSelectTagDataInForm() {
     });
 }
 
-function customizeSearchingListEvent(displayList) {
+function customizeSearchingListEvent(rowFormattingEngine, plainDataRows) {
     const searchingInputTag = $('#table-search-box input#search');
     const selectedOption = $('#table-search-box select#search');
+
     const handleSearchingListEvent = e => {
         const tableBody = $('table tbody');
-        displayList(tableBody);
 
-        if (selectedOption.value == "") {
+        if (searchingInputTag.value === "") {
+            tableBody.innerHTML = plainDataRows;
+            customizeAllAvatarColor();
+            return
+        }
+
+        if (selectedOption.value === "") {
             alert("Bạn hãy chọn trường cần tìm kiếm trước!");
             return;
         }
-        console.log(tableBody)
-        if (tableBody == "")
-            tableBody.innerHTML = '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
+
+        console.log(searchingInputTag.value)
+        console.log(selectedOption.value)
+
+        //--Searching data with selected field by calling an API.
+        fetch(
+            window.location.origin + "/service/v1/branch/find-employee-by-values",
+            {//--Request Options
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    searchingField: selectedOption.value,
+                    searchingValue: searchingInputTag.value
+                })
+            }
+        )
+            .then(response => {
+                if (response.ok)   return response.json();
+                else    throw new Error('Có lỗi xảy ra khi gửi yêu cầu.');
+            })
+            .then(foundDataSet => {
+                $('#quantity').textContent = foundDataSet.length;
+
+                if (foundDataSet.length === 0) {
+                    tableBody.innerHTML = '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
+                } else {
+                    tableBody.innerHTML = foundDataSet
+                        .map(dataOfRow => rowFormattingEngine(dataOfRow))
+                        .join("");
+                    customizeAllAvatarColor();
+                }
+            })
+            .catch(error => console.error('Đã có lỗi xảy ra:', error));
 
         return null;
     }

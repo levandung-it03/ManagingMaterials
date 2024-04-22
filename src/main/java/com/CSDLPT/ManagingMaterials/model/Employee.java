@@ -38,7 +38,7 @@ public class Employee {
 
     @NotNull(message = "error_entity_03")
     @Min(value = 4000000, message = "error_entity_03")
-    private Integer salary;
+    private Double salary;
 
     private String branch = null;
 
