@@ -14,10 +14,5 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 @RequestMapping("${url.get.branch.prefix}")
 public class HeaderPagesController {
-    private final EmployeeService employeeService;
 
-    @GetMapping("/employee/manage-employee")
-    public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) {
-        return employeeService.getManageEmployeePage(request, model);
-    }
 }

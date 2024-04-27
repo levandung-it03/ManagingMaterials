@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class Branch {
-    private String branchId;
+    private String branch;
     private String branchName;
     private String branchAddress;
     private String branchPhoneNumber;

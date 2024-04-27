@@ -42,7 +42,7 @@
             <div class="account-wrapper">
                 <div class="account-info">
                     <div class="info center">
-                        <span id="employee-id">Mã nhân viên: ${userInfo.employeeId}</span>
+                        <span id="employeeId">Mã nhân viên: ${userInfo.employeeId}</span>
                         <span id="full-name">Họ tên: ${userInfo.fullName}</span>
                         <span id="branch">Chi Nhanh: ${userInfo.branch}</span>
                         <span id="role">Vai trò: ${userInfo.role}</span>

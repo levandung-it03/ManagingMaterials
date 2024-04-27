@@ -60,19 +60,12 @@ function createErrBlocksOfInputTags(validatingBlocks) {
 
 function customizeValidateEventInputTags(validatingBlocks) {
     Object.entries(validatingBlocks).forEach(elem => {
-        let ignoredResult = elem[1].confirm(elem[1].tag.value);
-        elem[1].tag.addEventListener("keyup", e => {
-            if (elem[1].confirm(elem[1].tag.value))
-                $('span#' + elem[0]).style.display = "none";
-            else
-                $('span#' + elem[0]).style.display = "inline";
-        })
-        elem[1].tag.addEventListener("change", e => {
-            if (elem[1].confirm(elem[1].tag.value))
-                $('span#' + elem[0]).style.display = "none";
-            else
-                $('span#' + elem[0]).style.display = "inline";
-        })
+        const toggleShowMessage = (elem) => {
+            if (elem[1].confirm(elem[1].tag.value)) $('span#' + elem[0]).style.display = "none";
+            else    $('span#' + elem[0]).style.display = "inline";
+        };
+        elem[1].tag.addEventListener("keyup", e => toggleShowMessage(elem));
+        elem[1].tag.addEventListener("change", e => toggleShowMessage(elem));
     });
 }
 
@@ -127,7 +120,7 @@ function recoveryAllSelectTagDataInForm() {
     });
 }
 
-function customizeSearchingListEvent(rowFormattingEngine, plainDataRows) {
+function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource) {
     const searchingInputTag = $('#table-search-box input#search');
     const selectedOption = $('#table-search-box select#search');
 
@@ -135,8 +128,10 @@ function customizeSearchingListEvent(rowFormattingEngine, plainDataRows) {
         const tableBody = $('table tbody');
 
         if (searchingInputTag.value === "") {
-            tableBody.innerHTML = plainDataRows;
+            tableBody.innerHTML = searchingSupportingDataSource.plainDataRows;
+            $('#quantity').textContent = $$('table tbody tr').length;
             customizeAllAvatarColor();
+            customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
             return
         }
 
@@ -144,9 +139,6 @@ function customizeSearchingListEvent(rowFormattingEngine, plainDataRows) {
             alert("Bạn hãy chọn trường cần tìm kiếm trước!");
             return;
         }
-
-        console.log(searchingInputTag.value)
-        console.log(selectedOption.value)
 
         //--Searching data with selected field by calling an API.
         fetch(
@@ -162,7 +154,7 @@ function customizeSearchingListEvent(rowFormattingEngine, plainDataRows) {
         )
             .then(response => {
                 if (response.ok)   return response.json();
-                else    throw new Error('Có lỗi xảy ra khi gửi yêu cầu.');
+                else    throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
             })
             .then(foundDataSet => {
                 $('#quantity').textContent = foundDataSet.length;
@@ -171,12 +163,13 @@ function customizeSearchingListEvent(rowFormattingEngine, plainDataRows) {
                     tableBody.innerHTML = '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
                 } else {
                     tableBody.innerHTML = foundDataSet
-                        .map(dataOfRow => rowFormattingEngine(dataOfRow))
+                        .map(dataOfRow => searchingSupportingDataSource.rowFormattingEngine(dataOfRow))
                         .join("");
                     customizeAllAvatarColor();
+                    customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
                 }
             })
-            .catch(error => console.error('Đã có lỗi xảy ra:', error));
+            .catch(error => console.error("Đã có lỗi xảy ra:", error));
 
         return null;
     }
@@ -233,18 +226,58 @@ function customizeAllAvatarColor() {
     [...$$('table tbody tr td.base-profile span.mock-avatar')].forEach(avatarTag => {
         const avatarColor = colorMap[avatarTag.innerText.trim().toUpperCase()];
 
-        // Convert background color to RGB
+        //--Convert background color to RGB
         let r = parseInt(avatarColor.slice(1, 3), 16);
         let g = parseInt(avatarColor.slice(3, 5), 16);
         let b = parseInt(avatarColor.slice(5, 7), 16);
 
-        // Calculate luminance
+        //--Calculate luminance
         let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 
-        // Get the right letter's color
+        //--Get the right letter's color
         const letterColor = (luminance > 0.5) ? "#000000" : "#FFFFFF";
 
         avatarTag.style.backgroundColor = avatarColor;
         avatarTag.style.color = letterColor;
     })
+}
+
+function customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource) {
+    [...$$('div#center-page_list table tbody tr td.update a')].forEach(updatingBtn => {
+        updatingBtn.addEventListener("click", e => {
+            handlingCreateUpdatingForm(e.target.parentElement, updatingSupportingDataSource);
+        });
+    });
+}
+
+function handlingCreateUpdatingForm(updatingBtn, updatingSupportingDataSource) {
+    //--Creating new 'form' and changing "action", "method" and components to correspond with updating-form.
+    const newForm = updatingSupportingDataSource.plainAddingForm.cloneNode(true);
+    newForm.setAttribute("action", updatingSupportingDataSource.updatingAction + updatingBtn.id);
+    newForm.querySelector('div#rest-components-for-updating').outerHTML =
+        updatingSupportingDataSource.componentsForUpdating.join("");
+    //--Adding cancel-updating-btn at the tail of updating-form.
+    newForm.innerHTML = newForm.innerHTML + '<span id="cancel-updating"><p>Huỷ cập nhật</p></span>';
+
+    //--Mapping data-row into input and select tags of updating-form.
+    const updatedObjectRow = updatingBtn.parentElement.parentElement;
+    newForm.querySelectorAll('div.form-input').forEach(formInputDivBlock => {
+        formInputDivBlock.querySelector('input').setAttribute("value", updatedObjectRow
+            .querySelector('.' + formInputDivBlock.id)
+            .textContent.trim());
+    });
+    newForm.querySelectorAll('div.form-select').forEach(formInputDivBlock => {
+        const value = updatedObjectRow.querySelector('.' + formInputDivBlock.id).textContent.trim();
+        formInputDivBlock.querySelector(`select option[value=${value}]`).selected = true;
+    });
+    newForm.querySelector('input[type=submit]').value = "Cập nhật";
+    //--Print-out updating-form.
+    $('div#center-page div#center-page_adding-form form').outerHTML = newForm.outerHTML;
+
+    //--Customize bringing back adding-form when cancel-updating-btn is clicked.
+    $('div#center-page div#center-page_adding-form form #cancel-updating')
+        .addEventListener("click", e => {
+            $('div#center-page div#center-page_adding-form form').outerHTML =
+                updatingSupportingDataSource.plainAddingForm.outerHTML;
+        });
 }

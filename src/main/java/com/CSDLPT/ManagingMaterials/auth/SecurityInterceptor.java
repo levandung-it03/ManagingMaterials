@@ -31,9 +31,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
         logger.info("URL: " + request.getRequestURI() + ", method: " + request.getMethod());
 
         try {
-            ResDtoUserInfo userInfo = (ResDtoUserInfo) request
-                .getSession()
-                .getAttribute("userInfo");
+            ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
             //--May throw SQLException.
             connectionHolder.buildConnection(

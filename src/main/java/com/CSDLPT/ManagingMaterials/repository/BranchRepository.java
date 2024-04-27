@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.repository;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
+import com.CSDLPT.ManagingMaterials.model.Branch;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
@@ -8,23 +9,27 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
 public class BranchRepository {
     private final Logger logger;
 
-    public int countAll(DBConnectionHolder conHolder) {
+    public List<String> findAllBranchIds(DBConnectionHolder conHolder) {
+        List<String> result = new ArrayList<>();
         try {
-            PreparedStatement statement = conHolder.getConnection()
-                .prepareStatement("SELECT SoLuongChiNhanh = COUNT(MACN) FROM LINK2.QLVT_DATHANG.DBO.ChiNhanh");
+            PreparedStatement statement = conHolder.getConnection().prepareStatement("SELECT MACN FROM LINK2.QLVT_DATHANG.DBO.ChiNhanh");
             ResultSet resultSet = statement.executeQuery();
 
-            if (resultSet.next())
-                return resultSet.getInt("SoLuongChiNhanh");
+            while (resultSet.next())   result.add(resultSet.getString("MACN"));
+
+            statement.close();
+            resultSet.close();
         } catch (SQLException e) {
             logger.info("Error In 'countAllBranch' of BranchRepository: " + e);
         }
-        return 0;
+        return result;
     }
 }

@@ -1,5 +1,4 @@
 (function AddEmployeeComponent() {
-    const hiddenDataFields = {}
     const validatingBlocks = {
         identifier: {
             tag: $('input[name=identifier]'),
@@ -60,18 +59,6 @@
         },
     };
 
-    function collectHiddenDataFields(hiddenDataFields) {
-        [...$$('span.hidden-data-fields')].forEach(tag => {
-            if (tag.getAttribute("type") === 'number') {
-                hiddenDataFields[tag.getAttribute("name")] = Number.parseInt(tag.innerText);
-            } else if (tag.getAttribute("type") === 'text') {
-                hiddenDataFields[tag.getAttribute("name")] = tag.innerText;
-            }
-            tag.outerHTML = "";
-        })
-    }
-
-    collectHiddenDataFields(hiddenDataFields);
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
     customizeSubmitFormAction('div#center-page_adding-form form', validatingBlocks);
@@ -80,36 +67,60 @@
 })();
 
 (function ListComponent() {
-    const plainDataRows = $('table tbody').innerHTML;
-    const rowFormattingEngine = (row) => `
-        <tr id="${row.employeeId}">
-            <td plain-value="${row.employeeId}" class="employee-id">${row.employeeId}</td>
-            <td plain-value="${row.identifier} ${row.lastName} ${row.firstName}"
-                class="base-profile">
-                <span class="mock-avatar">${row.firstName.charAt(0)}</span>
-                <div class="employee-info">
-                    <b class="employee-name">${row.lastName} ${row.firstName}</b>
-                    <p class="identifier">${row.identifier}</p>
-                </div>
-            </td>
-            <td plain-value="${row.birthday}" class="birthday">${row.birthday}</td>
-            <td plain-value="${row.salary}" class="address">${row.address}</td>
-            <td plain-value="${row.salary}" class="salary">${row.salary}</td>
-            <td class="table-row-btn update">
-                <a href="/branch/employee/update-employee?employeeId=${row.employeeId}">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                </a>
-            </td>
-            <td class="table-row-btn delete">
-                <button name="deleteBtn" value="${row.employeeId}">
-                    <i class="fa-regular fa-trash-can"></i>
-                </button>
-            </td>
-        </tr>
-    `;
-    customizeSearchingListEvent(rowFormattingEngine, plainDataRows);
+    const updatingSupportingDataSource = {
+        plainAddingForm: $('div#center-page div#center-page_adding-form form').cloneNode(true),
+        updatingAction: "/service/v1/branch/update-employee?employeeId=",
+        componentsForUpdating: [
+            //--Create 'select' block to serve selecting-another-branch.
+            `<div class="form-select" id="branch">
+                <fieldset>
+                    <legend>Chi nhánh</legend>
+                    <select data="" name="branch">${
+                        [...$$('div#branchesList span.hidden-data-fields')].map(tag => {
+                            const value = tag.textContent.trim();
+                            return `<option value="${value}">${value}</option>`;
+                        }).join("")
+                    }</select>
+                </fieldset>
+            </div>`
+        ]
+    };
+    const searchingSupportingDataSource = {
+        plainDataRows: $('table tbody').innerHTML,
+        rowFormattingEngine: (row) => `
+            <tr id="${row.employeeId}">
+                <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
+                <td plain-value="${row.identifier} ${row.lastName} ${row.firstName}" class="base-profile">
+                    <span class="mock-avatar">${row.firstName.charAt(0)}</span>
+                    <div class="employee-info">
+                        <span class="employeeName">
+                            <b class="lastName">${row.lastName}</b>
+                            <b class="firstName"> ${row.firstName}</b>
+                        </span>
+                        <p class="identifier">${row.identifier}</p>
+                    </div>
+                </td>
+                <td plain-value="${row.birthday.substring(0, 10)}" class="birthday">${row.birthday.substring(0, 10)}</td>
+                <td plain-value="${row.salary}" class="address">${row.address}</td>
+                <td plain-value="${row.salary}" class="salary">${row.salary}</td>
+                <td style="display:none" plain-value="${row.branch}" class="branch">${row.branch}</td>
+                <td class="table-row-btn update">
+                    <a id="${row.employeeId}">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>
+                </td>
+                <td class="table-row-btn delete">
+                    <button name="deleteBtn" value="${row.employeeId}">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </td>
+            </tr>`
+    };
+
+    customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
     customizeSortingListEvent();
     customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+    customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
 })();
 
 (function GeneralMethods() {

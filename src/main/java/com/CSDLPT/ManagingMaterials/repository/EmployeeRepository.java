@@ -18,7 +18,7 @@ public class EmployeeRepository {
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Logger logger;
 
-    public boolean isExistingEmployee(DBConnectionHolder conHolder, String identifier) {
+    public boolean isExistingEmployeeByIdentifier(DBConnectionHolder conHolder, String identifier) {
         //--Using a 'result' var to make our logic easily to control.
         boolean result = false;
 
@@ -40,25 +40,24 @@ public class EmployeeRepository {
         return result;
     }
 
-    public Integer findTheLastEmployeeId(DBConnectionHolder connectHolder) {
-        //--Using a 'Optional' var to make our logic easily to control.
+    public Integer getNextEmployeeId(DBConnectionHolder connectHolder, String branch) {
         Integer result = null;
 
         try {
             //--Prepare data to execute Query Statement.
-            PreparedStatement statement = connectHolder.getConnection()
-                .prepareStatement("SELECT TOP 1 MANV FROM NhanVien ORDER BY MANV DESC");
-            ResultSet resultSet = statement.executeQuery();
+            CallableStatement statement = connectHolder.getConnection().prepareCall("{call SP_GET_EMPLOYEE_ID(?, ?)}");
+            statement.setString(1, branch);
+            statement.registerOutParameter(2, Types.INTEGER);
+
+            statement.execute();
 
             //--May throw NullPointerException.
-            if (resultSet.next())
-                result = resultSet.getInt("MANV");
+            result = statement.getInt(2);
 
             //--Close all connection.
-            resultSet.close();
             statement.close();
         } catch (SQLException | NullPointerException e) {
-            logger.info("Error In 'findTheLastEmployeeId' of EmployeeRepository: " + e);
+            logger.info("Error In 'getNextEmployeeId' of EmployeeRepository: " + e);
         }
         return result;
     }
@@ -79,12 +78,13 @@ public class EmployeeRepository {
                 result.add(
                     Employee.builder()
                         .employeeId(resultSet.getInt("MANV"))
-                        .identifier(resultSet.getString("CMND"))
-                        .lastName(resultSet.getString("HO"))
-                        .firstName(resultSet.getString("TEN"))
-                        .address(resultSet.getString("DIACHI"))
+                        .identifier(resultSet.getString("CMND").trim())
+                        .lastName(resultSet.getString("HO").trim())
+                        .firstName(resultSet.getString("TEN").trim())
+                        .address(resultSet.getString("DIACHI").trim())
                         .birthday(resultSet.getDate("NGAYSINH"))
                         .salary(resultSet.getDouble("LUONG"))
+                        .branch(resultSet.getString("MACN").trim())
                         .build()
                 );
             }
@@ -92,7 +92,6 @@ public class EmployeeRepository {
             //--Close all connection.
             resultSet.close();
             statement.close();
-            connectHolder.removeConnection();
         } catch (SQLException e) {
             logger.info("Error In 'findAll' of EmployeeRepository: " + e);
         }
@@ -102,10 +101,11 @@ public class EmployeeRepository {
     public int save(DBConnectionHolder connectHolder, Employee employee) {
         try {
             //--Prepare data to execute Query Statement.
-            PreparedStatement statement = this.mapDataIntoCommonStatement(
-                connectHolder.getConnection(),
-                "INSERT INTO NhanVien (%s) VALUES (%s)", employee
-            );
+            PreparedStatement statement = connectHolder.getConnection().prepareStatement("""
+                INSERT INTO NhanVien (MANV ,CMND ,HO ,TEN ,DIACHI ,NGAYSINH ,LUONG ,MACN ,TrangThaiXoa)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """);
+            statement = this.mapDataIntoStatement(statement, employee);
 
             //--Retrieve affected rows to know if our Query worked correctly.
             int result = statement.executeUpdate();
@@ -119,14 +119,56 @@ public class EmployeeRepository {
         }
     }
 
+    public int update(DBConnectionHolder connectionHolder, Employee employee, String oldBranch) {
+        try {
+            /** SP_UPDATE_EMPLOYEE
+             *  @MANV INT,
+             *  @CMND NVARCHAR(10),
+             *  @HO NVARCHAR(20),
+             *  @TEN NVARCHAR(50),
+             *  @DIACHI NVARCHAR(100),
+             *  @NGAYSINH DATE,
+             *  @LUONG FLOAT,
+             *  @MACN_CU NVARCHAR(3),
+             *  @MACN_MOI NVARCHAR(3)
+             */
+            CallableStatement statement = connectionHolder.getConnection()
+                .prepareCall("{call SP_UPDATE_EMPLOYEE(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            statement = (CallableStatement) this.mapDataIntoStatement(statement, employee);
+            statement.setString(9, oldBranch);
+
+            //--Retrieve affected rows to know if our Query worked correctly.
+            int result = statement.executeUpdate();
+
+            //--Close all connection.
+            statement.close();
+            return result;
+        } catch (SQLException e) {
+            logger.info("Error In 'update' of EmployeeRepository: " + e);
+            return 0;
+        }
+    }
+
+    public int delete(DBConnectionHolder connectionHolder, int employeeId) {
+        int result = 0;
+        try {
+            CallableStatement statement = connectionHolder.getConnection().prepareCall("{call SP_DELETE_EMPLOYEE(?)}");
+            statement.setInt(1, employeeId);
+
+            //--Retrieve affected rows to know if our Query worked correctly.
+            result = statement.executeUpdate();
+
+            connectionHolder.removeConnection();
+        } catch (SQLException e) {
+            logger.info("Error In 'delete; of EmployeeRepository: " + e);
+        }
+        return result;
+    }
+
     /**
      * SQL Server: This method is used to map data into the common PreparedStatement, which has all fields of Employee.
      **/
-    public PreparedStatement mapDataIntoCommonStatement(Connection connection, String queryFormat, Employee employee
-    ) throws SQLException {
-        String orderedFields = "MANV ,CMND ,HO ,TEN ,DIACHI ,NGAYSINH ,LUONG ,MACN ,TrangThaiXoa";
-        String allFields = "? ,? ,? ,? ,? ,? ,? ,? ,?";
-        PreparedStatement statement = connection.prepareStatement(String.format(queryFormat, orderedFields, allFields));
+    public PreparedStatement mapDataIntoStatement(PreparedStatement statement, Employee employee) throws SQLException {
         statement.setInt(1, employee.getEmployeeId());
         statement.setString(2, employee.getIdentifier());
         statement.setString(3, employee.getLastName());

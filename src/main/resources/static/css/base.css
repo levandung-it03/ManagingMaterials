@@ -139,17 +139,23 @@ div#center-page_adding-form {
 .form-input .password_toggle-hidden>.hidden {
     display: none;
 }
-form input[type=submit] {
+form input[type=submit],
+form span#cancel-updating {
     display: block;
     width: 100%;
     border: 2px var(--black-text) solid;
     background-color: var(--black-text);
     color: white;
     border-radius: 10px;
-    transition: background-color ease 0.2s;
-    transition: border-radius ease 0.3s;
+    text-align: center;
+    transition: background-color ease 0.2s, border-radius ease 0.3s;
 }
-form input[type=submit]:hover {
+form span#cancel-updating {
+    font-size: 0.85rem!important;
+    font-weight: 100!important;
+}
+form input[type=submit]:hover,
+form span#cancel-updating:hover {
     cursor: pointer;
     border-radius: 22px;
     background-color: #9fa7ae;

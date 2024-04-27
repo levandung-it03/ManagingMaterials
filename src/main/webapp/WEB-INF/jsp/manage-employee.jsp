@@ -82,22 +82,15 @@
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <c:if test="${employee.branch != null}">
-                <div class="form-input" id="branch">
-                    <label for="branch">Chi nhánh</label>
-                    <select data="${branch.branchId}" name="branchId">
-                        <option value="" disabled hidden selected>Chọn chi nhánh</option>
-                        <c:forEach var="branch" items="${branchList}">
-                            <option value="${branch.branchId}">${branch.branchId}</option>
-                        </c:forEach>
-                    </select>
-                </div>
-            </c:if>
+            <div id="rest-components-for-updating"></div>
             <input name="pageNumber" value="${pageNumber}" hidden/>
             <input type="submit" value="Thêm nhân viên">
         </form>
-        <span type="number" class="hidden-data-fields" name="branchesQuantity">${branchesQuantity}</span>
-        <span type="number" class="hidden-data-fields" name="lastEmployeeId">${lastEmployeeId}</span>
+        <div id="branchesList" style="display:none">
+            <c:forEach items="${branchesList}" var="branch">
+                <span class="hidden-data-fields" type="blacks text" name="branch">${branch}</span>
+            </c:forEach>
+        </div>
     </div>
     <div id="center-page_list">
         <div id="table-tools">
@@ -122,7 +115,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th id="employee-id">
+                    <th id="employeeId">
                         Mã
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
@@ -149,30 +142,25 @@
                 <tbody>
                 <c:forEach items="${employeeList}" var="eachEmployeeInfo">
                     <tr id="${eachEmployeeInfo.employeeId}">
-                        <td plain-value="${eachEmployeeInfo.employeeId}" class="employee-id">
-                                ${eachEmployeeInfo.employeeId}
-                        </td>
-                        <td plain-value="${eachEmployeeInfo.identifier} ${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}"
-                            class="base-profile">
+                        <td plain-value="${eachEmployeeInfo.employeeId}" class="employeeId">${eachEmployeeInfo.employeeId}</td>
+                        <td plain-value="${eachEmployeeInfo.identifier} ${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}" class="base-profile">
                             <span class="mock-avatar">${eachEmployeeInfo.firstName.charAt(0)}</span>
                             <div class="employee-info">
-                                <b class="employee-name">${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}</b>
+                                <span class="employeeName">
+                                    <b class="lastName">${eachEmployeeInfo.lastName}</b>
+                                    <b class="firstName"> ${eachEmployeeInfo.firstName}</b>
+                                </span>
                                 <p class="identifier">${eachEmployeeInfo.identifier}</p>
                             </div>
                         </td>
                         <fmt:formatDate value="${eachEmployeeInfo.birthday}" pattern="yyyy-MM-dd" var="formattedBirthday"/>
-                        <td plain-value="${formattedBirthday}" class="birthday">
-                                ${formattedBirthday}
-                        </td>
-                        <td plain-value="${eachEmployeeInfo.salary}" class="address">
-                                ${eachEmployeeInfo.address}
-                        </td>
+                        <td plain-value="${formattedBirthday}" class="birthday">${formattedBirthday}</td>
+                        <td plain-value="${eachEmployeeInfo.address}" class="address">${eachEmployeeInfo.address}</td>
                         <c:set var="salary" value="${eachEmployeeInfo.salary.intValue()}" />
-                        <td plain-value="${salary}" class="salary">
-                                ${salary}
-                        </td>
+                        <td plain-value="${salary}" class="salary">${salary}</td>
+                        <td style="display:none" plain-value="${eachEmployeeInfo.branch}" class="branch">${eachEmployeeInfo.branch}</td>
                         <td class="table-row-btn update">
-                            <a href="/branch/employee/update-employee?employeeId=${eachEmployeeInfo.employeeId}">
+                            <a id="${eachEmployeeInfo.employeeId}">
                                 <i class="fa-regular fa-pen-to-square"></i>
                             </a>
                         </td>
