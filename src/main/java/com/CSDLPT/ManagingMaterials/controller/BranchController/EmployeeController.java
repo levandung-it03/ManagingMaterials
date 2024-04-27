@@ -96,7 +96,7 @@ public class EmployeeController {
     }
 
     @PostMapping("${url.post.branch.prefix.v1}/delete-employee")
-    public String updateEmployee(
+    public String deleteEmployee(
         @RequestParam("deleteBtn") String employeeId,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
