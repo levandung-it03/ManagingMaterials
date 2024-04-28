@@ -24,21 +24,34 @@ import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("${url.post.branch.prefix.v1}")
 public class EmployeeController {
     private final EmployeeService employeeService;
     private final Validator hibernateValidator;
     private final Logger logger;
-
-    /*-------------------------------------------GET-MAPPING-------------------------------------------*/
-    @GetMapping("${url.get.branch.prefix}/employee/manage-employee")
-    public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
-        return employeeService.getManageEmployeePage(request, model);
+    
+    @PostMapping("/find-employee-by-values")
+    public ResponseEntity<List<Employee>> findingEmployeesByValues(
+        @RequestBody ReqDtoFindingAction<Employee> searchingObject,
+        HttpServletRequest request
+    ){
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(employeeService.findEmployee(request, searchingObject));
+        } catch (Exception e) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(List.of());
+        }
     }
-
-    /*-------------------------------------------POST-MAPPING------------------------------------------*/
-    @PostMapping("${url.post.branch.prefix.v1}/add-employee")
-    @ModelAttribute("employee")
-    public String addEmployee(Employee employee, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    
+    @PostMapping("/add-employee")
+    public String addEmployee(
+        @ModelAttribute("employee") Employee employee,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
+    ) {
         final String standingUrl = request.getHeader("Referer");
         Set<ConstraintViolation<Employee>> violations = hibernateValidator.validate(employee);
         if (!violations.isEmpty()) {
@@ -59,23 +72,7 @@ public class EmployeeController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/find-employee-by-values")
-    public ResponseEntity<List<Employee>> getLatestEmployeeList(
-        @RequestBody ReqDtoFindingAction<Employee> searchingObject,
-        HttpServletRequest request
-    ){
-        try {
-            return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(employeeService.findEmployee(request, searchingObject));
-        } catch (Exception e) {
-            return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(List.of());
-        }
-    }
-
-    @PostMapping("${url.post.branch.prefix.v1}/update-employee")
+    @PostMapping("/update-employee")
     public String updateEmployee(
         @ModelAttribute("employee") Employee employee,
         HttpServletRequest request,
@@ -95,7 +92,7 @@ public class EmployeeController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-employee")
+    @PostMapping("/delete-employee")
     public String deleteEmployee(
         @RequestParam("deleteBtn") String employeeId,
         HttpServletRequest request,
