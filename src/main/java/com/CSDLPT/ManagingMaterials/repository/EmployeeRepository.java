@@ -105,7 +105,7 @@ public class EmployeeRepository {
                 INSERT INTO NhanVien (MANV ,CMND ,HO ,TEN ,DIACHI ,NGAYSINH ,LUONG ,MACN ,TrangThaiXoa)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """);
-            statement = this.mapDataIntoStatement(statement, employee);
+            this.mapDataIntoStatement(statement, employee);
 
             //--Retrieve affected rows to know if our Query worked correctly.
             int result = statement.executeUpdate();
@@ -134,7 +134,7 @@ public class EmployeeRepository {
              */
             CallableStatement statement = connectionHolder.getConnection()
                 .prepareCall("{call SP_UPDATE_EMPLOYEE(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-            statement = (CallableStatement) this.mapDataIntoStatement(statement, employee);
+            this.mapDataIntoStatement(statement, employee);
             statement.setString(9, oldBranch);
 
             //--Retrieve affected rows to know if our Query worked correctly.
@@ -168,7 +168,7 @@ public class EmployeeRepository {
     /**
      * SQL Server: This method is used to map data into the common PreparedStatement, which has all fields of Employee.
      **/
-    public PreparedStatement mapDataIntoStatement(PreparedStatement statement, Employee employee) throws SQLException {
+    public void mapDataIntoStatement(PreparedStatement statement, Employee employee) throws SQLException {
         statement.setInt(1, employee.getEmployeeId());
         statement.setString(2, employee.getIdentifier());
         statement.setString(3, employee.getLastName());
@@ -178,6 +178,5 @@ public class EmployeeRepository {
         statement.setDouble(7, employee.getSalary());
         statement.setString(8, employee.getBranch());
         statement.setInt(9, 0);
-        return statement;
     }
 }
