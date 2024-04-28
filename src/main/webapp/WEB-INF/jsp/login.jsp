@@ -14,12 +14,14 @@
 </head>
 
 <body>
-    <c:if test="${errorMessage != null}">
-        <div class="error-service-message">
-            <span>${errorMessage}</span>
-            <i id="error-service-message_close-btn" class="fa fa-times-circle" aria-hidden="true"></i>
-        </div>
-    </c:if>
+    <div id="message-block">
+        <c:if test="${errorMessage != null}">
+            <div class="error-service-message">
+                <span>${errorMessage}</span>
+                <i id="error-service-message_close-btn" class="fa fa-times-circle" aria-hidden="true"></i>
+            </div>
+        </c:if>
+    </div>
     <form method="POST" action="/service/v1/auth/authenticate" modelAttribute="authObject">
         <span id="form-title">Đăng nhập</span>
         <div class="form-input" id="branch">
