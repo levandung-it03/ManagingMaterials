@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.model;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Data
@@ -8,12 +9,14 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class Account {
-    @NotEmpty(message = "error_entity_03")
+    @NotBlank(message = "error_entity_03")
+    @Pattern(regexp = "^[A-Z0-9]{1,10}$", message = "error_entity_03")
     private String branch;
 
-    @NotEmpty(message = "error_account_01")
+    @NotBlank(message = "error_account_01")
+    @Pattern(regexp = "^[A-Z]{1,10}$", message = "error_entity_03")
     private String username;
 
-    @NotEmpty(message = "error_account_01")
+    @NotBlank(message = "error_account_01")
     private String password;
 }
