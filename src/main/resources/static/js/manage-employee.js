@@ -1,4 +1,4 @@
-(function AddEmployeeComponent() {
+function AddEmployeeComponent() {
     const validatingBlocks = {
         identifier: {
             tag: $('input[name=identifier]'),
@@ -64,11 +64,12 @@
     customizeSubmitFormAction('div#center-page_adding-form form', validatingBlocks);
     // recoveryAllSelectTagDataInForm();
     customizeAutoFormatStrongInputTextEvent();
-})();
+}
 
-(function ListComponent() {
+function ListComponent(AddEmployeeComponentFunc) {
     const updatingSupportingDataSource = {
-        plainAddingForm: $('div#center-page div#center-page_adding-form form').cloneNode(true),
+        addingFormCustomizer: AddEmployeeComponentFunc,
+        plainAddingForm: $('div#center-page div#center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-employee?employeeId=",
         componentsForUpdating: [
             //--Create 'select' block to serve selecting-another-branch.
@@ -76,11 +77,11 @@
                 <fieldset>
                     <legend>Chi nhánh</legend>
                     <select data="" name="branch">${
-                        [...$$('div#branchesList span.hidden-data-fields')].map(tag => {
-                            const value = tag.textContent.trim();
-                            return `<option value="${value}">${value}</option>`;
-                        }).join("")
-                    }</select>
+                [...$$('div#branchesList span.hidden-data-fields')].map(tag => {
+                    const value = tag.textContent.trim();
+                    return `<option value="${value}">${value}</option>`;
+                }).join("")
+            }</select>
                 </fieldset>
             </div>`
         ]
@@ -121,10 +122,16 @@
     customizeSortingListEvent();
     customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
     customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
-})();
+}
 
-(function GeneralMethods() {
+function GeneralMethods() {
     customizeAllAvatarColor();
     removePathAttributes();
     customizeClosingNoticeMessageEvent();
+}
+
+(function main() {
+    AddEmployeeComponent();
+    ListComponent(AddEmployeeComponent);
+    GeneralMethods();
 })();
