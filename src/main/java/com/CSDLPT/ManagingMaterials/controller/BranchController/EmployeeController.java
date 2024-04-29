@@ -2,7 +2,7 @@ package com.CSDLPT.ManagingMaterials.controller.BranchController;
 
 import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
 import com.CSDLPT.ManagingMaterials.model.Employee;
-import com.CSDLPT.ManagingMaterials.service.EmployeeService;
+import com.CSDLPT.ManagingMaterials.service.BranchService.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import lombok.RequiredArgsConstructor;
@@ -11,15 +11,11 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Validator;
 
-import java.sql.SQLException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Controller
