@@ -273,11 +273,13 @@ function handlingCreateUpdatingForm(updatingBtn, updatingSupportingDataSource) {
     newForm.querySelector('input[type=submit]').value = "Cập nhật";
     //--Print-out updating-form.
     $('div#center-page div#center-page_adding-form form').outerHTML = newForm.outerHTML;
+    updatingSupportingDataSource.addingFormCustomizer();
 
     //--Customize bringing back adding-form when cancel-updating-btn is clicked.
     $('div#center-page div#center-page_adding-form form #cancel-updating')
         .addEventListener("click", e => {
             $('div#center-page div#center-page_adding-form form').outerHTML =
                 updatingSupportingDataSource.plainAddingForm.outerHTML;
+            updatingSupportingDataSource.addingFormCustomizer();
         });
 }
