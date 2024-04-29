@@ -126,53 +126,46 @@ function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupp
     const searchingInputTag = $('#table-search-box input#search');
     const selectedOption = $('#table-search-box select#search');
 
-    const handleSearchingListEvent = e => {
+    const handleSearchingListEvent = async e => {
         const tableBody = $('table tbody');
 
-        if (searchingInputTag.value === "") {
-            tableBody.innerHTML = searchingSupportingDataSource.plainDataRows;
-            $('#quantity').textContent = $$('table tbody tr').length;
-            customizeAllAvatarColor();
-            customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
-            return
-        }
+        //--Stop searching if searching-input-value is empty.
+        if (searchingInputTag.value === "")     tableBody.innerHTML = searchingSupportingDataSource.plainDataRows;
 
-        if (selectedOption.value === "") {
-            alert("Bạn hãy chọn trường cần tìm kiếm trước!");
-            return;
-        }
+        //--Stop searching if searched-field is not selected yet.
+        else if (selectedOption.value === "")   alert("Bạn hãy chọn trường cần tìm kiếm trước!");
 
-        //--Searching data with selected field by calling an API.
-        fetch(
-            window.location.origin + "/service/v1/branch/find-employee-by-values",
-            {//--Request Options
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    searchingField: selectedOption.value,
-                    searchingValue: searchingInputTag.value
-                })
-            }
-        )
-            .then(response => {
-                if (response.ok)   return response.json();
-                else    throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
-            })
-            .then(foundDataSet => {
-                $('#quantity').textContent = foundDataSet.length;
-
-                if (foundDataSet.length === 0) {
-                    tableBody.innerHTML = '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
-                } else {
-                    tableBody.innerHTML = foundDataSet
-                        .map(dataOfRow => searchingSupportingDataSource.rowFormattingEngine(dataOfRow))
-                        .join("");
-                    customizeAllAvatarColor();
-                    customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
+        //--Start data with selected field by calling an API.
+        else {
+            await fetch(
+                window.location.origin + "/service/v1/branch/find-employee-by-values",
+                {//--Request Options
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        searchingField: selectedOption.value,
+                        searchingValue: searchingInputTag.value
+                    })
                 }
-            })
-            .catch(error => console.error("Đã có lỗi xảy ra:", error));
-
+            )
+                .then(response => {
+                    if (response.ok)   return response.json();
+                    else    throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
+                })
+                .then(foundDataSet => {
+                    if (foundDataSet.length === 0) {
+                        tableBody.innerHTML = '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
+                    } else {
+                        tableBody.innerHTML = foundDataSet
+                            .map(dataOfRow => searchingSupportingDataSource.rowFormattingEngine(dataOfRow))
+                            .join("");
+                    }
+                })
+                .catch(error => console.error("Đã có lỗi xảy ra:", error));
+        }
+        $('#quantity').textContent = $$('table tbody tr').length;
+        customizeAllAvatarColor();
+        customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
         return null;
     }
 
