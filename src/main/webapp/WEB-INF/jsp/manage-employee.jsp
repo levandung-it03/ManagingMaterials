@@ -95,8 +95,8 @@
     <div id="center-page_list">
         <div id="table-tools">
             <div id="table-description">
-                <b>Số lượng người</b>
-                <span id="quantity">${employeeList.size()}</span>
+                <b>Số lượng </b>
+                <span id="quantity">${employeeList.size()} người</span>
             </div>
             <div id="table-search-box">
                 <select id="search">
