@@ -1,4 +1,4 @@
-package com.CSDLPT.ManagingMaterials.service;
+package com.CSDLPT.ManagingMaterials.service.BranchService;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
