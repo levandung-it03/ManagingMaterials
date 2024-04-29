@@ -2,60 +2,35 @@ function AddEmployeeComponent() {
     const validatingBlocks = {
         identifier: {
             tag: $('input[name=identifier]'),
-            confirm: function (value) {
-                this.isValid = (/^[0-9]{9,20}$/).test(value);
-                return this.isValid;
-            },
-            errorMessage: "CMND không hợp lệ.",
-            isValid: false,
+            validate: (value) => (/^[0-9]{9,20}$/).test(value),
+            errorMessage: "CMND không hợp lệ."
         },
         lastName: {
             tag: $('input[name=lastName]'),
-            confirm: function (value) {
-                this.isValid = (/^[A-Za-zÀ-ỹ]{1,50}( [A-Za-zÀ-ỹ]{1,50})*$/).test(value);
-                return this.isValid;
-            },
-            errorMessage: "Họ nhân viên không hợp lệ.",
-            isValid: false,
+            validate: (value) => (/^[A-Za-zÀ-ỹ]{1,50}( [A-Za-zÀ-ỹ]{1,50})*$/).test(value),
+            errorMessage: "Họ nhân viên không hợp lệ."
         },
         firstName: {
             tag: $('input[name=firstName]'),
-            confirm: function (value) {
-                this.isValid = (/^[A-Za-zÀ-ỹ]{1,50}$/).test(value);
-                return this.isValid;
-            },
-            errorMessage: "Tên nhân viên không hợp lệ.",
-            isValid: false,
+            validate: (value) => (/^[A-Za-zÀ-ỹ]{1,50}$/).test(value),
+            errorMessage: "Tên nhân viên không hợp lệ."
         },
         birthday: {
             tag: $('input[name=birthday]'),
-            confirm: function (value) {
-                const isNotNaN = !isNaN(new Date(value));
-                const isAdults = (new Date().getFullYear() - new Date(value).getFullYear()) >= 18;
-                const isNotTooOld = (new Date().getFullYear() - new Date(value).getFullYear()) < 150;
-                this.isValid = isNotNaN && isAdults && isNotTooOld
-                return this.isValid;
-            },
-            errorMessage: "Ngày sinh không hợp lệ.",
-            isValid: false,
+            validate: (value) => (!isNaN(new Date(value))   //--is not "NaN".
+                && (new Date().getFullYear() - new Date(value).getFullYear()) >= 18     //--is adults
+                && (new Date().getFullYear() - new Date(value).getFullYear()) < 150),   //--is not too old
+            errorMessage: "Ngày sinh không hợp lệ."
         },
         address: {
             tag: $('input[name=address]'),
-            confirm: function (value) {
-                this.isValid = value.length !== 0;
-                return this.isValid;
-            },
-            errorMessage: "Địa chỉ không được để trống.",
-            isValid: false,
+            validate: (value) => value.length !== 0,
+            errorMessage: "Địa chỉ không được để trống."
         },
         salary: {
             tag: $('input[name=salary]'),
-            confirm: function (value) {
-                this.isValid = value >= 4000000;
-                return this.isValid;
-            },
-            errorMessage: "Lương phải >= 4.000.000",
-            isValid: false,
+            validate: (value) => value >= 4000000,
+            errorMessage: "Lương phải >= 4.000.000"
         },
     };
 
@@ -77,11 +52,11 @@ function ListComponent(AddEmployeeComponentFunc) {
                 <fieldset>
                     <legend>Chi nhánh</legend>
                     <select data="" name="branch">${
-                [...$$('div#branchesList span.hidden-data-fields')].map(tag => {
-                    const value = tag.textContent.trim();
-                    return `<option value="${value}">${value}</option>`;
-                }).join("")
-            }</select>
+                        [...$$('div#branchesList span.hidden-data-fields')].map(tag => {
+                            const value = tag.textContent.trim();
+                            return `<option value="${value}">${value}</option>`;
+                        }).join("")
+                    }</select>
                 </fieldset>
             </div>`
         ]

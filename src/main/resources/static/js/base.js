@@ -61,7 +61,7 @@ function createErrBlocksOfInputTags(validatingBlocks) {
 function customizeValidateEventInputTags(validatingBlocks) {
     Object.entries(validatingBlocks).forEach(elem => {
         const toggleShowMessage = (elem) => {
-            if (elem[1].confirm(elem[1].tag.value)) $('span#' + elem[0]).style.display = "none";
+            if (elem[1].validate(elem[1].tag.value)) $('span#' + elem[0]).style.display = "none";
             else    $('span#' + elem[0]).style.display = "inline";
         };
         elem[1].tag.addEventListener("keyup", e => toggleShowMessage(elem));
@@ -71,8 +71,10 @@ function customizeValidateEventInputTags(validatingBlocks) {
 
 function customizeSubmitFormAction(formSelector, validatingBlocks) {
     $(formSelector).onsubmit = e => {
+        console.log(validatingBlocks);
         if (confirm("Bạn chắc chắn muốn thực hiện thao tác?") === true) {
-            let isValid = Object.entries(validatingBlocks).every((elem) => elem[1].isValid);
+            let isValid = Object.entries(validatingBlocks)
+                .every(elem => elem[1].validate(elem[1].tag.value));
             if (!isValid) alert("Thông tin đầu vào bị lỗi!");
             return isValid;
         } else return false;
