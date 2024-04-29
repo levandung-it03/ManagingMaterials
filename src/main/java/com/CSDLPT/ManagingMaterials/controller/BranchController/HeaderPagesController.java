@@ -24,7 +24,7 @@ public class HeaderPagesController {
         return employeeService.getManageEmployeePage(request, model);
     }
 
-    @GetMapping("/employee/manage-warehouse")
+    @GetMapping("/warehouse/manage-warehouse")
     public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) throws SQLException {
         return warehouseService.getManageWarehousePage(request, model);
     }

@@ -1,4 +1,4 @@
-package com.CSDLPT.ManagingMaterials.service;
+package com.CSDLPT.ManagingMaterials.service.BranchService;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
@@ -37,7 +37,8 @@ public class SupplyService {
         if (supply != null)   modelAndView.addObject("supply", supply);
             //--If the redirected supply-info doesn't exist, so this is the plain (empty) adding-form.
         else {
-            Integer nextSupplyId = supplyRepository.getNextSupplyId(connectionHolder, userInfo.getBranch());
+            PageObject pageObj = new PageObject(request);
+            Integer nextSupplyId = supplyRepository.findAll(connectionHolder, pageObj).le;
 
             //--Save auto-generated into session for AddSupplyAction.
             request.getSession().setAttribute("addingSupplyId", nextSupplyId);
@@ -52,7 +53,6 @@ public class SupplyService {
 
         //--Data for SupplyList component.
         modelAndView.addObject("supplyList", supplyList);
-        modelAndView.addObject("branchesList", branchesList);
         modelAndView.addObject("currentPage", pageObj.getPage());
 
         //--Close Connection.
