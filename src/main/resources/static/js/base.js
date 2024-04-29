@@ -74,7 +74,10 @@ function customizeSubmitFormAction(formSelector, validatingBlocks) {
         console.log(validatingBlocks);
         if (confirm("Bạn chắc chắn muốn thực hiện thao tác?") === true) {
             let isValid = Object.entries(validatingBlocks)
-                .every(elem => elem[1].validate(elem[1].tag.value));
+                .every(elem => {
+                    elem[1].tag.value = elem[1].tag.value.trim();
+                    return elem[1].validate(elem[1].tag.value);
+                });
             if (!isValid) alert("Thông tin đầu vào bị lỗi!");
             return isValid;
         } else return false;
@@ -139,7 +142,7 @@ function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupp
         else {
             //--Use await to make this "fetch" action sync with this "handleSearchingListEvent" method.
             await fetch(
-                window.location.origin + "/service/v1/branch/find-employee-by-values",
+                window.location.origin + searchingSupportingDataSource.fetchDataAction,
                 {//--Request Options
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -164,8 +167,8 @@ function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupp
                 })
                 .catch(error => console.error("Đã có lỗi xảy ra:", error));
         }
-        $('#quantity').textContent = $$('table tbody tr').length;
-        customizeAllAvatarColor();
+        searchingSupportingDataSource.objectsQuantityInTableCustomizer();
+        searchingSupportingDataSource.allAvatarColorCustomizer();
         customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
         return null;
     }
@@ -250,22 +253,29 @@ function handlingCreateUpdatingForm(updatingBtn, updatingSupportingDataSource) {
     //--Creating new 'form' and changing "action", "method" and components to correspond with updating-form.
     const newForm = updatingSupportingDataSource.plainAddingForm.cloneNode(true);
     newForm.setAttribute("action", updatingSupportingDataSource.updatingAction + updatingBtn.id);
-    newForm.querySelector('div#rest-components-for-updating').outerHTML =
-        updatingSupportingDataSource.componentsForUpdating.join("");
+    //--Adding rest-components needed for updating.
+    const restComponents = newForm.querySelector('div#rest-components-for-updating');
+    if (restComponents !== null)
+        restComponents.outerHTML = updatingSupportingDataSource.componentsForUpdating.join("");
     //--Adding cancel-updating-btn at the tail of updating-form.
     newForm.innerHTML = newForm.innerHTML + '<span id="cancel-updating"><p>Huỷ cập nhật</p></span>';
 
     //--Mapping data-row into input and select tags of updating-form.
     const updatedObjectRow = updatingBtn.parentElement.parentElement;
-    newForm.querySelectorAll('div.form-input').forEach(formInputDivBlock => {
-        formInputDivBlock.querySelector('input').setAttribute("value", updatedObjectRow
-            .querySelector('.' + formInputDivBlock.id)
-            .textContent.trim());
-    });
-    newForm.querySelectorAll('div.form-select').forEach(formInputDivBlock => {
-        const value = updatedObjectRow.querySelector('.' + formInputDivBlock.id).textContent.trim();
-        formInputDivBlock.querySelector(`select option[value=${value}]`).selected = true;
-    });
+    const allBlocksContainInputTag = newForm.querySelectorAll('div.form-input');
+    if (allBlocksContainInputTag !== null)
+        allBlocksContainInputTag.forEach(formInputDivBlock => {
+            formInputDivBlock.querySelector('input').setAttribute("value", updatedObjectRow
+                .querySelector('.' + formInputDivBlock.id)
+                .textContent.trim());
+        });
+    const allBlocksContainSelectTag = newForm.querySelectorAll('div.form-select');
+    if (allBlocksContainSelectTag !== null)
+        allBlocksContainSelectTag.forEach(formInputDivBlock => {
+            const value = updatedObjectRow.querySelector('.' + formInputDivBlock.id).textContent.trim();
+            formInputDivBlock.querySelector(`select option[value=${value}]`).selected = true;
+        });
+
     newForm.querySelector('input[type=submit]').value = "Cập nhật";
     //--Print-out updating-form.
     $('div#center-page div#center-page_adding-form form').outerHTML = newForm.outerHTML;

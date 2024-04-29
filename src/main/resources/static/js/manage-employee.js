@@ -62,7 +62,10 @@ function ListComponent(AddEmployeeComponentFunc) {
         ]
     };
     const searchingSupportingDataSource = {
+        fetchDataAction: "/service/v1/branch/find-employee-by-values",
         plainDataRows: $('table tbody').innerHTML,
+        objectsQuantityInTableCustomizer: () => $('#quantity').textContent = $$('table tbody tr').length + " người",
+        allAvatarColorCustomizer: customizeAllAvatarColor,
         rowFormattingEngine: (row) => `
             <tr id="${row.employeeId}">
                 <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
