@@ -2,22 +2,17 @@
     const validatingBlocks = {
         username: {
             tag: $('input[name=username]'),
-            confirm: function (value) {
+            validate: function (value) {
+                //--Using function to make "this" works correctly.
                 this.tag.value = value.trim().toUpperCase();
-                this.isValid = (/^[A-Za-z]+$/).test(value);
-                return this.isValid;
+                return (/^[A-Za-z]+$/).test(value);
             },
-            errorMessage: "Nhập đúng định dạng",
-            isValid: false,
+            errorMessage: "Nhập đúng định dạng"
         },
         password: {
             tag: $('input[name=password]'),
-            confirm: function (value) {
-                this.isValid = value.length >= 8;
-                return this.isValid;
-            },
-            errorMessage: "Mật khẩu không đủ dài.",
-            isValid: false,
+            validate: (value) => value.length >= 8,
+            errorMessage: "Mật khẩu không đủ dài."
         },
     };
 
