@@ -137,6 +137,7 @@ function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupp
 
         //--Start data with selected field by calling an API.
         else {
+            //--Use await to make this "fetch" action sync with this method.
             await fetch(
                 window.location.origin + "/service/v1/branch/find-employee-by-values",
                 {//--Request Options
