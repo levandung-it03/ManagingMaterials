@@ -36,31 +36,31 @@ public class SupplyController {
 //        }
 //    }
 
-    @PostMapping("/add-supply")
-    public String addSupply(
-            @ModelAttribute("supply") Supply supply,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttributes
-    ) {
-        final String standingUrl = request.getHeader("Referer");
-        Set<ConstraintViolation<Supply>> violations = hibernateValidator.validate(supply);
-        if (!violations.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
-            return "redirect:" + standingUrl;
-        }
-
-        try {
-            supplyService.addSupply(request, supply);
-            redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
-        } catch (DuplicateKeyException ignored) {
-            redirectAttributes.addFlashAttribute("submittedSupply", supply);
-            redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
-        } catch (Exception ignored) {
-            redirectAttributes.addFlashAttribute("submittedSupply", supply);
-            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-        }
-        return "redirect:" + standingUrl;
-    }
+//    @PostMapping("/add-supply")
+//    public String addSupply(
+//            @ModelAttribute("supply") Supply supply,
+//            HttpServletRequest request,
+//            RedirectAttributes redirectAttributes
+//    ) {
+//        final String standingUrl = request.getHeader("Referer");
+//        Set<ConstraintViolation<Supply>> violations = hibernateValidator.validate(supply);
+//        if (!violations.isEmpty()) {
+//            redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
+//            return "redirect:" + standingUrl;
+//        }
+//
+//        try {
+//            supplyService.addSupply(request, supply);
+//            redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
+//        } catch (DuplicateKeyException ignored) {
+//            redirectAttributes.addFlashAttribute("submittedSupply", supply);
+//            redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
+//        } catch (Exception ignored) {
+//            redirectAttributes.addFlashAttribute("submittedSupply", supply);
+//            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+//        }
+//        return "redirect:" + standingUrl;
+//    }
 
 //    @PostMapping("/update-supply")
 //    public String updateSupply(

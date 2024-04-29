@@ -4,7 +4,7 @@
     <div class="header-wrapper center">
         <ul id="nav" class="center">
             <li><a href="/branch/employee/manage-employee">NHÂN VIÊN</a></li>
-            <li><a href="">VẬT TƯ</a></li>
+            <li><a href="/branch/supply/manage-supply">VẬT TƯ</a></li>
             <li><a href="/branch/warehouse/manage-warehouse">KHO</a></li>
             <li>
                 <a href="">

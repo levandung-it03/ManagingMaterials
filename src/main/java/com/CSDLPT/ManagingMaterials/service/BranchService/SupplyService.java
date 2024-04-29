@@ -35,17 +35,6 @@ public class SupplyService {
         //--If there's an error when handle data with DB, take the submitted-supply-info and give it back to this page
         Supply supply = (Supply) model.asMap().get("submittedSupply");
         if (supply != null)   modelAndView.addObject("supply", supply);
-            //--If the redirected supply-info doesn't exist, so this is the plain (empty) adding-form.
-        else {
-            PageObject pageObj = new PageObject(request);
-            Integer nextSupplyId = supplyRepository.findAll(connectionHolder, pageObj).le;
-
-            //--Save auto-generated into session for AddSupplyAction.
-            request.getSession().setAttribute("addingSupplyId", nextSupplyId);
-
-            //--Give the auto-generated supplyId to user.
-            modelAndView.addObject("supply", Supply.builder().supplyId(nextSupplyId).build());
-        }
 
         //--Prepare data of supply-list.
         PageObject pageObj = new PageObject(request);
@@ -61,29 +50,29 @@ public class SupplyService {
         return modelAndView;
     }
 
-    public void addSupply(HttpServletRequest request, Supply supply) throws DuplicateKeyException, SQLException {
-        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
-        //--Get the auto-generated supplyId from Session (from getManageSupplyPage()).
-        String autoSupplyIdFromSession = request.getSession().getAttribute("addingSupplyId").toString();
-        supply.setSupplyId(Integer.parseInt(autoSupplyIdFromSession));
-
-        //--Get Current_Login_User from Session.
-        ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
-
-        //--Check If 'MANV' is already existing or not.
-        if (supplyRepository.isExistingSupplyByIdentifier(connectionHolder, supply.getIdentifier()))
-            throw new DuplicateKeyException("Can't add an existing supply!");
-
-        //--Supply must have the same 'branch' with Current_Login_User.
-        supply.setBranch(userInfo.getBranch());
-
-        //--May throw DuplicateKeyException with ('CNMD', 'TrangThaiXoa') pair of fields.
-        if (supplyRepository.save(connectionHolder, supply) == 0)
-            throw new DuplicateKeyException("There's an error with SQL Server!");
-
-        //--Close Connection.
-        connectionHolder.removeConnection();
-    }
+//    public void addSupply(HttpServletRequest request, Supply supply) throws DuplicateKeyException, SQLException {
+//        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+//        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+//
+//        //--Get the auto-generated supplyId from Session (from getManageSupplyPage()).
+//        String autoSupplyIdFromSession = request.getSession().getAttribute("addingSupplyId").toString();
+//        supply.setSupplyId(Integer.parseInt(autoSupplyIdFromSession));
+//
+//        //--Get Current_Login_User from Session.
+//        ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
+//
+//        //--Check If 'MANV' is already existing or not.
+//        if (supplyRepository.isExistingSupplyByIdentifier(connectionHolder, supply.getIdentifier()))
+//            throw new DuplicateKeyException("Can't add an existing supply!");
+//
+//        //--Supply must have the same 'branch' with Current_Login_User.
+//        supply.setBranch(userInfo.getBranch());
+//
+//        //--May throw DuplicateKeyException with ('CNMD', 'TrangThaiXoa') pair of fields.
+//        if (supplyRepository.save(connectionHolder, supply) == 0)
+//            throw new DuplicateKeyException("There's an error with SQL Server!");
+//
+//        //--Close Connection.
+//        connectionHolder.removeConnection();
+//    }
 }

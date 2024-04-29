@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
 
@@ -18,11 +19,12 @@ public class Supply {
     private String supplyId;
 
     @NotBlank(message = "error_entity_03")
-    @Pattern(regexp = "^[A-Za-zÀ-ỹ]{1,50}( [A-Za-zÀ-ỹ]{1,50})*$", message = "error_entity_03")
+    @Length(min = 1, max = 30, message = "error_entity_03")
+    @Pattern(regexp = "^[A-ZÀ-ỹ0-9]( [A-ZÀ-ỹ0-9])*$", message = "error_entity_03")
     private String supplyName;
 
     @NotBlank(message = "error_entity_03")
-    @Pattern(regexp = "^[0-9]{9,20}$", message = "error_entity_03")
+    @Length(min = 1, max = 15, message = "error_entity_03")
     private String unit;
 
     @NotNull(message = "error_entity_03")
