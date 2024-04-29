@@ -51,6 +51,8 @@ public class StaticUtilMethods {
             case "salary" -> "LUONG";
             case "branch" -> "MACN";
             case "deletedStatus" -> "TrangThaiXoa";
+            case "warehouseId" -> "MAKHO";
+            case "warehouseName" -> "MAKHO";
             //--More....
 
             default -> throw new NoSuchFieldException("Field not found");
