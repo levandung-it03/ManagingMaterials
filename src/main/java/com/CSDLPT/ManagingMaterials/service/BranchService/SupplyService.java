@@ -2,10 +2,10 @@ package com.CSDLPT.ManagingMaterials.service.BranchService;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Supply;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
-import com.CSDLPT.ManagingMaterials.repository.BranchRepository;
 import com.CSDLPT.ManagingMaterials.repository.SupplyRepository;
 import com.CSDLPT.ManagingMaterials.service.GeneralService.FindingActionService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -50,27 +51,40 @@ public class SupplyService {
         return modelAndView;
     }
 
-//    public void addSupply(HttpServletRequest request, Supply supply) throws DuplicateKeyException, SQLException {
+    public List<Supply> findSupply(HttpServletRequest request, ReqDtoFindingAction<Supply> searchingObject) {
+        searchingObject.setObjectType(Supply.class);
+        searchingObject.setSearchingTable("VATTU");
+        searchingObject.setSortingCondition("ORDER BY MAVT DESC, TENVT ASC");
+        return findingActionService.findingDataWithPaging(request, searchingObject);
+    }
+
+    public void addSupply(HttpServletRequest request, Supply supply) throws DuplicateKeyException, SQLException {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        //--Check If 'MAVT' is already existing or not.
+        if (supplyRepository.isExistingSupplyBySupplyId(connectionHolder, supply.getSupplyId()))
+            throw new DuplicateKeyException("Can't add an existing supply!");
+
+        //--May throw DuplicateKeyException with 'MAVT'.
+        if (supplyRepository.save(connectionHolder, supply) == 0)
+            throw new DuplicateKeyException("There's an error with SQL Server!");
+
+        //--Close Connection.
+        connectionHolder.removeConnection();
+    }
+
+//    public void updateSupply(Supply supply, HttpServletRequest request) throws SQLException {
+//        final String updatedId = request.getParameter("supplyId");
+//
 //        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
 //        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 //
-//        //--Get the auto-generated supplyId from Session (from getManageSupplyPage()).
-//        String autoSupplyIdFromSession = request.getSession().getAttribute("addingSupplyId").toString();
-//        supply.setSupplyId(Integer.parseInt(autoSupplyIdFromSession));
+//        if (!updatedId.equals(supply.getSupplyId()))
+//            throw new NoSuchElementException("Supply Id is invalid");
 //
-//        //--Get Current_Login_User from Session.
-//        ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
-//
-//        //--Check If 'MANV' is already existing or not.
-//        if (supplyRepository.isExistingSupplyByIdentifier(connectionHolder, supply.getIdentifier()))
-//            throw new DuplicateKeyException("Can't add an existing supply!");
-//
-//        //--Supply must have the same 'branch' with Current_Login_User.
-//        supply.setBranch(userInfo.getBranch());
-//
-//        //--May throw DuplicateKeyException with ('CNMD', 'TrangThaiXoa') pair of fields.
-//        if (supplyRepository.save(connectionHolder, supply) == 0)
-//            throw new DuplicateKeyException("There's an error with SQL Server!");
+//        if (supplyRepository.update(connectionHolder, supply) == 0)
+//            throw new SQLException("There's an error with SQL Server!");
 //
 //        //--Close Connection.
 //        connectionHolder.removeConnection();

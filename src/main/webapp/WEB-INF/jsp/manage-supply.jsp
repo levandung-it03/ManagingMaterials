@@ -37,8 +37,9 @@
             <div class="form-input" id="supplyId">
                 <fieldset>
                     <legend>Mã vật tư</legend>
-                    <input name="supplyId" type="text" value="${supply.supplyId}"/>
+                    <input name="supplyId" type="text" value="${supply.supplyId}" maxlength="4" required/>
                 </fieldset>
+                <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input" id="supplyName">
                 <fieldset>
@@ -47,7 +48,7 @@
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <div class="form-input" id="unit">
+            <div class="form-input  strong-text" id="unit">
                 <fieldset>
                     <legend>Đơn vị tính</legend>
                     <input name="unit" type="text" value="${supply.unit}" maxlength="15" required/>
@@ -69,8 +70,8 @@
     <div id="center-page_list">
         <div id="table-tools">
             <div id="table-description">
-                <b>Số lượng vật tư</b>
-                <span id="quantity">${supplyList.size()}</span>
+                <b>Số lượng </b>
+                <span id="quantity">${supplyList.size()} vật tư</span>
             </div>
             <div id="table-search-box">
                 <select id="search">
@@ -163,6 +164,6 @@
     </div>
 </div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
-<%--<script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-supply.js"></script>--%>
+<script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-supply.js"></script>
 </body>
 </html>

@@ -43,6 +43,7 @@ public class ApplicationConfig {
         messagePairs.put("error_account_02", "Username đã tồn tại!");
 
         messagePairs.put("error_employee_01", "Mã nhân viên, hoặc CMND đã tồn tại!");
+        messagePairs.put("error_supply_01", "Mã vật tư đã tồn tại!");
 
 
         return messagePairs;

@@ -20,11 +20,12 @@ public class Supply {
 
     @NotBlank(message = "error_entity_03")
     @Length(min = 1, max = 30, message = "error_entity_03")
-    @Pattern(regexp = "^[A-ZÀ-ỹ0-9]( [A-ZÀ-ỹ0-9])*$", message = "error_entity_03")
+    @Pattern(regexp = "^[A-Za-zÀ-ỹ]{1,50}( [A-Za-zÀ-ỹ0-9]{1,30})*$", message = "error_entity_03")
     private String supplyName;
 
     @NotBlank(message = "error_entity_03")
     @Length(min = 1, max = 15, message = "error_entity_03")
+    @Pattern(regexp = "^[A-Za-zÀ-ỹ]{1,15}$", message = "error_entity_03")
     private String unit;
 
     @NotNull(message = "error_entity_03")
