@@ -2,8 +2,7 @@ package com.CSDLPT.ManagingMaterials.service.BranchService;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
-import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.model.Supply;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.repository.SupplyRepository;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -51,11 +49,12 @@ public class SupplyService {
         return modelAndView;
     }
 
-    public List<Supply> findSupply(HttpServletRequest request, ReqDtoFindingAction<Supply> searchingObject) {
-        searchingObject.setObjectType(Supply.class);
-        searchingObject.setSearchingTable("VATTU");
-        searchingObject.setSortingCondition("ORDER BY MAVT DESC, TENVT ASC");
-        return findingActionService.findingDataWithPaging(request, searchingObject);
+    public List<Supply> findSupply(HttpServletRequest request, ReqDtoRetrievingData<Supply> searchingObject) {
+//        searchingObject.setObjectType(Supply.class);
+//        searchingObject.setSearchingTable("VATTU");
+//        searchingObject.setSortingCondition("ORDER BY MAVT DESC, TENVT ASC");
+//        return findingActionService.findingDataWithPaging(request, searchingObject);
+        return List.of();
     }
 
     public void addSupply(HttpServletRequest request, Supply supply) throws DuplicateKeyException, SQLException {

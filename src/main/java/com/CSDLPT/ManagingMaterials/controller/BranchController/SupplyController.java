@@ -1,6 +1,6 @@
 package com.CSDLPT.ManagingMaterials.controller.BranchController;
 
-import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.model.Supply;
 import com.CSDLPT.ManagingMaterials.service.BranchService.SupplyService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ public class SupplyController {
 
     @PostMapping("/find-supply-by-values")
     public ResponseEntity<List<Supply>> findingSuppliesByValues(
-            @RequestBody ReqDtoFindingAction<Supply> searchingObject,
+            @RequestBody ReqDtoRetrievingData<Supply> searchingObject,
             HttpServletRequest request
     ){
         try {

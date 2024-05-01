@@ -1,5 +1,6 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
+const paginationSize = 1;
 const urlParams = new URLSearchParams(window.location.search);
 const colorMap = {
     A: "#FFBF00",
@@ -71,7 +72,6 @@ function customizeValidateEventInputTags(validatingBlocks) {
 
 function customizeSubmitFormAction(formSelector, validatingBlocks) {
     $(formSelector).onsubmit = e => {
-        console.log(validatingBlocks);
         if (confirm("Bạn chắc chắn muốn thực hiện thao tác?") === true) {
             let isValid = Object.entries(validatingBlocks)
                 .every(elem => {
@@ -130,51 +130,176 @@ function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupp
     const selectedOption = $('#table-search-box select#search');
 
     const handleSearchingListEvent = async e => {
-        const tableBody = $('table tbody');
-
-        //--Stop searching if searching-input-value is empty.
-        if (searchingInputTag.value === "")     tableBody.innerHTML = searchingSupportingDataSource.plainDataRows;
-
         //--Stop searching if searched-field is not selected yet.
-        else if (selectedOption.value === "")   alert("Bạn hãy chọn trường cần tìm kiếm trước!");
+        if (selectedOption.value === "")   alert("Bạn hãy chọn trường cần tìm kiếm trước!");
 
         //--Start data with selected field by calling an API.
         else {
+            searchingSupportingDataSource.searchingValue = searchingInputTag.value;
+            searchingSupportingDataSource.searchingField = selectedOption.value;
+
+            //-- Set pagination-bar[page-1] before "fetch" to make the printed-result start from [1].
+            searchingSupportingDataSource.page = 1;
+
             //--Use await to make this "fetch" action sync with this "handleSearchingListEvent" method.
-            await fetch(
-                window.location.origin + searchingSupportingDataSource.fetchDataAction,
-                {//--Request Options
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        searchingField: selectedOption.value,
-                        searchingValue: searchingInputTag.value
-                    })
-                }
-            )
-                .then(response => {
-                    if (response.ok)   return response.json();
-                    else    throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
-                })
-                .then(foundDataSet => {
-                    if (foundDataSet.length === 0) {
-                        tableBody.innerHTML = '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
-                    } else {
-                        tableBody.innerHTML = foundDataSet
-                            .map(dataOfRow => searchingSupportingDataSource.rowFormattingEngine(dataOfRow))
-                            .join("");
-                    }
-                })
-                .catch(error => console.error("Đã có lỗi xảy ra:", error));
+            await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
+
+            //--Rebuild pagination-bar for searching-action.
+            customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
         }
-        searchingSupportingDataSource.objectsQuantityInTableCustomizer();
-        searchingSupportingDataSource.allAvatarColorCustomizer();
-        customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
+
         return null;
     }
 
     $('#table-search-box i').addEventListener("click", handleSearchingListEvent);
     searchingInputTag.addEventListener("keyup", handleSearchingListEvent);
+}
+
+async function fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource) {
+    await fetch(
+        window.location.origin + searchingSupportingDataSource.fetchDataAction,
+        {//--Request Options
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                page: searchingSupportingDataSource.page,
+                searchingField: searchingSupportingDataSource.searchingField,
+                searchingValue: searchingSupportingDataSource.searchingValue
+            })
+        }
+    )
+        .then(response => {
+            if (response.ok)   return response.json();
+            else    throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
+        })
+        .then(responseObject => {
+            if (responseObject["totalObjectsQuantityResult"] === 0) {
+                searchingSupportingDataSource.tableBody.innerHTML =
+                    '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
+            } else {
+                //--Render table-data by found result-data-set.
+                searchingSupportingDataSource.tableBody.innerHTML = responseObject["resultDataSet"]
+                    .map(dataOfRow => searchingSupportingDataSource.rowFormattingEngine(dataOfRow))
+                    .join("");
+                searchingSupportingDataSource.objectsQuantityInTableCustomizer();
+                searchingSupportingDataSource.allAvatarColorCustomizer();
+
+                //--Custom all updating-action for update-btns.
+                customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
+            }
+            //--Return responseObject for next promise-block.
+            return responseObject;
+        })
+        .then(responseObject => {
+            //--Update objects-quantity value of hidden-input-tag to build pagination-bar.
+            //--Maybe "0" if data-set is empty.
+            searchingSupportingDataSource.objectsQuantity = responseObject["totalObjectsQuantityResult"];
+        })
+        .catch(error => { console.error("Đã có lỗi xảy ra:", error) });
+}
+
+function customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource) {
+    const totalPages = Math.ceil(searchingSupportingDataSource.objectsQuantity / paginationSize);
+    let currentPage = searchingSupportingDataSource.page;
+
+    (function generatePaginationBar(paginationBarSelector = 'div#table-footer_main') {
+        let indexNumberBlocks = '';
+        const indexNumberFormatter = (page) => `<span class="interact-page-btn page-${page}">${page}</span>`;
+        const dotsSeparatorBlock = '<span style="align-self: end; padding: 0 10px; font-size: 1.4rem;">...</span>';
+
+        //--case.1 - [1 2 3 4 5 6 7]
+        if (totalPages <= 7) {
+            for (let index = 1; index <= totalPages; index++) {
+                //--Loop from [1] to the [current-selected-page-number + 2].
+                //--Note: the range [+ 2] is used for user-selecting-benefit.
+                //--Note: max of this indexNumbers is [7], so we don't need to add "..." into this bar.
+                indexNumberBlocks += indexNumberFormatter(index);
+            }
+
+            //--Build the pagination-bar-constructor.
+            $(paginationBarSelector).innerHTML = `<div id="index-numbers">${indexNumberBlocks}</div>`;
+        }
+        //--case.2 - [<] [1] 2 3 ... 15 [>]
+        //--Note: the [15] "max-page-number" is just an example, use the "total-pages" instead.
+        else {
+            //--case.2.1 - [<] 1 2 3 [4] 5 6 ... 15 [>]
+            if (currentPage <= 4) {
+                //--Build the child part - [<] 1 2 3 [4] 5 6 ____
+                for (let index = 1; index <= (currentPage + 2); index++) {
+                    //--Loop from [1] to the [current-selected-page-number + 2].
+                    //--Note: the range [+ 2] is used for user-selecting-benefit.
+                    indexNumberBlocks += indexNumberFormatter(index);
+                }
+
+                //--Build the child part - ____ ... 15 [>]
+                indexNumberBlocks += (dotsSeparatorBlock + indexNumberFormatter(totalPages));
+            }
+            //--case.2.2 - [<] 1 ... 10 11 [12] 13 14 15 [>]
+            else if ((totalPages - currentPage) <= 4) {
+                //--Build the child part - [<] 1 ... ____
+                indexNumberBlocks += (indexNumberFormatter(1) + dotsSeparatorBlock);
+
+                //--Build the child part - ____ 10 11 [12] 13 14 15 [>]
+                for (let index = (currentPage - 2); index <= totalPages; index++) {
+                    //--Loop from the [current-selected-page-number - 2] to [15].
+                    //--Note: the range [- 2] is used for user-selecting-benefit.
+                    indexNumberBlocks += indexNumberFormatter(index);
+                }
+            }
+            //--case.2.3 - [<] 1 ... 3 4 [5] 6 7 ... 15 [>]
+            else {
+                //--Build the child part - [<] 1 ... ____
+                indexNumberBlocks += (indexNumberFormatter(1) + dotsSeparatorBlock);
+
+                //--Build the child part - ____ 3 4 [5] 6 7 ____
+                for (let index = (currentPage - 2); index <= (currentPage + 2); index++) {
+                    //--Loop from the [current-selected-page-number - 2] to [current-selected-page-number - 2].
+                    //--Note: the range [- 2], [+ 2] is used for user-selecting-benefit.
+                    indexNumberBlocks += indexNumberFormatter(index);
+                }
+                //--Build the child part - ____ ... 15 [>]
+                indexNumberBlocks += (dotsSeparatorBlock + indexNumberFormatter(totalPages));
+            }
+
+            //--Build the pagination-bar-constructor.
+            $(paginationBarSelector).innerHTML = `
+                <span id="page-moving-previous-btn" class="interact-page-btn"><i class="fa-solid fa-angle-left"></i></span>
+                <div id="index-numbers">${indexNumberBlocks}</div>
+                <span id="page-moving-next-btn" class="interact-page-btn"><i class="fa-solid fa-angle-right"></i></span>
+            `;
+            //--Check if user's touching the limit of index-number-pages.
+            //--Note: "deactivated" class make the moving-btn can't click.
+            //--Note: "deactivated" class make the btn can't complete the "fetch" action.
+            if (currentPage === totalPages) $('span#page-moving-next-btn').classList.add("deactivated");
+            else if (currentPage === 1)     $('span#page-moving-previous-btn').classList.add("deactivated");
+        }
+
+        //--Note: "selected-page" class make the index-btn highlighted.
+        //--Note: "deactivated" class make the btn can't complete the "fetch" action.
+        $(`${paginationBarSelector} div#index-numbers span.page-${currentPage}`).classList
+            .add("selected-page", "deactivated");
+    })();
+
+    //--Customize selected pagination-btns-action.
+    $$('span.interact-page-btn').forEach(btn => {
+        btn.addEventListener("click", async e => {
+            if (!btn.classList.contains("deactivated")) {
+            //--If the selected btn is not the index-number-page-btns.
+                if (btn.classList.contains("page-moving-previous-btn"))         currentPage = currentPage - 1;
+                else if (btn.classList.contains("page-moving-previous-btn"))    currentPage = currentPage + 1;
+            //--Or else.
+                else    currentPage = btn.textContent.trim();
+
+                //--Starting fetch data by selected-pagination-bar-btns.
+                searchingSupportingDataSource.page = currentPage;
+                await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
+
+                //--Change the selected page-index-number-btn.
+                $(`div#index-numbers span.selected-page.deactivated`).classList.remove("selected-page", "deactivated");
+                $(`div#index-numbers span.page-${currentPage}`).classList.add("selected-page", "deactivated");
+            }
+        });
+    });
 }
 
 function customizeSortingListEvent() {

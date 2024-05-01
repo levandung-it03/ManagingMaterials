@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.controller.BranchController;
 
-import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.service.BranchService.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,18 +28,17 @@ public class EmployeeController {
     private final Logger logger;
     
     @PostMapping("/find-employee-by-values")
-    public ResponseEntity<List<Employee>> findingEmployeesByValues(
-        @RequestBody ReqDtoFindingAction<Employee> searchingObject,
+    public ResponseEntity<ResDtoRetrievingData<Employee>> findingEmployeesByValues(
+        @RequestBody ReqDtoRetrievingData<Employee> searchingObject,
         HttpServletRequest request
-    ){
+    ) {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(employeeService.findEmployee(request, searchingObject));
         } catch (Exception e) {
-            return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(List.of());
+            logger.info(e.toString());
+            return null;
         }
     }
     

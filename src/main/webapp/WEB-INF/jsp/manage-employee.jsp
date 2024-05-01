@@ -114,95 +114,36 @@
         <form action="/service/v1/branch/delete-employee" method="POST">
             <table>
                 <thead>
-                <tr>
-                    <th id="employeeId">
-                        Mã
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="base-profile">
-                        Thông tin cơ bản
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="birthday">
-                        Ngày sinh
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="address">
-                        Địa chỉ
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="salary">
-                        Lương
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="update">Cập nhật</th>
-                    <th id="delete">Xoá</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${employeeList}" var="eachEmployeeInfo">
-                    <tr id="${eachEmployeeInfo.employeeId}">
-                        <td plain-value="${eachEmployeeInfo.employeeId}" class="employeeId">${eachEmployeeInfo.employeeId}</td>
-                        <td plain-value="${eachEmployeeInfo.identifier} ${eachEmployeeInfo.lastName} ${eachEmployeeInfo.firstName}" class="base-profile">
-                            <span class="mock-avatar">${eachEmployeeInfo.firstName.charAt(0)}</span>
-                            <div class="employee-info">
-                                <span class="employeeName">
-                                    <b class="lastName">${eachEmployeeInfo.lastName}</b>
-                                    <b class="firstName"> ${eachEmployeeInfo.firstName}</b>
-                                </span>
-                                <p class="identifier">${eachEmployeeInfo.identifier}</p>
-                            </div>
-                        </td>
-                        <fmt:formatDate value="${eachEmployeeInfo.birthday}" pattern="yyyy-MM-dd" var="formattedBirthday"/>
-                        <td plain-value="${formattedBirthday}" class="birthday">${formattedBirthday}</td>
-                        <td plain-value="${eachEmployeeInfo.address}" class="address">${eachEmployeeInfo.address}</td>
-                        <c:set var="salary" value="${eachEmployeeInfo.salary.intValue()}" />
-                        <td plain-value="${salary}" class="salary">${salary}</td>
-                        <td style="display:none" plain-value="${eachEmployeeInfo.branch}" class="branch">${eachEmployeeInfo.branch}</td>
-                        <td class="table-row-btn update">
-                            <a id="${eachEmployeeInfo.employeeId}">
-                                <i class="fa-regular fa-pen-to-square"></i>
-                            </a>
-                        </td>
-                        <td class="table-row-btn delete">
-                            <button name="deleteBtn" value="${eachEmployeeInfo.employeeId}">
-                                <i class="fa-regular fa-trash-can"></i>
-                            </button>
-                        </td>
+                    <tr>
+                        <th id="employeeId">
+                            Mã
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="base-profile">
+                            Thông tin cơ bản
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="birthday">
+                            Ngày sinh
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="address">
+                            Địa chỉ
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="salary">
+                            Lương
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="update">Cập nhật</th>
+                        <th id="delete">Xoá</th>
                     </tr>
-                </c:forEach>
-                </tbody>
+                </thead>
+                <tbody></tbody>
             </table>
         </form>
         <div id="table-footer">
-            <c:set var="prefixUrl" value="/branch/employee/manage-employee?page=" scope="page"/>
-            <div id="table-footer_main">
-                    <span class="interact-page-btn">
-                        <a href="${prefixUrl}${(currentPage == 1) ? currentPage : (currentPage - 1)}">
-                            <i class="fa-solid fa-angle-left"></i>
-                        </a>
-                    </span>
-                <div id="pages-content">
-                    <c:if test="${currentPage > 1}">
-                            <span class="index-btn">
-                                <a href="${prefixUrl}${currentPage - 1}">${currentPage - 1}</a>
-                            </span>
-                    </c:if>
-                    <span class="index-btn">
-                            <a href="${prefixUrl}${currentPage}">${currentPage}</a>
-                        </span>
-                    <c:if test="${employeeList.size() != 0}">
-                            <span class="index-btn">
-                                <a href="${prefixUrl}${currentPage + 1}">${currentPage + 1}</a>
-                            </span>
-                    </c:if>
-                </div>
-                <span class="interact-page-btn">
-                        <a href="${prefixUrl}${(employeeList.size() == 0) ? currentPage : (currentPage + 1)}">
-                            <i class="fa-solid fa-angle-right"></i>
-                        </a>
-                    </span>
-            </div>
+            <div id="table-footer_main"></div>
         </div>
     </div>
 </div>

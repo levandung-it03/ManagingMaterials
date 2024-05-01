@@ -41,7 +41,7 @@ function AddEmployeeComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-function ListComponent(AddEmployeeComponentFunc) {
+async function ListComponent(AddEmployeeComponentFunc) {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddEmployeeComponentFunc,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
@@ -62,8 +62,15 @@ function ListComponent(AddEmployeeComponentFunc) {
         ]
     };
     const searchingSupportingDataSource = {
+        //--Initialize field-values for firstly fetch action.
+        page: 1,
+        objectsQuantity: 0,
+        searchingField: "MANV",
+        searchingValue: "",
+
+        //--Main fields for searching-action.
+        tableBody: $('div#center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-employee-by-values",
-        plainDataRows: $('table tbody').innerHTML,
         objectsQuantityInTableCustomizer: () => $('#quantity').textContent = $$('table tbody tr').length + " người",
         allAvatarColorCustomizer: customizeAllAvatarColor,
         rowFormattingEngine: (row) => `
@@ -95,11 +102,15 @@ function ListComponent(AddEmployeeComponentFunc) {
                 </td>
             </tr>`
     };
+    //--Firstly "fetch" data to put into empty-table-as-list.
+    await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
+    customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
+    customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
+
     customizeSortingListEvent();
     customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
-    customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
 }
 
 function GeneralMethods() {
@@ -108,8 +119,8 @@ function GeneralMethods() {
     customizeClosingNoticeMessageEvent();
 }
 
-(function main() {
+(async function main() {
     AddEmployeeComponent();
-    ListComponent(AddEmployeeComponent);
+    await ListComponent(AddEmployeeComponent);
     GeneralMethods();
 })();

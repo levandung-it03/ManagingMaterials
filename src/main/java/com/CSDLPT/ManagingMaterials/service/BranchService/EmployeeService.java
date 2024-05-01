@@ -2,10 +2,10 @@ package com.CSDLPT.ManagingMaterials.service.BranchService;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Employee;
-import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.repository.BranchRepository;
 import com.CSDLPT.ManagingMaterials.repository.EmployeeRepository;
 import com.CSDLPT.ManagingMaterials.service.GeneralService.FindingActionService;
@@ -27,6 +27,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final BranchRepository branchRepository;
     private final FindingActionService findingActionService;
+    private final ResDtoRetrievingData<Employee> resDtoRetrievingData;
 
     public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
@@ -52,14 +53,8 @@ public class EmployeeService {
             modelAndView.addObject("employee", Employee.builder().employeeId(nextEmployeeId).build());
         }
 
-        //--Prepare data of employee-list.
-        PageObject pageObj = new PageObject(request);
-        List<Employee> employeeList = employeeRepository.findAll(connectionHolder, pageObj);
-
-        //--Data for EmployeeList component.
-        modelAndView.addObject("employeeList", employeeList);
+        //--Data for AddingEmployeeForm component.
         modelAndView.addObject("branchesList", branchesList);
-        modelAndView.addObject("currentPage", pageObj.getPage());
 
         //--Close Connection.
         connectionHolder.removeConnection();
@@ -93,12 +88,29 @@ public class EmployeeService {
         connectionHolder.removeConnection();
     }
 
-    public List<Employee> findEmployee(HttpServletRequest request, ReqDtoFindingAction<Employee> searchingObject) {
+    public ResDtoRetrievingData<Employee> findEmployee(
+        HttpServletRequest request,
+        ReqDtoRetrievingData<Employee> searchingObject
+    ) throws SQLException {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
         searchingObject.setObjectType(Employee.class);
-        searchingObject.setSearchingTable("NHANVIEN");
+        searchingObject.setSearchingTable("NhanVien");
+        searchingObject.setSearchingTableIdName("MANV");
         searchingObject.setMoreCondition("TrangThaiXoa = 0");
         searchingObject.setSortingCondition("ORDER BY MANV DESC, TEN ASC, HO DESC");
-        return findingActionService.findingDataWithPaging(request, searchingObject);
+
+        //--IoC at here.
+        resDtoRetrievingData.setResultDataSet(findingActionService
+            .findingDataWithPaging(connectionHolder, searchingObject));
+        resDtoRetrievingData.setTotalObjectsQuantityResult(findingActionService
+            .countAllByCondition(connectionHolder, searchingObject));
+
+        //--Close Connection.
+        connectionHolder.removeConnection();
+
+        return resDtoRetrievingData;
     }
 
     public void updateEmployee(Employee employee, HttpServletRequest request) throws SQLException {

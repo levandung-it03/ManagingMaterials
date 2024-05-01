@@ -2,9 +2,11 @@ package com.CSDLPT.ManagingMaterials.service.BranchService;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.model.Warehouse;
 import com.CSDLPT.ManagingMaterials.repository.WarehouseRepository;
+import com.CSDLPT.ManagingMaterials.service.GeneralService.FindingActionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.List;
 public class WarehouseService {
     private final StaticUtilMethods staticUtilMethods;
     private final WarehouseRepository warehouseRepository;
+    private final FindingActionService findingActionService;
 
     public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) throws SQLException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
@@ -40,5 +43,13 @@ public class WarehouseService {
         connectionHolder.removeConnection();
 
         return modelAndView;
+    }
+
+    public List<Warehouse> findWarehouse(HttpServletRequest request, ReqDtoRetrievingData<Warehouse> searchingObject) {
+//        searchingObject.setObjectType(Warehouse.class);
+//        searchingObject.setSearchingTable("KHO");
+//        searchingObject.setSortingCondition("ORDER BY MAKHO ASC");
+//        return findingActionService.findingDataWithPaging(request, searchingObject);
+        return List.of();
     }
 }

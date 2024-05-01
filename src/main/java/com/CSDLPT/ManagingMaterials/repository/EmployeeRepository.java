@@ -18,13 +18,13 @@ public class EmployeeRepository {
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Logger logger;
 
-    public boolean isExistingEmployeeByIdentifier(DBConnectionHolder conHolder, String identifier) {
+    public boolean isExistingEmployeeByIdentifier(DBConnectionHolder connectHolder, String identifier) {
         //--Using a 'result' var to make our logic easily to control.
         boolean result = false;
 
         try {
             //--Prepare data to execute Stored Procedure.
-            CallableStatement statement = conHolder.getConnection().prepareCall("{call SP_CHECK_EXIST_CMND(?)}");
+            CallableStatement statement = connectHolder.getConnection().prepareCall("{call SP_CHECK_EXIST_CMND(?)}");
             statement.setString(1, identifier);
             ResultSet resultSet = statement.executeQuery();
 

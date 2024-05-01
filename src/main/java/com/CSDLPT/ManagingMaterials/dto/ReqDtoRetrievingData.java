@@ -1,6 +1,6 @@
 package com.CSDLPT.ManagingMaterials.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReqDtoFindingAction <T> {
+public class ReqDtoRetrievingData<T> {
     private Class<T> objectType = null;
     private String searchingTable = "";
+    private String searchingTableIdName = "";
     private String moreCondition = "";
     private String sortingCondition = "";
-    @NotBlank
     private String searchingField;
-    @NotBlank
     private String searchingValue;
+    @NotNull
+    private Integer page = 1;
 }

@@ -1,7 +1,7 @@
 package com.CSDLPT.ManagingMaterials.service.GeneralService;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.dto.ReqDtoFindingAction;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +24,12 @@ public class FindingActionService {
 
     /**Spring JdbcTemplate: Finding data of any entities**/
     public <T> List<T> findingDataWithPaging(
-        HttpServletRequest request,
-        ReqDtoFindingAction<T> searchingObject
+        DBConnectionHolder connectionHolder,
+        ReqDtoRetrievingData<T> searchingObject
     ) {
-        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
         List<T> result = new ArrayList<>();
         try {
-            PageObject pageObject = new PageObject(request);
+            PageObject pageObject = new PageObject(searchingObject.getPage());
             String query = "SELECT * FROM " + searchingObject.getSearchingTable()
                 + " WHERE " + searchingObject.getMoreCondition() + (searchingObject.getMoreCondition().isEmpty() ? " " : " AND ")
                 + searchingObject.getSearchingField() + " LIKE '%' + ? +'%' "
@@ -50,9 +48,8 @@ public class FindingActionService {
             //--Close all connection.
             resultSet.close();
             statement.close();
-            connectionHolder.removeConnection();
         } catch (SQLException e) {
-            logger.info("Error In 'findByField' of EmployeeRepository: " + e);
+            logger.info("Error In 'findByField' of FindingActionService: " + e);
         }
         return result;
     }
@@ -78,5 +75,31 @@ public class FindingActionService {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    /**Spring JdbcTemplate: Counting all entities quantity by input-condition**/
+    public <T> int countAllByCondition(DBConnectionHolder connectionHolder, ReqDtoRetrievingData<T> searchingObject) {
+        int result = 0;
+        try {
+            String query = "SELECT SOLUONG = COUNT(" + searchingObject.getSearchingTableIdName()
+                + ") FROM " + searchingObject.getSearchingTable()
+                + " WHERE " + searchingObject.getMoreCondition() + (searchingObject.getMoreCondition().isEmpty() ? " " : " AND ")
+                + searchingObject.getSearchingField() + " LIKE '%' + ? +'%' ";
+
+            //--Prepare data to execute Stored Procedure.
+            PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
+            statement.setString(1, searchingObject.getSearchingValue());
+            ResultSet resultSet = statement.executeQuery();
+
+            //--If at least one Employee is existing.
+            if (resultSet.next()) result = resultSet.getInt("SOLUONG");
+
+            //--Close all connection.
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'countAll' of EmployeeRepository: " + e);
+        }
+        return result;
     }
 }
