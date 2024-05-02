@@ -53,7 +53,7 @@
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <input type="submit" value="Thêm nhân viên">
+            <input type="submit" value="Thêm kho">
         </form>
     </div>
     <div id="center-page_list">

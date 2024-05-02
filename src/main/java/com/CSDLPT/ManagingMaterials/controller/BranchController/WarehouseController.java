@@ -54,6 +54,7 @@ public class WarehouseController {
         Set<ConstraintViolation<Warehouse>> violations = hibernateValidator.validate(warehouse);
         if (!violations.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
+            redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
             return "redirect:" + standingUrl;
         }
 

@@ -4,6 +4,7 @@ import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoRetrievingData;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.model.Warehouse;
@@ -25,7 +26,6 @@ public class WarehouseService {
     private final StaticUtilMethods staticUtilMethods;
     private final WarehouseRepository warehouseRepository;
     private final FindingActionService findingActionService;
-    private final ResDtoRetrievingData<Warehouse> resDtoRetrievingData;
 
     public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) {
         //--Prepare a modelAndView object to symbolize the whole page.
@@ -33,7 +33,7 @@ public class WarehouseService {
             .customResponseModelView(request, model.asMap(), "manage-warehouse");
 
         //--Check if there's a response warehouse to map into adding-form when an error occurred.
-        Warehouse warehouse = (Warehouse) model.asMap().get("warehouse");
+        Warehouse warehouse = (Warehouse) model.asMap().get("submittedWarehouse");
         if (warehouse != null)   modelAndView.addObject("warehouse", warehouse);
 
         return modelAndView;
@@ -43,31 +43,23 @@ public class WarehouseService {
         HttpServletRequest request,
         ReqDtoRetrievingData<Warehouse> searchingObject
     ) throws SQLException {
-        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
+        //--Preparing data to fetch.
         searchingObject.setObjectType(Warehouse.class);
         searchingObject.setSearchingTable("KHO");
         searchingObject.setSearchingTableIdName("MAKHO");
         searchingObject.setSortingCondition("ORDER BY MAKHO ASC");
 
-        //--IoC at here.
-        resDtoRetrievingData.setResultDataSet(findingActionService
-            .findingDataWithPaging(connectionHolder, searchingObject));
-        resDtoRetrievingData.setTotalObjectsQuantityResult(findingActionService
-            .countAllByCondition(connectionHolder, searchingObject));
-
-        //--Close Connection.
-        connectionHolder.removeConnection();
-
-        return resDtoRetrievingData;
+        return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
     }
 
     public void addWarehouse(HttpServletRequest request, Warehouse warehouse) throws SQLException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
-        String branch = request.
+        //--Prepare data to save.
+        ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
+        warehouse.setBranch(userInfo.getBranch());
+
         warehouseRepository.save(connectionHolder, warehouse);
 
         //--Close Connection.

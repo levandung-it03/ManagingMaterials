@@ -24,17 +24,18 @@ public class FindingActionService {
     private final Logger logger;
     private final StaticUtilMethods staticUtilMethods;
 
-    /**Spring JdbcTemplate: Combination between .findingDataWithPaging() and .countAllByCondition() **/
+    /**Spring JdbcTemplate: Combination between .findingDataWithPagination() and .countAllByCondition() **/
     public <T> ResDtoRetrievingData<T> findingDataAndServePaginationBarFormat(
-        DBConnectionHolder connectionHolder,
+        HttpServletRequest request,
         ReqDtoRetrievingData<T> searchingObject
-    ) {
+    ) throws SQLException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
+        //--IoC here.
         ResDtoRetrievingData<T> resDtoRetrievingData = new ResDtoRetrievingData<>();
         resDtoRetrievingData.setResultDataSet(
-            this.findingDataWithPaging(connectionHolder, searchingObject)
+            this.findingDataWithPagination(connectionHolder, searchingObject)
         );
         resDtoRetrievingData.setTotalObjectsQuantityResult(
             this.countAllByCondition(connectionHolder, searchingObject)
@@ -47,7 +48,7 @@ public class FindingActionService {
     }
 
     /**Spring JdbcTemplate: Finding data of any entities**/
-    public <T> List<T> findingDataWithPaging(
+    public <T> List<T> findingDataWithPagination(
         DBConnectionHolder connectionHolder,
         ReqDtoRetrievingData<T> searchingObject
     ) {

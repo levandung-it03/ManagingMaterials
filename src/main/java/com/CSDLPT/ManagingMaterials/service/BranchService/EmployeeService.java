@@ -27,7 +27,6 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final BranchRepository branchRepository;
     private final FindingActionService findingActionService;
-    private final ResDtoRetrievingData<Employee> resDtoRetrievingData;
 
     public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
@@ -91,21 +90,15 @@ public class EmployeeService {
     public ResDtoRetrievingData<Employee> findEmployee(
         HttpServletRequest request,
         ReqDtoRetrievingData<Employee> searchingObject
-    ) throws SQLException, NoSuchFieldException {
+    ) throws SQLException {
+        //--Preparing data to fetch.
         searchingObject.setObjectType(Employee.class);
         searchingObject.setSearchingTable("NhanVien");
         searchingObject.setSearchingTableIdName("MANV");
         searchingObject.setMoreCondition("TrangThaiXoa = 0");
         searchingObject.setSortingCondition("ORDER BY MANV DESC, TEN ASC, HO DESC");
 
-        //--IoC at here.
-        resDtoRetrievingData.setResultDataSet(findingActionService
-            .findingDataWithPaging(connectionHolder, searchingObject));
-        resDtoRetrievingData.setTotalObjectsQuantityResult(findingActionService
-            .countAllByCondition(connectionHolder, searchingObject));
-
-
-        return resDtoRetrievingData;
+        return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
     }
 
     public void updateEmployee(Employee employee, HttpServletRequest request) throws SQLException {

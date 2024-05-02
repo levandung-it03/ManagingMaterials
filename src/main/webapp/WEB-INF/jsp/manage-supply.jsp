@@ -63,7 +63,6 @@
                 <div class="form_text-input_err-message"></div>
             </div>
             <div id="rest-components-for-updating"></div>
-            <input name="pageNumber" value="${pageNumber}" hidden/>
             <input type="submit" value="Thêm vật tư">
         </form>
     </div>

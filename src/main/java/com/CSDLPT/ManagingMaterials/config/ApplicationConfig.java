@@ -45,6 +45,8 @@ public class ApplicationConfig {
 
         messagePairs.put("error_employee_01", "Mã nhân viên, hoặc CMND đã tồn tại!");
 
+        messagePairs.put("ngu", "ngu vai cac!");
+
         return messagePairs;
     }
 }

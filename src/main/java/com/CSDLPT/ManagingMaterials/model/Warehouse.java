@@ -19,7 +19,7 @@ public class Warehouse {
 
     @NotBlank(message = "error_entity_03")
     @Length(min = 1, max = 30, message = "error_entity_03")
-    @Pattern(regexp = "^[A-ZÀ-ỹ0-9]( [A-ZÀ-ỹ0-9])*$", message = "error_entity_03")
+    @Pattern(regexp = "^[A-ZÀ-ỹ0-9]{1,30}( [A-ZÀ-ỹ0-9]{1,30})*$", message = "error_entity_03")
     private String warehouseName;
 
     @NotBlank(message = "error_entity_03")
@@ -27,5 +27,5 @@ public class Warehouse {
     private String address;
 
     @Pattern(regexp = "^[A-Z0-9]{1,10}$", message = "error_entity_03")
-    private String branch;
+    private String branch = null;
 }

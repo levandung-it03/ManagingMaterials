@@ -52,6 +52,7 @@ public class EmployeeController {
         Set<ConstraintViolation<Employee>> violations = hibernateValidator.validate(employee);
         if (!violations.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
+            redirectAttributes.addFlashAttribute("submittedEmployee", employee);
             return "redirect:" + standingUrl;
         }
 

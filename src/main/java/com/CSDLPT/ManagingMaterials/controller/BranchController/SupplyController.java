@@ -52,6 +52,7 @@ public class SupplyController {
         Set<ConstraintViolation<Supply>> violations = hibernateValidator.validate(supply);
         if (!violations.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
+            redirectAttributes.addFlashAttribute("submittedSupply", supply);
             return "redirect:" + standingUrl;
         }
 

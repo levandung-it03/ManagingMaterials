@@ -27,12 +27,12 @@ public class HeaderPagesController {
     }
 
     @GetMapping("/supply/manage-supply")
-    public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) throws SQLException {
+    public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) {
         return supplyService.getManageSupplyPage(request, model);
     }
 
     @GetMapping("/warehouse/manage-warehouse")
-    public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) throws SQLException {
+    public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) {
         return warehouseService.getManageWarehousePage(request, model);
     }
 }

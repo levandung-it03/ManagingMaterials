@@ -26,29 +26,15 @@ public class SupplyService {
     private final StaticUtilMethods staticUtilMethods;
     private final SupplyRepository supplyRepository;
     private final FindingActionService findingActionService;
-    private final ResDtoRetrievingData<Supply> resDtoRetrievingData;
 
-    public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) throws SQLException {
-        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
+    public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) {
         //--Prepare common-components of ModelAndView if we need.
-        ModelAndView modelAndView = staticUtilMethods.customResponseModelView(request, model.asMap(), "manage-supply");
+        ModelAndView modelAndView = staticUtilMethods
+            .customResponseModelView(request, model.asMap(), "manage-supply");
 
         //--If there's an error when handle data with DB, take the submitted-supply-info and give it back to this page
         Supply supply = (Supply) model.asMap().get("submittedSupply");
         if (supply != null)   modelAndView.addObject("supply", supply);
-
-        //--Prepare data of supply-list.
-        PageObject pageObj = new PageObject(request);
-        List<Supply> supplyList = supplyRepository.findAll(connectionHolder, pageObj);
-
-        //--Data for SupplyList component.
-        modelAndView.addObject("supplyList", supplyList);
-        modelAndView.addObject("currentPage", pageObj.getPage());
-
-        //--Close Connection.
-        connectionHolder.removeConnection();
 
         return modelAndView;
     }
@@ -57,24 +43,13 @@ public class SupplyService {
             HttpServletRequest request,
             ReqDtoRetrievingData<Supply> searchingObject
     ) throws SQLException {
-        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
+        //--Preparing data to fetch.
         searchingObject.setObjectType(Supply.class);
         searchingObject.setSearchingTable("Vattu");
         searchingObject.setSearchingTableIdName("MAVT");
         searchingObject.setSortingCondition("ORDER BY TENVT ASC");
 
-        //--IoC at here.
-        resDtoRetrievingData.setResultDataSet(findingActionService
-                .findingDataWithPaging(connectionHolder, searchingObject));
-        resDtoRetrievingData.setTotalObjectsQuantityResult(findingActionService
-                .countAllByCondition(connectionHolder, searchingObject));
-
-        //--Close Connection.
-        connectionHolder.removeConnection();
-
-        return resDtoRetrievingData;
+        return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
     }
 
     public void addSupply(HttpServletRequest request, Supply supply) throws DuplicateKeyException, SQLException {
