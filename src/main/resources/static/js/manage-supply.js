@@ -37,7 +37,7 @@ function AddSupplyComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-function ListComponent(AddSupplyComponentFunc) {
+async function ListComponent(AddSupplyComponentFunc) {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSupplyComponentFunc,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
@@ -45,8 +45,15 @@ function ListComponent(AddSupplyComponentFunc) {
         componentsForUpdating: []
     };
     const searchingSupportingDataSource = {
+        //--Initialize field-values for firstly fetch action.
+        page: 1,
+        objectsQuantity: 0,
+        searchingField: "MAVT",
+        searchingValue: "",
+
+        //--Main fields for searching-action.
+        tableBody: $('div#center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-supply-by-values",
-        plainDataRows: $('table tbody').innerHTML,
         objectsQuantityInTableCustomizer: () => $('#quantity').textContent = $$('table tbody tr').length + " vật tư",
         allAvatarColorCustomizer: () => {},
         rowFormattingEngine: (row) => `
@@ -67,11 +74,15 @@ function ListComponent(AddSupplyComponentFunc) {
                 </td>
             </tr>`
     };
+    //--Firstly "fetch" data to put into empty-table-as-list.
+    await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
+    customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
-    customizeSortingListEvent();
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
     customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
+
+    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+    customizeSortingListEvent();
 }
 
 function GeneralMethods() {
@@ -79,8 +90,8 @@ function GeneralMethods() {
     customizeClosingNoticeMessageEvent();
 }
 
-(function main() {
+(async function main() {
     AddSupplyComponent();
-    ListComponent(AddSupplyComponent);
+    await ListComponent(AddSupplyComponent);
     GeneralMethods();
 })();
