@@ -60,7 +60,7 @@ public class SupplyController {
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException ignored) {
             redirectAttributes.addFlashAttribute("submittedSupply", supply);
-            redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_04");
         } catch (Exception ignored) {
             redirectAttributes.addFlashAttribute("submittedSupply", supply);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");

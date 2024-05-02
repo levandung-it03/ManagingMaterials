@@ -92,9 +92,6 @@ public class EmployeeService {
         HttpServletRequest request,
         ReqDtoRetrievingData<Employee> searchingObject
     ) throws SQLException, NoSuchFieldException {
-        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
         searchingObject.setObjectType(Employee.class);
         searchingObject.setSearchingTable("NhanVien");
         searchingObject.setSearchingTableIdName("MANV");
@@ -107,8 +104,6 @@ public class EmployeeService {
         resDtoRetrievingData.setTotalObjectsQuantityResult(findingActionService
             .countAllByCondition(connectionHolder, searchingObject));
 
-        //--Close Connection.
-        connectionHolder.removeConnection();
 
         return resDtoRetrievingData;
     }

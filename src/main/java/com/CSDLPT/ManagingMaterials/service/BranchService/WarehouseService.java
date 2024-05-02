@@ -27,7 +27,7 @@ public class WarehouseService {
     private final FindingActionService findingActionService;
     private final ResDtoRetrievingData<Warehouse> resDtoRetrievingData;
 
-    public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) throws SQLException {
+    public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) {
         //--Prepare a modelAndView object to symbolize the whole page.
         ModelAndView modelAndView = staticUtilMethods
             .customResponseModelView(request, model.asMap(), "manage-warehouse");
@@ -61,5 +61,16 @@ public class WarehouseService {
         connectionHolder.removeConnection();
 
         return resDtoRetrievingData;
+    }
+
+    public void addWarehouse(HttpServletRequest request, Warehouse warehouse) throws SQLException {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        String branch = request.
+        warehouseRepository.save(connectionHolder, warehouse);
+
+        //--Close Connection.
+        connectionHolder.removeConnection();
     }
 }

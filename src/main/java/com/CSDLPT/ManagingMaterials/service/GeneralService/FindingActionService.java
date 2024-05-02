@@ -2,6 +2,8 @@ package com.CSDLPT.ManagingMaterials.service.GeneralService;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
+import com.CSDLPT.ManagingMaterials.dto.ResDtoRetrievingData;
+import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,28 @@ import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 public class FindingActionService {
     private final Logger logger;
     private final StaticUtilMethods staticUtilMethods;
+
+    /**Spring JdbcTemplate: Combination between .findingDataWithPaging() and .countAllByCondition() **/
+    public <T> ResDtoRetrievingData<T> findingDataAndServePaginationBarFormat(
+        DBConnectionHolder connectionHolder,
+        ReqDtoRetrievingData<T> searchingObject
+    ) {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        ResDtoRetrievingData<T> resDtoRetrievingData = new ResDtoRetrievingData<>();
+        resDtoRetrievingData.setResultDataSet(
+            this.findingDataWithPaging(connectionHolder, searchingObject)
+        );
+        resDtoRetrievingData.setTotalObjectsQuantityResult(
+            this.countAllByCondition(connectionHolder, searchingObject)
+        );
+
+        //--Close Connection.
+        connectionHolder.removeConnection();
+
+        return resDtoRetrievingData;
+    }
 
     /**Spring JdbcTemplate: Finding data of any entities**/
     public <T> List<T> findingDataWithPaging(

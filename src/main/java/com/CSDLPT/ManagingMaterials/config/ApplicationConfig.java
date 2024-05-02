@@ -38,13 +38,12 @@ public class ApplicationConfig {
         messagePairs.put("error_entity_01", "Không tìm thấy ID của đối tượng, vui lòng không sửa đổi phần mềm!");
         messagePairs.put("error_entity_02", "Trường dữ liệu không thể xoá, thay vào đó hãy đổi trạng thái để bảo toàn dữ liệu!");
         messagePairs.put("error_entity_03", "Dữ liệu không hợp lệ, hãy kiểm tra lại!");
+        messagePairs.put("error_entity_04", "Mã đối tượng bị trùng, vui lòng thay đổi!");
 
         messagePairs.put("error_account_01", "Thông tin đăng nhập không đúng!");
         messagePairs.put("error_account_02", "Username đã tồn tại!");
 
         messagePairs.put("error_employee_01", "Mã nhân viên, hoặc CMND đã tồn tại!");
-        messagePairs.put("error_supply_01", "Mã vật tư đã tồn tại!");
-
 
         return messagePairs;
     }

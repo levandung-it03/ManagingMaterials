@@ -5,16 +5,21 @@ import com.CSDLPT.ManagingMaterials.dto.ResDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.model.Warehouse;
 import com.CSDLPT.ManagingMaterials.service.BranchService.WarehouseService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ import java.util.List;
 public class WarehouseController {
     private final WarehouseService warehouseService;
     private final Logger logger;
+    private final Validator hibernateValidator;
 
     @PostMapping("/find-warehouse-by-values")
     public ResponseEntity<ResDtoRetrievingData<Warehouse>> findingWarehousesByValues(
@@ -36,5 +42,31 @@ public class WarehouseController {
             logger.info(e.toString());
             return null;
         }
+    }
+
+    @PostMapping("/add-warehouse")
+    public String addWarehouse(
+        @ModelAttribute("employee") Warehouse warehouse,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
+    ) {
+        final String standingUrl = request.getHeader("Referer");
+        Set<ConstraintViolation<Warehouse>> violations = hibernateValidator.validate(warehouse);
+        if (!violations.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
+            return "redirect:" + standingUrl;
+        }
+
+        try {
+            warehouseService.addWarehouse(request, warehouse);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
+        } catch (DuplicateKeyException ignored) {
+            redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_04");
+        } catch (Exception ignored) {
+            redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+        }
+        return "redirect:" + standingUrl;
     }
 }
