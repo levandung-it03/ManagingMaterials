@@ -71,7 +71,7 @@
         <div id="table-tools">
             <div id="table-description">
                 <b>Số lượng </b>
-                <span id="quantity">${supplyList.size()} vật tư</span>
+                <span id="quantity"></span>
             </div>
             <div id="table-search-box">
                 <select id="search">
@@ -109,57 +109,11 @@
                     <th id="delete">Xoá</th>
                 </tr>
                 </thead>
-                <tbody>
-                <c:forEach items="${supplyList}" var="eachSupplyInfo">
-                    <tr id="${eachSupplyInfo.supplyId}">
-                        <td plain-value="${eachSupplyInfo.supplyId}" class="supplyId">${eachSupplyInfo.supplyId}</td>
-                        <td plain-value="${eachSupplyInfo.supplyName}" class="supplyName">${eachSupplyInfo.supplyName}</td>
-                        <td plain-value="${eachSupplyInfo.unit}" class="unit">${eachSupplyInfo.unit}</td>
-                        <td plain-value="${eachSupplyInfo.quantityInStock}" class="quantityInStock">${eachSupplyInfo.quantityInStock}</td>
-                        <td class="table-row-btn update">
-                            <a id="${eachSupplyInfo.supplyId}">
-                                <i class="fa-regular fa-pen-to-square"></i>
-                            </a>
-                        </td>
-                        <td class="table-row-btn delete">
-                            <button name="deleteBtn" value="${eachSupplyInfo.supplyId}">
-                                <i class="fa-regular fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
+                <tbody></tbody>
             </table>
         </form>
         <div id="table-footer">
-            <c:set var="prefixUrl" value="/branch/supply/manage-supply?page=" scope="page"/>
-            <div id="table-footer_main">
-                    <span class="interact-page-btn">
-                        <a href="${prefixUrl}${(currentPage == 1) ? currentPage : (currentPage - 1)}">
-                            <i class="fa-solid fa-angle-left"></i>
-                        </a>
-                    </span>
-                <div id="pages-content">
-                    <c:if test="${currentPage > 1}">
-                            <span class="index-btn">
-                                <a href="${prefixUrl}${currentPage - 1}">${currentPage - 1}</a>
-                            </span>
-                    </c:if>
-                    <span class="index-btn">
-                            <a href="${prefixUrl}${currentPage}">${currentPage}</a>
-                        </span>
-                    <c:if test="${supplyList.size() != 0}">
-                            <span class="index-btn">
-                                <a href="${prefixUrl}${currentPage + 1}">${currentPage + 1}</a>
-                            </span>
-                    </c:if>
-                </div>
-                <span class="interact-page-btn">
-                        <a href="${prefixUrl}${(supplyList.size() == 0) ? currentPage : (currentPage + 1)}">
-                            <i class="fa-solid fa-angle-right"></i>
-                        </a>
-                    </span>
-            </div>
+            <div id="table-footer_main"></div>
         </div>
     </div>
 </div>
