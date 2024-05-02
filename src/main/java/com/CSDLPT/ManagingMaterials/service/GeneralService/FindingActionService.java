@@ -32,7 +32,7 @@ public class FindingActionService {
             PageObject pageObject = new PageObject(searchingObject.getPage());
             String query = "SELECT * FROM " + searchingObject.getSearchingTable()
                 + " WHERE " + searchingObject.getMoreCondition() + (searchingObject.getMoreCondition().isEmpty() ? " " : " AND ")
-                + searchingObject.getSearchingField() + " LIKE '%' + ? +'%' "
+                + staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()) + " LIKE '%' + ? +'%' "
                 + searchingObject.getSortingCondition() + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
 
@@ -48,7 +48,7 @@ public class FindingActionService {
             //--Close all connection.
             resultSet.close();
             statement.close();
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchFieldException e) {
             logger.info("Error In 'findByField' of FindingActionService: " + e);
         }
         return result;
@@ -84,7 +84,7 @@ public class FindingActionService {
             String query = "SELECT SOLUONG = COUNT(" + searchingObject.getSearchingTableIdName()
                 + ") FROM " + searchingObject.getSearchingTable()
                 + " WHERE " + searchingObject.getMoreCondition() + (searchingObject.getMoreCondition().isEmpty() ? " " : " AND ")
-                + searchingObject.getSearchingField() + " LIKE '%' + ? +'%' ";
+                + staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()) + " LIKE '%' + ? +'%' ";
 
             //--Prepare data to execute Stored Procedure.
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
@@ -97,7 +97,7 @@ public class FindingActionService {
             //--Close all connection.
             resultSet.close();
             statement.close();
-        } catch (SQLException e) {
+        } catch (SQLException | NoSuchFieldException e) {
             logger.info("Error In 'countAll' of EmployeeRepository: " + e);
         }
         return result;

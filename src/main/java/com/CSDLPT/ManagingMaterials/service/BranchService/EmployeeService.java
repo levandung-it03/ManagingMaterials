@@ -91,7 +91,7 @@ public class EmployeeService {
     public ResDtoRetrievingData<Employee> findEmployee(
         HttpServletRequest request,
         ReqDtoRetrievingData<Employee> searchingObject
-    ) throws SQLException {
+    ) throws SQLException, NoSuchFieldException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 

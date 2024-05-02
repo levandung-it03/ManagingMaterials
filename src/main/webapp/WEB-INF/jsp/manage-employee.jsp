@@ -83,7 +83,6 @@
                 <div class="form_text-input_err-message"></div>
             </div>
             <div id="rest-components-for-updating"></div>
-            <input name="pageNumber" value="${pageNumber}" hidden/>
             <input type="submit" value="Thêm nhân viên">
         </form>
         <div id="branchesList" style="display:none">
@@ -96,16 +95,19 @@
         <div id="table-tools">
             <div id="table-description">
                 <b>Số lượng </b>
-                <span id="quantity">${employeeList.size()} người</span>
+                <span id="quantity"></span>
             </div>
             <div id="table-search-box">
                 <select id="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                    <option value="MANV">Mã nhân viên</option>
-                    <option value="CONCAT(CMND, ' ', HO, ' ', TEN)">Thông tin cơ bản</option>
-                    <option value="NGAYSINH">Ngày sinh</option>
-                    <option value="DIACHI">Địa chỉ</option>
-                    <option value="LUONG">Lương</option>
+                    <option value="employeeId">Mã nhân viên</option>
+                    <option value="identifier">CMND</option>
+                    <option value="lastName">Họ</option>
+                    <option value="firstName">Tên</option>
+                    <option value="fullName">Họ và tên</option>
+                    <option value="birthday">Ngày sinh</option>
+                    <option value="address">Địa chỉ</option>
+                    <option value="salary">Lương</option>
                 </select>
                 <input type="text" id="search">
                 <i class="fa-solid fa-magnifying-glass"></i>

@@ -60,15 +60,14 @@
         <div id="table-tools">
             <div id="table-description">
                 <b>Số lượng </b>
-                <span id="quantity">${warehousesList.size()} kho</span>
+                <span id="quantity"></span>
             </div>
             <div id="table-search-box">
                 <select id="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                    <option value="MANV">Mã kho</option>
-                    <option value="TENKHO">Tên kho</option>
-                    <option value="DIACHI">Địa chỉ</option>
-                    <option value="MACN">Chi nhánh</option>
+                    <option value="warehouseId">Mã kho</option>
+                    <option value="warehouseName">Tên kho</option>
+                    <option value="address">Địa chỉ</option>
                 </select>
                 <input type="text" id="search">
                 <i class="fa-solid fa-magnifying-glass"></i>

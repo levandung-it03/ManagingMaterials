@@ -42,21 +42,22 @@ public class StaticUtilMethods {
     public String columnNameStaticDictionary(String fieldName) throws NoSuchFieldException{
         return switch (fieldName) {
             //--Employee(NhanVien) Entity
-            case "employeeId" -> "MANV";
-            case "identifier" -> "CMND";
-            case "lastName" -> "HO";
-            case "firstName" -> "TEN";
-            case "address" -> "DIACHI";
-            case "birthday" -> "NGAYSINH";
-            case "salary" -> "LUONG";
-            case "branch" -> "MACN";
-            case "deletedStatus" -> "TrangThaiXoa";
-            case "warehouseId" -> "MAKHO";
-            case "warehouseName" -> "MAKHO";
-            case "supplyId" -> "MAVT";
-            case "supplyName" -> "TENVT";
-            case "unit" -> "DVT";
-            case "quantityInStock" -> "SOLUONGTON";
+            case "employeeId", "MANV" -> "MANV";
+            case "identifier", "CMND" -> "CMND";
+            case "lastName", "HO" -> "HO";
+            case "firstName", "TEN" -> "TEN";
+            case "fullName" -> "CONCAT(HO, ' ', TEN)";
+            case "address", "DIACHI" -> "DIACHI";
+            case "birthday", "NGAYSINH" -> "NGAYSINH";
+            case "salary", "LUONG" -> "LUONG";
+            case "branch", "MACN" -> "MACN";
+            case "deletedStatus", "TrangThaiXoa" -> "TrangThaiXoa";
+            case "warehouseId", "MAKHO" -> "MAKHO";
+            case "warehouseName", "TENKHO" -> "TENKHO";
+            case "supplyId", "MAVT" -> "MAVT";
+            case "supplyName", "TENVT" -> "TENVT";
+            case "unit", "DVT" -> "DVT";
+            case "quantityInStock", "SOLUONGTON" -> "SOLUONGTON";
             //--More....
 
             default -> throw new NoSuchFieldException("Field not found");
