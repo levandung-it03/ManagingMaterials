@@ -139,7 +139,7 @@ function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupp
             searchingSupportingDataSource.searchingField = selectedOption.value;
 
             //-- Set pagination-bar[page-1] before "fetch" to make the printed-result start from [1].
-            searchingSupportingDataSource.page = 1;
+            searchingSupportingDataSource.currentPage = 1;
 
             //--Use await to make this "fetch" action sync with this "handleSearchingListEvent" method.
             await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
@@ -162,7 +162,7 @@ async function fetchPaginatedDataByValues(searchingSupportingDataSource, updatin
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
-                page: searchingSupportingDataSource.page,
+                page: searchingSupportingDataSource.currentPage,
                 searchingField: searchingSupportingDataSource.searchingField,
                 searchingValue: searchingSupportingDataSource.searchingValue
             })
@@ -184,7 +184,7 @@ async function fetchPaginatedDataByValues(searchingSupportingDataSource, updatin
                 searchingSupportingDataSource.objectsQuantityInTableCustomizer();
                 searchingSupportingDataSource.allAvatarColorCustomizer();
 
-                //--Custom all updating-action for update-btns.
+                //--Custom all updating-action for update-buttons.
                 customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
             }
             //--Return responseObject for next promise-block.
@@ -194,18 +194,21 @@ async function fetchPaginatedDataByValues(searchingSupportingDataSource, updatin
             //--Update objects-quantity value of hidden-input-tag to build pagination-bar.
             //--Maybe "0" if data-set is empty.
             searchingSupportingDataSource.objectsQuantity = responseObject["totalObjectsQuantityResult"];
+
+            //--Rebuild pagination-bar when each fetch-action was made.
+            customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
         })
         .catch(error => { console.error("Đã có lỗi xảy ra:", error) });
 }
 
 function customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource) {
-    const totalPages = Math.ceil(searchingSupportingDataSource.objectsQuantity / paginationSize);
-    let currentPage = searchingSupportingDataSource.page;
-
     (function generatePaginationBar(paginationBarSelector = 'div#table-footer_main') {
-        let indexNumberBlocks = '';
         const indexNumberFormatter = (page) => `<span class="interact-page-btn page-${page}">${page}</span>`;
         const dotsSeparatorBlock = '<span style="align-self: end; padding: 0 10px; font-size: 1.4rem;">...</span>';
+
+        //--Temporary empty result.
+        let indexNumberBlocks = '';
+        const totalPages = Math.ceil(searchingSupportingDataSource.objectsQuantity / paginationSize);
 
         //--case.1 - [1 2 3 4 5 6 7]
         if (totalPages <= 7) {
@@ -223,9 +226,9 @@ function customizePaginationBarAndFetchData(searchingSupportingDataSource, updat
         //--Note: the [15] "max-page-number" is just an example, use the "total-pages" instead.
         else {
             //--case.2.1 - [<] 1 2 3 [4] 5 6 ... 15 [>]
-            if (currentPage <= 4) {
+            if (searchingSupportingDataSource.currentPage <= 4) {
                 //--Build the child part - [<] 1 2 3 [4] 5 6 ____
-                for (let index = 1; index <= (currentPage + 2); index++) {
+                for (let index = 1; index <= (searchingSupportingDataSource.currentPage + 2); index++) {
                     //--Loop from [1] to the [current-selected-page-number + 2].
                     //--Note: the range [+ 2] is used for user-selecting-benefit.
                     indexNumberBlocks += indexNumberFormatter(index);
@@ -235,12 +238,12 @@ function customizePaginationBarAndFetchData(searchingSupportingDataSource, updat
                 indexNumberBlocks += (dotsSeparatorBlock + indexNumberFormatter(totalPages));
             }
             //--case.2.2 - [<] 1 ... 10 11 [12] 13 14 15 [>]
-            else if ((totalPages - currentPage) <= 4) {
+            else if ((totalPages - searchingSupportingDataSource.currentPage) <= 4) {
                 //--Build the child part - [<] 1 ... ____
                 indexNumberBlocks += (indexNumberFormatter(1) + dotsSeparatorBlock);
 
                 //--Build the child part - ____ 10 11 [12] 13 14 15 [>]
-                for (let index = (currentPage - 2); index <= totalPages; index++) {
+                for (let index = (searchingSupportingDataSource.currentPage - 2); index <= totalPages; index++) {
                     //--Loop from the [current-selected-page-number - 2] to [15].
                     //--Note: the range [- 2] is used for user-selecting-benefit.
                     indexNumberBlocks += indexNumberFormatter(index);
@@ -252,7 +255,8 @@ function customizePaginationBarAndFetchData(searchingSupportingDataSource, updat
                 indexNumberBlocks += (indexNumberFormatter(1) + dotsSeparatorBlock);
 
                 //--Build the child part - ____ 3 4 [5] 6 7 ____
-                for (let index = (currentPage - 2); index <= (currentPage + 2); index++) {
+                for (let index = (searchingSupportingDataSource.currentPage - 2);
+                     index <= (searchingSupportingDataSource.currentPage + 2); index++) {
                     //--Loop from the [current-selected-page-number - 2] to [current-selected-page-number - 2].
                     //--Note: the range [- 2], [+ 2] is used for user-selecting-benefit.
                     indexNumberBlocks += indexNumberFormatter(index);
@@ -270,36 +274,34 @@ function customizePaginationBarAndFetchData(searchingSupportingDataSource, updat
             //--Check if user's touching the limit of index-number-pages.
             //--Note: "deactivated" class make the moving-btn can't click.
             //--Note: "deactivated" class make the btn can't complete the "fetch" action.
-            if (currentPage === totalPages) $('span#page-moving-next-btn').classList.add("deactivated");
-            else if (currentPage === 1)     $('span#page-moving-previous-btn').classList.add("deactivated");
+            if (searchingSupportingDataSource.currentPage === totalPages)
+                $('span#page-moving-next-btn').classList.add("deactivated");
+            else if (searchingSupportingDataSource.currentPage === 1)
+                $('span#page-moving-previous-btn').classList.add("deactivated");
         }
 
         //--Note: "selected-page" class make the index-btn highlighted.
         //--Note: "deactivated" class make the btn can't complete the "fetch" action.
-        $(`${paginationBarSelector} div#index-numbers span.page-${currentPage}`).classList
-            .add("selected-page", "deactivated");
+        $(`${paginationBarSelector} div#index-numbers span.page-${searchingSupportingDataSource.currentPage}`)
+            .classList.add("selected-page", "deactivated");
     })();
 
-    //--Customize selected pagination-btns-action.
-    $$('span.interact-page-btn').forEach(btn => {
-        btn.addEventListener("click", async e => {
-            if (!btn.classList.contains("deactivated")) {
-            //--If the selected btn is not the index-number-page-btns.
-                if (btn.classList.contains("page-moving-previous-btn"))         currentPage = currentPage - 1;
-                else if (btn.classList.contains("page-moving-previous-btn"))    currentPage = currentPage + 1;
-            //--Or else.
-                else    currentPage = btn.textContent.trim();
+    (function customizeSelectingInteractivePageButtons() {
+        $$('span.interact-page-btn').forEach(btn => {
+            btn.addEventListener("click", async e => {
+                if (!btn.classList.contains("deactivated")) {
+                    //--If the selected btn is not the index-number-page-buttons.
+                    if (btn.id.trim() === "page-moving-previous-btn")   searchingSupportingDataSource.currentPage--;
+                    else if (btn.id.trim() === "page-moving-next-btn")  searchingSupportingDataSource.currentPage++;
+                    //--Or else.
+                    else    searchingSupportingDataSource.currentPage = Number.parseInt(btn.textContent.trim());
 
-                //--Starting fetch data by selected-pagination-bar-btns.
-                searchingSupportingDataSource.page = currentPage;
-                await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
-
-                //--Change the selected page-index-number-btn.
-                $(`div#index-numbers span.selected-page.deactivated`).classList.remove("selected-page", "deactivated");
-                $(`div#index-numbers span.page-${currentPage}`).classList.add("selected-page", "deactivated");
-            }
+                    //--Starting fetch data by selected-pagination-bar-buttons.
+                    await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
+                }
+            });
         });
-    });
+    })();
 }
 
 function customizeSortingListEvent() {

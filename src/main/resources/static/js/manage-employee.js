@@ -63,7 +63,7 @@ async function ListComponent(AddEmployeeComponentFunc) {
     };
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
-        page: 1,
+        currentPage: 1,
         objectsQuantity: 0,
         searchingField: "MANV",
         searchingValue: "",
@@ -104,7 +104,6 @@ async function ListComponent(AddEmployeeComponentFunc) {
     };
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
-    customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
     customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);

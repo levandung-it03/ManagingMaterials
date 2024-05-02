@@ -40,7 +40,7 @@ async function ListComponent(AddWarehouseComponentFunc) {
     };
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
-        page: 1,
+        currentPage: 1,
         objectsQuantity: 0,
         searchingField: "MAKHO",
         searchingValue: "",
@@ -70,7 +70,6 @@ async function ListComponent(AddWarehouseComponentFunc) {
     };
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
-    customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
     customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
