@@ -53,7 +53,6 @@
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <input name="pageNumber" value="${pageNumber}" hidden/>
             <input type="submit" value="Thêm nhân viên">
         </form>
     </div>
@@ -96,56 +95,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${warehousesList}" var="eachWarehouseInfo">
-                    <tr id="${eachWarehouseInfo.warehouseId}">
-                        <td plain-value="${eachWarehouseInfo.warehouseId}" class="warehouseId">${eachWarehouseInfo.warehouseId}</td>
-                        <td plain-value="${eachWarehouseInfo.warehouseName}" class="warehouseName">${eachWarehouseInfo.warehouseName}</td>
-                        <td plain-value="${eachWarehouseInfo.address}" class="address">${eachWarehouseInfo.address}</td>
-                        <td style="display:none" plain-value="${eachWarehouseInfo.branch}" class="branch">${eachWarehouseInfo.branch}</td>
-                        <td class="table-row-btn update">
-                            <a id="${eachWarehouseInfo.warehouseId}">
-                                <i class="fa-regular fa-pen-to-square"></i>
-                            </a>
-                        </td>
-                        <td class="table-row-btn delete">
-                            <button name="deleteBtn" value="${eachWarehouseInfo.warehouseId}">
-                                <i class="fa-regular fa-trash-can"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </c:forEach>
                 </tbody>
             </table>
         </form>
         <div id="table-footer">
-            <c:set var="prefixUrl" value="/branch/warehouse/manage-warehouse?page=" scope="page"/>
-            <div id="table-footer_main">
-                    <span class="interact-page-btn">
-                        <a href="${prefixUrl}${(currentPage == 1) ? currentPage : (currentPage - 1)}">
-                            <i class="fa-solid fa-angle-left"></i>
-                        </a>
-                    </span>
-                <div id="pages-content">
-                    <c:if test="${currentPage > 1}">
-                            <span class="index-btn">
-                                <a href="${prefixUrl}${currentPage - 1}">${currentPage - 1}</a>
-                            </span>
-                    </c:if>
-                    <span class="index-btn">
-                            <a href="${prefixUrl}${currentPage}">${currentPage}</a>
-                        </span>
-                    <c:if test="${warehouseList.size() != 0}">
-                            <span class="index-btn">
-                                <a href="${prefixUrl}${currentPage + 1}">${currentPage + 1}</a>
-                            </span>
-                    </c:if>
-                </div>
-                <span class="interact-page-btn">
-                        <a href="${prefixUrl}${(warehouseList.size() == 0) ? currentPage : (currentPage + 1)}">
-                            <i class="fa-solid fa-angle-right"></i>
-                        </a>
-                    </span>
-            </div>
+            <div id="table-footer_main"></div>
         </div>
     </div>
 </div>

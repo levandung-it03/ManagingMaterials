@@ -31,7 +31,7 @@ function AddEmployeeComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-function ListComponent(AddWarehouseComponentFunc) {
+async function ListComponent(AddWarehouseComponentFunc) {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddWarehouseComponentFunc,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
@@ -39,8 +39,15 @@ function ListComponent(AddWarehouseComponentFunc) {
         componentsForUpdating: []
     };
     const searchingSupportingDataSource = {
+        //--Initialize field-values for firstly fetch action.
+        page: 1,
+        objectsQuantity: 0,
+        searchingField: "MAKHO",
+        searchingValue: "",
+
+        //--Main fields for searching-action.
+        tableBody: $('div#center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-warehouse-by-values",
-        plainDataRows: $('table tbody').innerHTML,
         objectsQuantityInTableCustomizer: () => $('#quantity').textContent = $$('table tbody tr').length + " kho",
         allAvatarColorCustomizer: () => {},
         rowFormattingEngine: (row) => `
@@ -61,11 +68,15 @@ function ListComponent(AddWarehouseComponentFunc) {
                 </td>
             </tr>`
     };
+    //--Firstly "fetch" data to put into empty-table-as-list.
+    await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
+    customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
-    customizeSortingListEvent();
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
     customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
+
+    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+    customizeSortingListEvent();
 }
 
 function GeneralMethods() {
@@ -73,8 +84,8 @@ function GeneralMethods() {
     customizeClosingNoticeMessageEvent();
 }
 
-(function main() {
+(async function main() {
     AddEmployeeComponent();
-    ListComponent(AddEmployeeComponent);
+    await ListComponent(AddEmployeeComponent);
     GeneralMethods();
 })();
