@@ -3,15 +3,11 @@ package com.CSDLPT.ManagingMaterials.repository;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.model.Employee;
-import com.CSDLPT.ManagingMaterials.model.PageObject;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -59,42 +55,6 @@ public class EmployeeRepository {
             statement.close();
         } catch (SQLException | NullPointerException e) {
             logger.info("Error In 'getNextEmployeeId' of EmployeeRepository: " + e);
-        }
-        return result;
-    }
-
-    public List<Employee> findAll(DBConnectionHolder connectHolder, PageObject pageObj) {
-        //--Using a 'List<Employee>' var as our result.
-        List<Employee> result = new ArrayList<>();
-
-        try {
-            //--Prepare data to execute Query Statement.
-            PreparedStatement statement = connectHolder.getConnection().prepareStatement(
-                String.format("{call SP_LIST_ALL_EMPLOYEES(%s, %s)}", pageObj.getPage(), pageObj.getSize())
-            );
-            ResultSet resultSet = statement.executeQuery();
-
-            //--Mapping all data into 'List<Employee>' result var.
-            while (resultSet.next()) {
-                result.add(
-                    Employee.builder()
-                        .employeeId(resultSet.getInt("MANV"))
-                        .identifier(resultSet.getString("CMND").trim())
-                        .lastName(resultSet.getString("HO").trim())
-                        .firstName(resultSet.getString("TEN").trim())
-                        .address(resultSet.getString("DIACHI").trim())
-                        .birthday(resultSet.getDate("NGAYSINH"))
-                        .salary(resultSet.getDouble("LUONG"))
-                        .branch(resultSet.getString("MACN").trim())
-                        .build()
-                );
-            }
-
-            //--Close all connection.
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            logger.info("Error In 'findAll' of EmployeeRepository: " + e);
         }
         return result;
     }
@@ -161,7 +121,7 @@ public class EmployeeRepository {
 
             connectionHolder.removeConnection();
         } catch (SQLException e) {
-            logger.info("Error In 'delete; of EmployeeRepository: " + e);
+            logger.info("Error In 'delete' of EmployeeRepository: " + e);
         }
         return result;
     }

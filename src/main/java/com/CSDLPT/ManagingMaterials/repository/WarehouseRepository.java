@@ -1,50 +1,17 @@
 package com.CSDLPT.ManagingMaterials.repository;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.model.Warehouse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
 public class WarehouseRepository {
     private final Logger logger;
-
-    public List<Warehouse> findAll(DBConnectionHolder connectHolder, PageObject pageObj) {
-        List<Warehouse> result = new ArrayList<>();
-        try {
-            //--Prepare data to execute Query Statement.
-            PreparedStatement statement = connectHolder.getConnection().prepareStatement(
-                String.format("{call SP_LIST_ALL_WAREHOUSES(%s, %s)}", pageObj.getPage(), pageObj.getSize())
-            );
-            ResultSet resultSet = statement.executeQuery();
-
-            //--Mapping all data into 'List<Warehouse>' result var.
-            while (resultSet.next()) {
-                result.add(
-                    Warehouse.builder()
-                        .warehouseId(resultSet.getString("MAKHO").trim())
-                        .warehouseName(resultSet.getString("TENKHO").trim())
-                        .address(resultSet.getString("DIACHI").trim())
-                        .branch(resultSet.getString("MACN").trim())
-                        .build()
-                );
-            }
-
-            //--Close all connection.
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            logger.info("Error In 'findAll' of WarehouseRepository: " + e);
-        }
-        return result;
-    }
 
     public int save(DBConnectionHolder connectHolder, Warehouse warehouse) {
         try {
@@ -85,6 +52,45 @@ public class WarehouseRepository {
             logger.info("Error In 'update' of WarehouseRepository: " + e);
             return 0;
         }
+    }
+
+    public boolean isExistingWarehouseByWarehouseId(DBConnectionHolder conHolder, String warehouseId) {
+        //--Using a 'result' var to make our logic easily to control.
+        boolean result = false;
+
+        try {
+            //--Prepare data to execute Stored Procedure.
+            CallableStatement statement = conHolder.getConnection().prepareCall("{? = call SP_CHECK_EXIST_WAREHOUSE_ID(?)}");
+            //--Register the output parameter
+            statement.registerOutParameter(1, Types.BOOLEAN);
+            statement.setString(2, warehouseId);
+
+            statement.execute();
+            result = statement.getBoolean(1);
+
+            //--Close all connection.
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'existingWarehouseId' of WarehouseRepository: " + e);
+        }
+        return result;
+    }
+
+    public int delete(DBConnectionHolder connectionHolder, String warehouseId) {
+        int result = 0;
+        try {
+            PreparedStatement statement = connectionHolder.getConnection()
+                .prepareStatement("DELETE FROM Kho WHERE MAKHO = ?;");
+            statement.setString(1, warehouseId);
+
+            //--Retrieve affected rows to know if our Query worked correctly.
+            result = statement.executeUpdate();
+
+            connectionHolder.removeConnection();
+        } catch (SQLException e) {
+            logger.info("Error In 'delete' of WarehouseRepository: " + e);
+        }
+        return result;
     }
 
     public void mapDataIntoStatement(PreparedStatement statement, Warehouse warehouse) throws SQLException {

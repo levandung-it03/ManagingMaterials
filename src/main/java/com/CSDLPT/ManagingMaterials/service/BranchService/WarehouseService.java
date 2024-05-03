@@ -5,22 +5,17 @@ import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
-import com.CSDLPT.ManagingMaterials.model.Employee;
-import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.model.Warehouse;
 import com.CSDLPT.ManagingMaterials.repository.WarehouseRepository;
 import com.CSDLPT.ManagingMaterials.service.GeneralService.FindingActionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -54,13 +49,17 @@ public class WarehouseService {
         return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
     }
 
-    public void addWarehouse(HttpServletRequest request, Warehouse warehouse) throws SQLException {
+    public void addWarehouse(HttpServletRequest request, Warehouse warehouse) throws SQLException, DuplicateKeyException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
         //--Prepare data to save.
         ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
         warehouse.setBranch(userInfo.getBranch());
+
+        //--Check If 'MAKHO' is already existing or not.
+        if (warehouseRepository.isExistingWarehouseByWarehouseId(connectionHolder, warehouse.getWarehouseId()))
+            throw new DuplicateKeyException("Can't add an existing warehouse!");
 
         if (warehouseRepository.save(connectionHolder, warehouse) == 0)
             throw new SQLException("Something wrong with SQL");
@@ -73,10 +72,26 @@ public class WarehouseService {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
+        //--Check If 'MAKHO' is already existing or not.
+        if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectionHolder, warehouse.getWarehouseId()))
+            throw new DuplicateKeyException("Updated Warehouse Id not found!");
+
         if (warehouseRepository.update(connectionHolder, warehouse) == 0)
             throw new SQLException("There's an error with SQL Server!");
 
         //--Close Connection.
         connectionHolder.removeConnection();
+    }
+
+    public void deleteWarehouse(String warehouseId, HttpServletRequest request) throws SQLException {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        //--Check If 'MAKHO' is already existing or not.
+        if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectionHolder, warehouseId))
+            throw new DuplicateKeyException("Deleted Warehouse Id not found!");
+
+        if (warehouseRepository.delete(connectionHolder, warehouseId) == 0)
+            throw new SQLException("Something wrong happened in your DBMS");
     }
 }

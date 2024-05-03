@@ -55,7 +55,6 @@ async function ListComponent(AddWarehouseComponentFunc) {
                 <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
                 <td plain-value="${row.warehouseName}" class="warehouseName">${row.warehouseName}</td>
                 <td plain-value="${row.address}" class="address">${row.address}</td>
-                <td style="display:none" plain-value="${row.branch}" class="branch">${row.branch}</td>
                 <td class="table-row-btn update">
                     <a id="${row.warehouseId}">
                         <i class="fa-regular fa-pen-to-square"></i>

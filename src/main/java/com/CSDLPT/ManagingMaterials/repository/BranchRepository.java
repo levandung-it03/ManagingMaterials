@@ -1,7 +1,6 @@
 package com.CSDLPT.ManagingMaterials.repository;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.model.Branch;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;

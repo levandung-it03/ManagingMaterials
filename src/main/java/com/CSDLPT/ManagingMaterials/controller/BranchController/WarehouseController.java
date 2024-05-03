@@ -13,12 +13,10 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Controller
@@ -81,11 +79,31 @@ public class WarehouseController {
         try {
             warehouseService.updateWarehouse(warehouse, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
-        } catch (NumberFormatException e) {
+        } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
             logger.info(e.toString());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            logger.info(e.toString());
+        }
+        return "redirect:" + standingUrl;
+    }
+
+    @PostMapping("/delete-warehouse")
+    public String deleteWarehouse(
+        @RequestParam("deleteBtn") String warehouseId,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
+    ) {
+        final String standingUrl = request.getHeader("Referer");
+        try {
+            warehouseService.deleteWarehouse(warehouseId, request);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
+        } catch (NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
+            logger.info(e.toString());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_02");
             logger.info(e.toString());
         }
         return "redirect:" + standingUrl;
