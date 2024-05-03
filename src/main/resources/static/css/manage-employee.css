@@ -105,7 +105,7 @@ table tr td.employeeId {
 table tr th#base-profile,
 table tr td.base-profile {
     text-align: start;
-    width: 25%;
+    width: 23%;
 }
 table tr td.base-profile {
     display: flex;
@@ -136,16 +136,20 @@ table tr td.birthday {
 table tr th#salary,
 table tr td.salary {
     text-align: start;
-    width: 10%;
+    width: 12%;
 }
 table tr th#address,
 table tr td.address {
     text-align: start;
-    width: 27%;
+    width: 20%;
 }
 table tr th#update,
 table tr td.update,
 table tr th#delete,
 table tr td.delete {
-    width: 8%;
+    width: 7%;
+}
+table tr th#addAccount,
+table tr td.addAccount {
+    width: 9%;
 }

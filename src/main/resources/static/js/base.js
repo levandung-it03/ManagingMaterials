@@ -34,6 +34,14 @@ let tempCounter = 0;
 function tst() { tempCounter++; console.log(tempCounter); }
 function log(v) {console.log(v);}
 
+function salaryFormattingEngine(salary) {
+    const salaryAsString = salary + "";
+    let result = "";
+    for (let index = salaryAsString.length; index >= 0; index-=3)
+        result = "," + salaryAsString.substring(index - 3, index) + result;
+    return result.slice(1) + "VNĐ";
+}
+
 function customizeClosingNoticeMessageEvent() {
     const errMessageCloseBtn = $('div#message-block div.error-service-message i#error-service-message_close-btn');
     const succeedMessageCloseBtn = $('div#message-block div.succeed-service-message i#succeed-service-message_close-btn');
@@ -289,10 +297,11 @@ function customizePaginationBarAndFetchData(searchingSupportingDataSource, updat
                 previousBtn.classList.add("deactivated");
         }
 
+        const selectedIndexBtn = $(`${paginationBarSelector} div#index-numbers span.page-${searchingSupportingDataSource.currentPage}`);
         //--Note: "selected-page" class make the index-btn highlighted.
         //--Note: "deactivated" class make the btn can't complete the "fetch" action.
-        $(`${paginationBarSelector} div#index-numbers span.page-${searchingSupportingDataSource.currentPage}`)
-            .classList.add("selected-page", "deactivated");
+        if (selectedIndexBtn !== null)
+            selectedIndexBtn.classList.add("selected-page", "deactivated");
     })();
 
     (function customizeSelectingInteractivePageButtons() {
@@ -403,7 +412,8 @@ function handlingCreateUpdatingForm(updatingBtn, updatingSupportingDataSource) {
         allBlocksContainInputTag.forEach(formInputDivBlock => {
             formInputDivBlock.querySelector('input').setAttribute("value", updatedObjectRow
                 .querySelector('.' + formInputDivBlock.id)
-                .textContent.trim());
+                .getAttribute('plain-value').trim()
+            );
         });
     const allBlocksContainSelectTag = newForm.querySelectorAll('div.form-select');
     if (allBlocksContainSelectTag !== null)

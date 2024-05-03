@@ -77,21 +77,26 @@ async function ListComponent(AddEmployeeComponentFunc) {
         rowFormattingEngine: (row) => `
             <tr id="${row.employeeId}">
                 <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
-                <td plain-value="${row.identifier} ${row.lastName} ${row.firstName}" class="base-profile">
+                <td class="base-profile">
                     <span class="mock-avatar">${row.firstName.charAt(0)}</span>
                     <div class="employee-info">
                         <span class="employeeName">
-                            <b class="lastName">${row.lastName}</b>
-                            <b class="firstName"> ${row.firstName}</b>
+                            <b plain-value="${row.lastName}" class="lastName">${row.lastName}</b>
+                            <b plain-value="${row.firstName}" class="firstName"> ${row.firstName}</b>
                         </span>
-                        <p class="identifier">${row.identifier}</p>
+                        <p plain-value="${row.identifier}" class="identifier">${row.identifier}</p>
                     </div>
                 </td>
                 <td plain-value="${row.birthday.substring(0, 10)}" class="birthday">${row.birthday.substring(0, 10)}</td>
-                <td plain-value="${row.salary}" class="address">${row.address}</td>
-                <td plain-value="${row.salary}" class="salary">${row.salary}</td>
+                <td plain-value="${row.address}" class="address">${row.address}</td>
+                <td plain-value="${row.salary}" class="salary">${salaryFormattingEngine(row.salary)}</td>
                 <td style="display:none" plain-value="${row.branch}" class="branch">${row.branch}</td>
                 <td class="table-row-btn update">
+                    <a id="${row.employeeId}">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </a>
+                </td>
+                <td class="table-row-btn addAccount">
                     <a id="${row.employeeId}">
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a>

@@ -39,7 +39,7 @@ public class WarehouseService {
     public ResDtoRetrievingData<Warehouse> findWarehouse(
         HttpServletRequest request,
         ReqDtoRetrievingData<Warehouse> searchingObject
-    ) throws SQLException {
+    ) throws SQLException, NoSuchFieldException {
         //--Preparing data to fetch.
         searchingObject.setObjectType(Warehouse.class);
         searchingObject.setSearchingTable("KHO");

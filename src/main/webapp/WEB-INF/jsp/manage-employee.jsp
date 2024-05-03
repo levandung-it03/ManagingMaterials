@@ -138,6 +138,7 @@
                             <i class="fa-solid fa-arrow-down-a-z"></i>
                         </th>
                         <th id="update">Cập nhật</th>
+                        <th id="addAccount">Thêm tài khoản</th>
                         <th id="delete">Xoá</th>
                     </tr>
                 </thead>

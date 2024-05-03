@@ -42,7 +42,7 @@ public class SupplyService {
     public ResDtoRetrievingData<Supply> findSupply(
             HttpServletRequest request,
             ReqDtoRetrievingData<Supply> searchingObject
-    ) throws SQLException {
+    ) throws SQLException, NoSuchFieldException {
         //--Preparing data to fetch.
         searchingObject.setObjectType(Supply.class);
         searchingObject.setSearchingTable("Vattu");

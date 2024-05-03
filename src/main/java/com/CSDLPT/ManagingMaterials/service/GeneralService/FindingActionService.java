@@ -16,29 +16,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
+import static com.CSDLPT.ManagingMaterials.config.StaticUtilMethods.*;
 
 @Service
 @RequiredArgsConstructor
 public class FindingActionService {
     private final Logger logger;
     private final StaticUtilMethods staticUtilMethods;
+    private String conditionOfQuery;
 
     /**Spring JdbcTemplate: Combination between .findingDataWithPagination() and .countAllByCondition() **/
     public <T> ResDtoRetrievingData<T> findingDataAndServePaginationBarFormat(
         HttpServletRequest request,
         ReqDtoRetrievingData<T> searchingObject
-    ) throws SQLException {
+    ) throws SQLException, NoSuchFieldException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        //--Generate the condition syntax of query.
+        List<String> fieldInfo = staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField());
+        this.conditionOfQuery = String.format(
+            "%s AND %s LIKE '%%'+?+'%%' ",
+            searchingObject.getMoreCondition().isEmpty() ? "TRUE" : searchingObject.getMoreCondition(),
+            //--Type-casting syntax of this query corresponding with data-type.
+            switch (fieldInfo.getLast()) {
+                case NUM_TYPE -> String.format(
+                    "CAST(CAST(%s AS BIGINT) AS NVARCHAR(50))",
+                    staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst()
+                );
+                case DATE_TYPE -> String.format(
+                    "CAST(%s AS NVARCHAR)",
+                    staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst()
+                );
+                default -> staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst();
+            }
+        );
 
         //--IoC here.
         ResDtoRetrievingData<T> resDtoRetrievingData = new ResDtoRetrievingData<>();
         resDtoRetrievingData.setResultDataSet(
-            this.findingDataWithPagination(connectionHolder, searchingObject)
-        );
+            this.findingDataWithPagination(connectionHolder, searchingObject));
         resDtoRetrievingData.setTotalObjectsQuantityResult(
-            this.countAllByCondition(connectionHolder, searchingObject)
-        );
+            this.countAllByCondition(connectionHolder, searchingObject));
 
         //--Close Connection.
         connectionHolder.removeConnection();
@@ -54,14 +73,16 @@ public class FindingActionService {
         List<T> result = new ArrayList<>();
         try {
             PageObject pageObject = new PageObject(searchingObject.getPage());
-            String query = "SELECT * FROM " + searchingObject.getSearchingTable()
-                + " WHERE " + searchingObject.getMoreCondition() + (searchingObject.getMoreCondition().isEmpty() ? " " : " AND ")
-                + staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()) + " LIKE '%' + ? +'%' "
-                + searchingObject.getSortingCondition() + " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            String query = String.format(
+                "SELECT * FROM %s WHERE %s %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY",
+                searchingObject.getSearchingTable(),
+                this.conditionOfQuery,
+                searchingObject.getSortingCondition()
+            );
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
 
             //--Prepare data of employee-list.
-            statement.setString(1, searchingObject.getSearchingValue());
+            statement.setString(1, String.valueOf(searchingObject.getSearchingValue()));
             statement.setInt(2, (pageObject.getPage() - 1) * pageObject.getSize());
             statement.setInt(3, pageObject.getSize());
 
@@ -72,7 +93,7 @@ public class FindingActionService {
             //--Close all connection.
             resultSet.close();
             statement.close();
-        } catch (SQLException | NoSuchFieldException e) {
+        } catch (SQLException e) {
             logger.info("Error In 'findByField' of FindingActionService: " + e);
         }
         return result;
@@ -89,9 +110,7 @@ public class FindingActionService {
                 //--Use "Field" class to set all field's values in "object" type "T".
                 field.set(object,
                     //--Get value from resultSet
-                    resultSet.getObject(
-                        staticUtilMethods.columnNameStaticDictionary(field.getName())
-                    )
+                    resultSet.getObject(staticUtilMethods.columnNameStaticDictionary(field.getName()).getFirst())
                 );
             }
 
@@ -105,10 +124,12 @@ public class FindingActionService {
     public <T> int countAllByCondition(DBConnectionHolder connectionHolder, ReqDtoRetrievingData<T> searchingObject) {
         int result = 0;
         try {
-            String query = "SELECT SOLUONG = COUNT(" + searchingObject.getSearchingTableIdName()
-                + ") FROM " + searchingObject.getSearchingTable()
-                + " WHERE " + searchingObject.getMoreCondition() + (searchingObject.getMoreCondition().isEmpty() ? " " : " AND ")
-                + staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()) + " LIKE '%' + ? +'%' ";
+            String query = String.format(
+                "SELECT SOLUONG = COUNT(%s) FROM %s WHERE %s",
+                searchingObject.getSearchingTableIdName(),
+                searchingObject.getSearchingTable(),
+                this.conditionOfQuery
+            );
 
             //--Prepare data to execute Stored Procedure.
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
@@ -121,7 +142,7 @@ public class FindingActionService {
             //--Close all connection.
             resultSet.close();
             statement.close();
-        } catch (SQLException | NoSuchFieldException e) {
+        } catch (SQLException e) {
             logger.info("Error In 'countAll' of EmployeeRepository: " + e);
         }
         return result;

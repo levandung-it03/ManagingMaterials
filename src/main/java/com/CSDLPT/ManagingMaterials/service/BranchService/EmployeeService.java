@@ -90,7 +90,7 @@ public class EmployeeService {
     public ResDtoRetrievingData<Employee> findEmployee(
         HttpServletRequest request,
         ReqDtoRetrievingData<Employee> searchingObject
-    ) throws SQLException {
+    ) throws SQLException, NoSuchFieldException {
         //--Preparing data to fetch.
         searchingObject.setObjectType(Employee.class);
         searchingObject.setSearchingTable("NhanVien");
