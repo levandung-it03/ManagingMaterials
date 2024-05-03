@@ -41,14 +41,14 @@ async function ListComponent(AddSupplyComponentFunc) {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSupplyComponentFunc,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-supply?supplyId=",
+        updatingAction: "/service/v1/branch/update-supply",
         componentsForUpdating: []
     };
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
-        page: 1,
+        currentPage: 1,
         objectsQuantity: 0,
-        searchingField: "MAVT",
+        searchingField: "supplyId",
         searchingValue: "",
 
         //--Main fields for searching-action.
@@ -76,7 +76,6 @@ async function ListComponent(AddSupplyComponentFunc) {
     };
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
-    customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
     customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);

@@ -46,7 +46,7 @@ public class WarehouseController {
 
     @PostMapping("/add-warehouse")
     public String addWarehouse(
-        @ModelAttribute("employee") Warehouse warehouse,
+        @ModelAttribute("warehouse") Warehouse warehouse,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
@@ -67,6 +67,26 @@ public class WarehouseController {
         } catch (Exception ignored) {
             redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+        }
+        return "redirect:" + standingUrl;
+    }
+
+    @PostMapping("/update-warehouse")
+    public String updateWarehouse(
+        @ModelAttribute("warehouse") Warehouse warehouse,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
+    ) {
+        final String standingUrl = request.getHeader("Referer");
+        try {
+            warehouseService.updateWarehouse(warehouse, request);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
+        } catch (NumberFormatException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
+            logger.info(e.toString());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            logger.info(e.toString());
         }
         return "redirect:" + standingUrl;
     }

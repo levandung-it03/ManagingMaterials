@@ -7,7 +7,13 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Map;
+import java.time.LocalDate;
+import java.util.TimeZone;
 
 @Component
 @RequiredArgsConstructor
@@ -62,5 +68,19 @@ public class StaticUtilMethods {
 
             default -> throw new NoSuchFieldException("Field not found");
         };
+    }
+
+    /**Spring JdbcTemplate: this static method help us find converts java.util.Date to java.sql.Date and fix Timezone**/
+    public java.sql.Date dateUtilToSqlDate(java.util.Date inputDate) {
+        int[] arrDate = Arrays.stream(new SimpleDateFormat("dd/MM/yyyy").format(inputDate).split("/"))
+            .mapToInt(Integer::parseInt)
+            .toArray();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT-17"));
+        //--Tháng (0-indexed)
+        calendar.set(arrDate[2], arrDate[1] - 1, arrDate[0]);
+
+        return new java.sql.Date(calendar.getTimeInMillis());
     }
 }

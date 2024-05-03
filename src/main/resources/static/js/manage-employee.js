@@ -45,7 +45,7 @@ async function ListComponent(AddEmployeeComponentFunc) {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddEmployeeComponentFunc,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-employee?employeeId=",
+        updatingAction: "/service/v1/branch/update-employee",
         componentsForUpdating: [
             //--Create 'select' block to serve selecting-another-branch.
             `<div class="form-select" id="branch">
@@ -54,6 +54,7 @@ async function ListComponent(AddEmployeeComponentFunc) {
                     <select data="" name="branch">${
                         [...$$('div#branchesList span.hidden-data-fields')].map(tag => {
                             const value = tag.textContent.trim();
+                            tag.outerHTML = null;
                             return `<option value="${value}">${value}</option>`;
                         }).join("")
                     }</select>
@@ -65,7 +66,7 @@ async function ListComponent(AddEmployeeComponentFunc) {
         //--Initialize field-values for firstly fetch action.
         currentPage: 1,
         objectsQuantity: 0,
-        searchingField: "MANV",
+        searchingField: "employeeId",
         searchingValue: "",
 
         //--Main fields for searching-action.

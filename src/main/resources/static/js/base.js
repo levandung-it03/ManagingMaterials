@@ -30,6 +30,9 @@ const colorMap = {
     Y: "#FFFF00",
     Z: "#0014A8"
 };
+let tempCounter = 0;
+function tst() { tempCounter++; console.log(tempCounter); }
+function log(v) {console.log(v);}
 
 function customizeClosingNoticeMessageEvent() {
     const errMessageCloseBtn = $('div#message-block div.error-service-message i#error-service-message_close-btn');
@@ -72,6 +75,7 @@ function customizeValidateEventInputTags(validatingBlocks) {
 
 function customizeSubmitFormAction(formSelector, validatingBlocks) {
     $(formSelector).onsubmit = e => {
+        console.log($(formSelector));
         if (confirm("Bạn chắc chắn muốn thực hiện thao tác?") === true) {
             let isValid = Object.entries(validatingBlocks)
                 .every(elem => {
@@ -179,7 +183,10 @@ async function fetchPaginatedDataByValues(searchingSupportingDataSource, updatin
             } else {
                 //--Render table-data by found result-data-set.
                 searchingSupportingDataSource.tableBody.innerHTML = responseObject["resultDataSet"]
-                    .map(dataOfRow => searchingSupportingDataSource.rowFormattingEngine(dataOfRow))
+                    .map(dataOfRow => {
+                        for (let field in dataOfRow)    if (dataOfRow[field] === null)  dataOfRow[field] = "";
+                        return searchingSupportingDataSource.rowFormattingEngine(dataOfRow);
+                    })
                     .join("");
                 searchingSupportingDataSource.objectsQuantityInTableCustomizer();
                 searchingSupportingDataSource.allAvatarColorCustomizer();
@@ -274,10 +281,12 @@ function customizePaginationBarAndFetchData(searchingSupportingDataSource, updat
             //--Check if user's touching the limit of index-number-pages.
             //--Note: "deactivated" class make the moving-btn can't click.
             //--Note: "deactivated" class make the btn can't complete the "fetch" action.
-            if (searchingSupportingDataSource.currentPage === totalPages)
-                $('span#page-moving-next-btn').classList.add("deactivated");
-            else if (searchingSupportingDataSource.currentPage === 1)
-                $('span#page-moving-previous-btn').classList.add("deactivated");
+            const nextBtn = $('span#page-moving-next-btn');
+            const previousBtn = $('span#page-moving-previous-btn');
+            if (nextBtn !== null && searchingSupportingDataSource.currentPage === totalPages)
+                nextBtn.classList.add("deactivated");
+            else if (previousBtn !== null && searchingSupportingDataSource.currentPage === 1)
+                previousBtn.classList.add("deactivated");
         }
 
         //--Note: "selected-page" class make the index-btn highlighted.
@@ -379,7 +388,7 @@ function customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingD
 function handlingCreateUpdatingForm(updatingBtn, updatingSupportingDataSource) {
     //--Creating new 'form' and changing "action", "method" and components to correspond with updating-form.
     const newForm = updatingSupportingDataSource.plainAddingForm.cloneNode(true);
-    newForm.setAttribute("action", updatingSupportingDataSource.updatingAction + updatingBtn.id);
+    newForm.setAttribute("action", updatingSupportingDataSource.updatingAction);
     //--Adding rest-components needed for updating.
     const restComponents = newForm.querySelector('div#rest-components-for-updating');
     if (restComponents !== null)
@@ -399,11 +408,14 @@ function handlingCreateUpdatingForm(updatingBtn, updatingSupportingDataSource) {
     const allBlocksContainSelectTag = newForm.querySelectorAll('div.form-select');
     if (allBlocksContainSelectTag !== null)
         allBlocksContainSelectTag.forEach(formInputDivBlock => {
-            const value = updatedObjectRow.querySelector('.' + formInputDivBlock.id).textContent.trim();
-            formInputDivBlock.querySelector(`select option[value=${value}]`).selected = true;
+            formInputDivBlock.querySelector(`select option[value=${
+                updatedObjectRow.querySelector('.' + formInputDivBlock.id).textContent.trim()
+            }]`).selected = true;
         });
 
+    //--Set up the rest components of updating-form.
     newForm.querySelector('input[type=submit]').value = "Cập nhật";
+    newForm.querySelector('input[name*="Id"]').readOnly = true;
     //--Print-out updating-form.
     $('div#center-page div#center-page_adding-form form').outerHTML = newForm.outerHTML;
     updatingSupportingDataSource.addingFormCustomizer();

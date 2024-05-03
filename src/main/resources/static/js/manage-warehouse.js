@@ -35,14 +35,14 @@ async function ListComponent(AddWarehouseComponentFunc) {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddWarehouseComponentFunc,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-warehouse?warehouseId=",
+        updatingAction: "/service/v1/branch/update-warehouse",
         componentsForUpdating: []
     };
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
         currentPage: 1,
         objectsQuantity: 0,
-        searchingField: "MAKHO",
+        searchingField: "warehouseId",
         searchingValue: "",
 
         //--Main fields for searching-action.

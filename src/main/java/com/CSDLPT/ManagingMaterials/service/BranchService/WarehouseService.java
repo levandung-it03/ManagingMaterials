@@ -19,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +62,19 @@ public class WarehouseService {
         ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
         warehouse.setBranch(userInfo.getBranch());
 
-        warehouseRepository.save(connectionHolder, warehouse);
+        if (warehouseRepository.save(connectionHolder, warehouse) == 0)
+            throw new SQLException("Something wrong with SQL");
+
+        //--Close Connection.
+        connectionHolder.removeConnection();
+    }
+
+    public void updateWarehouse(Warehouse warehouse, HttpServletRequest request) throws SQLException {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        if (warehouseRepository.update(connectionHolder, warehouse) == 0)
+            throw new SQLException("There's an error with SQL Server!");
 
         //--Close Connection.
         connectionHolder.removeConnection();

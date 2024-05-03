@@ -1,17 +1,13 @@
 package com.CSDLPT.ManagingMaterials.repository;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
-import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.model.Warehouse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,10 +66,32 @@ public class WarehouseRepository {
         }
     }
 
+    public int update(DBConnectionHolder connectionHolder, Warehouse warehouse) {
+        try {
+            PreparedStatement statement = connectionHolder.getConnection().prepareStatement("""
+                UPDATE Kho SET TENKHO = ?, DIACHI = ? WHERE MAKHO = ?;
+            """);
+            statement.setString(1, warehouse.getWarehouseName());
+            statement.setString(2, warehouse.getAddress());
+            statement.setString(3, warehouse.getWarehouseId());
+
+            //--Retrieve affected rows to know if our Query worked correctly.
+            int result = statement.executeUpdate();
+
+            //--Close all connection.
+            statement.close();
+            return result;
+        } catch (SQLException e) {
+            logger.info("Error In 'update' of WarehouseRepository: " + e);
+            return 0;
+        }
+    }
+
     public void mapDataIntoStatement(PreparedStatement statement, Warehouse warehouse) throws SQLException {
         statement.setString(1, warehouse.getWarehouseId());
         statement.setString(2, warehouse.getWarehouseName());
         statement.setString(3, warehouse.getAddress());
         statement.setString(4, warehouse.getBranch());
     }
+
 }

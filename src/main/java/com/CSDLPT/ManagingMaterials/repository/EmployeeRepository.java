@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.repository;
 
+import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.model.PageObject;
@@ -15,8 +16,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class EmployeeRepository {
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final Logger logger;
+    private final StaticUtilMethods staticUtilMethods;
 
     public boolean isExistingEmployeeByIdentifier(DBConnectionHolder connectHolder, String identifier) {
         //--Using a 'result' var to make our logic easily to control.
@@ -174,7 +175,7 @@ public class EmployeeRepository {
         statement.setString(3, employee.getLastName());
         statement.setString(4, employee.getFirstName());
         statement.setString(5, employee.getAddress());
-        statement.setDate(6, Date.valueOf(simpleDateFormat.format(employee.getBirthday())));
+        statement.setDate(6, staticUtilMethods.dateUtilToSqlDate(employee.getBirthday()));
         statement.setDouble(7, employee.getSalary());
         statement.setString(8, employee.getBranch());
         statement.setInt(9, 0);

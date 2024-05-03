@@ -102,13 +102,8 @@ public class EmployeeService {
     }
 
     public void updateEmployee(Employee employee, HttpServletRequest request) throws SQLException {
-        final int updatedId = Integer.parseInt(request.getParameter("employeeId"));
-
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
-        if (updatedId != employee.getEmployeeId())
-            throw new NoSuchElementException("Employee Id is invalid");
 
         //--Get the old-branch from updating-action-owner (the logging-in user has the same branch with this employee)
         ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
