@@ -63,9 +63,12 @@ public class WarehouseController {
         } catch (DuplicateKeyException ignored) {
             redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_04");
-        } catch (Exception ignored) {
+        } catch (SQLException ignored) {
             redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
             redirectAttributes.addFlashAttribute("errorCode", "error_warehouse_01");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
         }
         return "redirect:" + standingUrl;
     }
