@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -82,8 +83,11 @@ public class WarehouseController {
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
             logger.info(e.toString());
-        } catch (Exception e) {
+        } catch (SQLException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_warehouse_01");
+            logger.info(e.toString());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
             logger.info(e.toString());
         }
         return "redirect:" + standingUrl;
@@ -102,8 +106,11 @@ public class WarehouseController {
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
             logger.info(e.toString());
-        } catch (Exception e) {
+        } catch (SQLException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_02");
+            logger.info(e.toString());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
             logger.info(e.toString());
         }
         return "redirect:" + standingUrl;
