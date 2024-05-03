@@ -64,7 +64,7 @@ public class WarehouseController {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_04");
         } catch (Exception ignored) {
             redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
-            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            redirectAttributes.addFlashAttribute("errorCode", "error_warehouse_01");
         }
         return "redirect:" + standingUrl;
     }
@@ -83,7 +83,7 @@ public class WarehouseController {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
             logger.info(e.toString());
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            redirectAttributes.addFlashAttribute("errorCode", "error_warehouse_01");
             logger.info(e.toString());
         }
         return "redirect:" + standingUrl;
