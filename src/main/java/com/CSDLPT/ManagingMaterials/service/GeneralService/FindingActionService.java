@@ -23,7 +23,6 @@ import static com.CSDLPT.ManagingMaterials.config.StaticUtilMethods.*;
 public class FindingActionService {
     private final Logger logger;
     private final StaticUtilMethods staticUtilMethods;
-    private String conditionOfQuery;
 
     /**Spring JdbcTemplate: Combination between .findingDataWithPagination() and .countAllByCondition() **/
     public <T> ResDtoRetrievingData<T> findingDataAndServePaginationBarFormat(
@@ -35,7 +34,7 @@ public class FindingActionService {
 
         //--Generate the condition syntax of query.
         List<String> fieldInfo = staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField());
-        this.conditionOfQuery = String.format(
+        String conditionOfQuery = String.format(
             "%s AND %s LIKE '%%'+?+'%%' ",
             searchingObject.getMoreCondition().isEmpty() ? "TRUE" : searchingObject.getMoreCondition(),
             //--Type-casting syntax of this query corresponding with data-type.
@@ -45,7 +44,7 @@ public class FindingActionService {
                     staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst()
                 );
                 case DATE_TYPE -> String.format(
-                    "CAST(%s AS NVARCHAR)",
+                    "CAST(CONVERT(DATE, %s) AS NVARCHAR(10))",
                     staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst()
                 );
                 default -> staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst();
@@ -55,9 +54,9 @@ public class FindingActionService {
         //--IoC here.
         ResDtoRetrievingData<T> resDtoRetrievingData = new ResDtoRetrievingData<>();
         resDtoRetrievingData.setResultDataSet(
-            this.findingDataWithPagination(connectionHolder, searchingObject));
+            this.findingDataWithPagination(connectionHolder, searchingObject, conditionOfQuery));
         resDtoRetrievingData.setTotalObjectsQuantityResult(
-            this.countAllByCondition(connectionHolder, searchingObject));
+            this.countAllByCondition(connectionHolder, searchingObject, conditionOfQuery));
 
         //--Close Connection.
         connectionHolder.removeConnection();
@@ -68,7 +67,8 @@ public class FindingActionService {
     /**Spring JdbcTemplate: Finding data of any entities**/
     public <T> List<T> findingDataWithPagination(
         DBConnectionHolder connectionHolder,
-        ReqDtoRetrievingData<T> searchingObject
+        ReqDtoRetrievingData<T> searchingObject,
+        String conditionOfQuery
     ) {
         List<T> result = new ArrayList<>();
         try {
@@ -76,7 +76,7 @@ public class FindingActionService {
             String query = String.format(
                 "SELECT * FROM %s WHERE %s %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY",
                 searchingObject.getSearchingTable(),
-                this.conditionOfQuery,
+                conditionOfQuery,
                 searchingObject.getSortingCondition()
             );
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
@@ -99,7 +99,7 @@ public class FindingActionService {
         return result;
     }
 
-    /**Spring JdbcTemplate: This method help us to map each result set to any models as generic type "T"**/
+    /**Spring JdbcTemplate: This method help us to map each "ResultSet" into any Models as generic type "T"**/
     public <T> T mapResultSetToObject(ResultSet resultSet, Class<T> objectType) {
         try {
             //--Get an object type "T" with all empty values of fields.
@@ -121,14 +121,18 @@ public class FindingActionService {
     }
 
     /**Spring JdbcTemplate: Counting all entities quantity by input-condition**/
-    public <T> int countAllByCondition(DBConnectionHolder connectionHolder, ReqDtoRetrievingData<T> searchingObject) {
+    public <T> int countAllByCondition(
+        DBConnectionHolder connectionHolder,
+        ReqDtoRetrievingData<T> searchingObject,
+        String conditionOfQuery
+    ) {
         int result = 0;
         try {
             String query = String.format(
                 "SELECT SOLUONG = COUNT(%s) FROM %s WHERE %s",
                 searchingObject.getSearchingTableIdName(),
                 searchingObject.getSearchingTable(),
-                this.conditionOfQuery
+                conditionOfQuery
             );
 
             //--Prepare data to execute Stored Procedure.
