@@ -66,7 +66,7 @@ public class WarehouseController {
         } catch (SQLException ignored) {
             redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
             redirectAttributes.addFlashAttribute("errorCode", "error_warehouse_01");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
             redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
         }
