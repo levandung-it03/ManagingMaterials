@@ -47,6 +47,8 @@ public class ApplicationConfig {
 
         messagePairs.put("error_employee_01", "Mã nhân viên, hoặc CMND đã tồn tại!");
 
+        messagePairs.put("error_supply_01", "Mã vật tư hoặc tên vật tư đã tồn tại!");
+
         messagePairs.put("error_warehouse_01", "Mã kho hoặc tên kho đã tồn tại!");
 
         messagePairs.put("ngu", "ngu vai cac!");

@@ -71,6 +71,28 @@ public class SupplyRepository {
         return result;
     }
 
+    public boolean isUsingSupplyBySupplyId(DBConnectionHolder connectHolder, String supplyId) {
+        //--Using a 'result' var to make our logic easily to control.
+        boolean result = false;
+
+        try {
+            //--Prepare data to execute Stored Procedure.
+            CallableStatement statement = connectHolder.getConnection().prepareCall("{call SP_CHECK_USING_SUPPLY(?)}");
+            statement.setString(1, supplyId);
+            ResultSet resultSet = statement.executeQuery();
+
+            //--If at least one Employee is existing.
+            if (resultSet.next()) result = true;
+
+            //--Close all connection.
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'existingEmployeeIdentifier' of EmployeeRepository: " + e);
+        }
+        return result;
+    }
+
     public int save(DBConnectionHolder connectHolder, Supply supply) {
         try {
             //--Prepare data to execute Query Statement.
@@ -92,24 +114,27 @@ public class SupplyRepository {
         }
     }
 
-//    public int update(DBConnectionHolder connectionHolder, Supply supply, String oldBranch) {
-//        try {
-//            CallableStatement statement = connectionHolder.getConnection()
-//                    .prepareCall("{call SP_UPDATE_SUPPLY_QUANTITY(?, ?, ?)}");
-//            this.mapDataIntoStatement(statement, supply);
-//            statement.setString(9, oldBranch);
-//
-//            //--Retrieve affected rows to know if our Query worked correctly.
-//            int result = statement.executeUpdate();
-//
-//            //--Close all connection.
-//            statement.close();
-//            return result;
-//        } catch (SQLException e) {
-//            logger.info("Error In 'update' of SupplyRepository: " + e);
-//            return 0;
-//        }
-//    }
+    public int update(DBConnectionHolder connectionHolder, Supply supply) {
+        try {
+            PreparedStatement statement = connectionHolder.getConnection().prepareStatement("""
+                UPDATE Kho SET TENVT = ?, DVT = ?, SOLUONGTON = ? WHERE MAVT = ?;
+            """);
+            statement.setString(1, supply.getSupplyName());
+            statement.setString(2, supply.getUnit());
+            statement.setInt(3, supply.getQuantityInStock());
+            statement.setString(4, supply.getSupplyId());
+
+            //--Retrieve affected rows to know if our Query worked correctly.
+            int result = statement.executeUpdate();
+
+            //--Close all connection.
+            statement.close();
+            return result;
+        } catch (SQLException e) {
+            logger.info("Error In 'update' of SupplyRepository: " + e);
+            return 0;
+        }
+    }
 
     /**
      * SQL Server: This method is used to map data into the common PreparedStatement, which has all fields of Supply.

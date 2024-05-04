@@ -16,7 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
+import java.sql.SQLException;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Controller
@@ -69,25 +70,28 @@ public class SupplyController {
         return "redirect:" + standingUrl;
     }
 
-//    @PostMapping("/update-supply")
-//    public String updateSupply(
-//            @ModelAttribute("supply") Supply supply,
-//            HttpServletRequest request,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        final String standingUrl = request.getHeader("Referer");
-//        try {
-//            supplyService.updateSupply(supply, request);
-//            redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
-//        } catch (NumberFormatException e) {
-//            redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
-//            logger.info(e.toString());
-//        } catch (Exception e) {
-//            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-//            logger.info(e.toString());
-//        }
-//        return "redirect:" + standingUrl;
-//    }
+    @PostMapping("/update-supply")
+    public String updateSupply(
+            @ModelAttribute("supply") Supply supply,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes
+    ) {
+        final String standingUrl = request.getHeader("Referer");
+        try {
+            supplyService.updateSupply(supply, request);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
+        } catch (NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
+            logger.info(e.toString());
+        } catch (SQLException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
+            logger.info(e.toString());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            logger.info(e.toString());
+        }
+        return "redirect:" + standingUrl;
+    }
 //
 //    @PostMapping("/delete-supply")
 //    public String deleteSupply(
