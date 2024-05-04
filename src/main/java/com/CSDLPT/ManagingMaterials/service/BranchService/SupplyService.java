@@ -4,8 +4,10 @@ import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoRetrievingData;
-import com.CSDLPT.ManagingMaterials.model.*;
+import com.CSDLPT.ManagingMaterials.model.Employee;
 import com.CSDLPT.ManagingMaterials.model.Supply;
+import com.CSDLPT.ManagingMaterials.model.Supply;
+import com.CSDLPT.ManagingMaterials.model.PageObject;
 import com.CSDLPT.ManagingMaterials.repository.SupplyRepository;
 import com.CSDLPT.ManagingMaterials.service.GeneralService.FindingActionService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +30,7 @@ public class SupplyService {
     public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) {
         //--Prepare common-components of ModelAndView if we need.
         ModelAndView modelAndView = staticUtilMethods
-            .customResponseModelView(request, model.asMap(), "manage-supply");
+                .customResponseModelView(request, model.asMap(), "manage-supply");
 
         //--If there's an error when handle data with DB, take the submitted-supply-info and give it back to this page
         Supply supply = (Supply) model.asMap().get("submittedSupply");
@@ -43,7 +45,7 @@ public class SupplyService {
     ) throws SQLException, NoSuchFieldException {
         //--Preparing data to fetch.
         searchingObject.setObjectType(Supply.class);
-        searchingObject.setSearchingTable("Vattu");
+        searchingObject.setSearchingTable("VatTu");
         searchingObject.setSearchingTableIdName("MAVT");
         searchingObject.setSortingCondition("ORDER BY TENVT ASC");
 
@@ -66,22 +68,19 @@ public class SupplyService {
         connectionHolder.removeConnection();
     }
 
-    public void updateSupply(Supply supply, HttpServletRequest request) throws SQLException {
-        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
-        //--Check If 'MAVT' is already existing or not.
-        if (!supplyRepository.isExistingSupplyBySupplyId(connectionHolder, supply.getSupplyId()))
-            throw new DuplicateKeyException("Updated Supply Id not found!");
-
-        //--Check If 'MAVT' is already in use or not.
-        if (!supplyRepository.isUsingSupplyBySupplyId(connectionHolder, supply.getSupplyId()))
-            throw new DuplicateKeyException("Updated Supply Id not found!");
-
-        if (supplyRepository.update(connectionHolder, supply) == 0)
-            throw new SQLException("There's an error with SQL Server!");
-
-        //--Close Connection.
-        connectionHolder.removeConnection();
-    }
+//    public void updateSupply(Supply supply, HttpServletRequest request) throws SQLException {
+//        final String updatedId = request.getParameter("supplyId");
+//
+//        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+//        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+//
+//        if (!updatedId.equals(supply.getSupplyId()))
+//            throw new NoSuchElementException("Supply Id is invalid");
+//
+//        if (supplyRepository.update(connectionHolder, supply) == 0)
+//            throw new SQLException("There's an error with SQL Server!");
+//
+//        //--Close Connection.
+//        connectionHolder.removeConnection();
+//    }
 }
