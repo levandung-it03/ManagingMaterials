@@ -123,5 +123,8 @@ public class EmployeeService {
 
         if (employeeRepository.delete(connectionHolder, deletedId) == 0)
             throw new SQLException("Something wrong happened in your DBMS");
+
+        //--Close Connection.
+        connectionHolder.removeConnection();
     }
 }

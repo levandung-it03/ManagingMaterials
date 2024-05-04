@@ -118,8 +118,6 @@ public class EmployeeRepository {
 
             //--Retrieve affected rows to know if our Query worked correctly.
             result = statement.executeUpdate();
-
-            connectionHolder.removeConnection();
         } catch (SQLException e) {
             logger.info("Error In 'delete' of EmployeeRepository: " + e);
         }

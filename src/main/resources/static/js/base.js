@@ -83,7 +83,6 @@ function customizeValidateEventInputTags(validatingBlocks) {
 
 function customizeSubmitFormAction(formSelector, validatingBlocks) {
     $(formSelector).onsubmit = e => {
-        console.log($(formSelector));
         if (confirm("Bạn chắc chắn muốn thực hiện thao tác?") === true) {
             let isValid = Object.entries(validatingBlocks)
                 .every(elem => {
@@ -110,11 +109,11 @@ function customizeToggleDisplayPasswordEvent() {
             if ([...e.target.classList].some((e) => e === "show-pass")) {
                 e.target.classList.add("hidden");
                 e.target.parentElement.querySelector(".hide-pass").classList.remove("hidden");
-                $(`input[name=${e.target.id}]`).type = "text";
+                e.target.parentElement.parentElement.querySelector('input').type = "text";
             } else {
                 e.target.classList.add("hidden");
                 e.target.parentElement.querySelector(".show-pass").classList.remove("hidden");
-                $(`input[name=${e.target.id}]`).type = "password";
+                e.target.parentElement.parentElement.querySelector('input').type = "password";
             }
         }
     })
@@ -137,7 +136,72 @@ function recoveryAllSelectTagDataInForm() {
     });
 }
 
-function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource) {
+
+function customizeAutoFormatStrongInputTextEvent() {
+    [...$$('div.strong-text input')].forEach(inputTag => {
+        inputTag.addEventListener("blur", e => {
+            inputTag.value = inputTag.value.trim().split(" ")
+                .filter(word => word !== "")
+                .map(word => word.slice(0, 1).toUpperCase() + word.slice(1).toLowerCase())
+                .join(" ");
+        });
+    });
+}
+
+function convertStrDateToDateObj(strDate) {
+    const startDateAsArr = strDate.split("/");
+    return new Date(startDateAsArr[2], startDateAsArr[1] - 1, startDateAsArr[0])
+}
+
+function paintAllAvatarColor() {
+    [...$$('table tbody tr td.base-profile span.mock-avatar')].forEach(avatarTag => {
+        const avatarColor = colorMap[avatarTag.innerText.trim().toUpperCase()];
+
+        //--Convert background color to RGB
+        let r = parseInt(avatarColor.slice(1, 3), 16);
+        let g = parseInt(avatarColor.slice(3, 5), 16);
+        let b = parseInt(avatarColor.slice(5, 7), 16);
+
+        //--Calculate luminance
+        let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+        //--Get the right letter's color
+        const letterColor = (luminance > 0.5) ? "#000000" : "#FFFFFF";
+
+        avatarTag.style.backgroundColor = avatarColor;
+        avatarTag.style.color = letterColor;
+    })
+}
+
+function customizeSortingListEvent() {
+    [...$$('table thead th i')].forEach(btn => {
+        btn.addEventListener("click", e => {
+            const fieldId = e.target.parentElement.id;
+            const cellOfFields = [...$$('table tbody td.' + fieldId)];
+            const firstCellOfSearchingColumn = cellOfFields[0].getAttribute('plain-value');
+            let searchingDataFieldType = null;
+
+            if (Number.parseInt(firstCellOfSearchingColumn) !== null)   searchingDataFieldType = "Number";
+            else if (new Date(firstCellOfSearchingColumn) !== null)     searchingDataFieldType = "Date";
+            else    searchingDataFieldType = "String";
+
+            cellOfFields.sort((a, b) => {
+                const firstCell = a.getAttribute('plain-value');
+                const secondCell = b.getAttribute('plain-value');
+
+                if (searchingDataFieldType === "Number") return Number.parseInt(firstCell) - Number.parseInt(secondCell);
+                else if (searchingDataFieldType === "Date")   return new Date(firstCell) < new Date(secondCell);
+                else    return firstCell.localeCompare(secondCell);
+            });
+            alert("Sắp xếp thành công!");
+            $('table tbody').innerHTML = cellOfFields.reduce((accumulator, cell) => {
+                return accumulator + cell.parentElement.outerHTML;
+            }, "");
+        })
+    })
+}
+
+function customizeSearchingListEvent(searchingSupportingDataSource) {
     const searchingInputTag = $('#table-search-box input#search');
     const selectedOption = $('#table-search-box select#search');
 
@@ -154,12 +218,8 @@ function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupp
             searchingSupportingDataSource.currentPage = 1;
 
             //--Use await to make this "fetch" action sync with this "handleSearchingListEvent" method.
-            await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
-
-            //--Rebuild pagination-bar for searching-action.
-            customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
+            await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
         }
-
         return null;
     }
 
@@ -167,7 +227,7 @@ function customizeSearchingListEvent(searchingSupportingDataSource, updatingSupp
     searchingInputTag.addEventListener("keyup", handleSearchingListEvent);
 }
 
-async function fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource) {
+async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource) {
     await fetch(
         window.location.origin + searchingSupportingDataSource.fetchDataAction,
         {//--Request Options
@@ -196,28 +256,17 @@ async function fetchPaginatedDataByValues(searchingSupportingDataSource, updatin
                         return searchingSupportingDataSource.rowFormattingEngine(dataOfRow);
                     })
                     .join("");
-                searchingSupportingDataSource.objectsQuantityInTableCustomizer();
-                searchingSupportingDataSource.allAvatarColorCustomizer();
-
-                //--Custom all updating-action for update-buttons.
-                customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
             }
-            //--Return responseObject for next promise-block.
-            return responseObject;
-        })
-        .then(responseObject => {
             //--Update objects-quantity value of hidden-input-tag to build pagination-bar.
             //--Maybe "0" if data-set is empty.
+            console.log(responseObject["totalObjectsQuantityResult"]);
             searchingSupportingDataSource.objectsQuantity = responseObject["totalObjectsQuantityResult"];
-
-            //--Rebuild pagination-bar when each fetch-action was made.
-            customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource);
         })
         .catch(error => { console.error("Đã có lỗi xảy ra:", error) });
 }
 
-function customizePaginationBarAndFetchData(searchingSupportingDataSource, updatingSupportingDataSource) {
-    (function generatePaginationBar(paginationBarSelector = 'div#table-footer_main') {
+function generatePaginationBar(searchingSupportingDataSource) {
+    (function customizePaginationBar(paginationBarSelector = 'div#table-footer_main') {
         const indexNumberFormatter = (page) => `<span class="interact-page-btn page-${page}">${page}</span>`;
         const dotsSeparatorBlock = '<span style="align-self: end; padding: 0 10px; font-size: 1.4rem;">...</span>';
 
@@ -298,7 +347,7 @@ function customizePaginationBarAndFetchData(searchingSupportingDataSource, updat
         }
 
         const selectedIndexBtn = $(`${paginationBarSelector} div#index-numbers span.page-${searchingSupportingDataSource.currentPage}`);
-        //--Note: "selected-page" class make the index-btn highlighted.
+        //--Note: "selected-page" class make the index-btn be highlighted.
         //--Note: "deactivated" class make the btn can't complete the "fetch" action.
         if (selectedIndexBtn !== null)
             selectedIndexBtn.classList.add("selected-page", "deactivated");
@@ -315,86 +364,22 @@ function customizePaginationBarAndFetchData(searchingSupportingDataSource, updat
                     else    searchingSupportingDataSource.currentPage = Number.parseInt(btn.textContent.trim());
 
                     //--Starting fetch data by selected-pagination-bar-buttons.
-                    await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
+                    await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
                 }
             });
         });
     })();
 }
 
-function customizeSortingListEvent() {
-    [...$$('table thead th i')].forEach(btn => {
-        btn.addEventListener("click", e => {
-            const fieldId = e.target.parentElement.id;
-            const cellOfFields = [...$$('table tbody td.' + fieldId)];
-            const firstCellOfSearchingColumn = cellOfFields[0].getAttribute('plain-value');
-            let searchingDataFieldType = null;
-
-            if (Number.parseInt(firstCellOfSearchingColumn) !== null)   searchingDataFieldType = "Number";
-            else if (new Date(firstCellOfSearchingColumn) !== null)     searchingDataFieldType = "Date";
-            else    searchingDataFieldType = "String";
-
-            cellOfFields.sort((a, b) => {
-                const firstCell = a.getAttribute('plain-value');
-                const secondCell = b.getAttribute('plain-value');
-
-                if (searchingDataFieldType === "Number") return Number.parseInt(firstCell) - Number.parseInt(secondCell);
-                else if (searchingDataFieldType === "Date")   return new Date(firstCell) < new Date(secondCell);
-                else    return firstCell.localeCompare(secondCell);
-            });
-            alert("Sắp xếp thành công!");
-            $('table tbody').innerHTML = cellOfFields.reduce((accumulator, cell) => {
-                return accumulator + cell.parentElement.outerHTML;
-            }, "");
-        })
-    })
-}
-
-function customizeAutoFormatStrongInputTextEvent() {
-    [...$$('div.strong-text input')].forEach(inputTag => {
-        inputTag.addEventListener("blur", e => {
-            inputTag.value = inputTag.value.trim().split(" ")
-                .filter(word => word !== "")
-                .map(word => word.slice(0, 1).toUpperCase() + word.slice(1).toLowerCase())
-                .join(" ");
-        });
-    });
-}
-
-function convertStrDateToDateObj(strDate) {
-    const startDateAsArr = strDate.split("/");
-    return new Date(startDateAsArr[2], startDateAsArr[1] - 1, startDateAsArr[0])
-}
-
-function customizeAllAvatarColor() {
-    [...$$('table tbody tr td.base-profile span.mock-avatar')].forEach(avatarTag => {
-        const avatarColor = colorMap[avatarTag.innerText.trim().toUpperCase()];
-
-        //--Convert background color to RGB
-        let r = parseInt(avatarColor.slice(1, 3), 16);
-        let g = parseInt(avatarColor.slice(3, 5), 16);
-        let b = parseInt(avatarColor.slice(5, 7), 16);
-
-        //--Calculate luminance
-        let luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-
-        //--Get the right letter's color
-        const letterColor = (luminance > 0.5) ? "#000000" : "#FFFFFF";
-
-        avatarTag.style.backgroundColor = avatarColor;
-        avatarTag.style.color = letterColor;
-    })
-}
-
-function customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource) {
+function customizeGeneratingFormUpdateEvent(updatingSupportingDataSource) {
     [...$$('div#center-page_list table tbody tr td.update a')].forEach(updatingBtn => {
         updatingBtn.addEventListener("click", e => {
-            handlingCreateUpdatingForm(e.target.parentElement, updatingSupportingDataSource);
+            handlingCreateFormUpdate(e.target.parentElement, updatingSupportingDataSource);
         });
     });
 }
 
-function handlingCreateUpdatingForm(updatingBtn, updatingSupportingDataSource) {
+function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
     //--Creating new 'form' and changing "action", "method" and components to correspond with updating-form.
     const newForm = updatingSupportingDataSource.plainAddingForm.cloneNode(true);
     newForm.setAttribute("action", updatingSupportingDataSource.updatingAction);
@@ -437,4 +422,23 @@ function handlingCreateUpdatingForm(updatingBtn, updatingSupportingDataSource) {
                 updatingSupportingDataSource.plainAddingForm.outerHTML;
             updatingSupportingDataSource.addingFormCustomizer();
         });
+}
+
+function CustomizeFetchingActionSpectator(searchingSupportingDataSource, updatingSupportingDataSource, moreFeatures) {
+    //--Create a mutation observer instance when each fetch-action is made.
+    new MutationObserver(async () => {
+        //--Re-calculate the quantities.
+        $('#quantity').textContent = $$('table tbody tr').length + " " + moreFeatures.tableLabel;
+
+        //--Re-customize the listener of all updating-buttons.
+        customizeGeneratingFormUpdateEvent(updatingSupportingDataSource);
+
+        //--Rebuild pagination-bar.
+        generatePaginationBar(searchingSupportingDataSource);
+
+        //--Call all rest custom modules.
+        await moreFeatures.callModules();
+
+        //--Configure the observer to observe changes to the table's child list
+    }).observe($('div#center-page_list table'), { childList: true, subtree: true });
 }

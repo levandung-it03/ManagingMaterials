@@ -1,4 +1,4 @@
-function AddEmployeeComponent() {
+function AddWarehouseComponent() {
     const validatingBlocks = {
         warehouseId: {
             tag: $('input[name=warehouseId]'),
@@ -31,9 +31,26 @@ function AddEmployeeComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-async function ListComponent(AddWarehouseComponentFunc) {
+async function ListComponent(searchingSupportingDataSource, updatingSupportingDataSource) {
+    //--Firstly "fetch" data to put into empty-table-as-list.
+    await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
+    customizeGeneratingFormUpdateEvent(updatingSupportingDataSource);
+    generatePaginationBar(searchingSupportingDataSource);
+
+    customizeSearchingListEvent(searchingSupportingDataSource);
+    customizeSortingListEvent();
+
+    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+}
+
+function GeneralMethods() {
+    removePathAttributes();
+    customizeClosingNoticeMessageEvent();
+}
+
+(async function main() {
     const updatingSupportingDataSource = {
-        addingFormCustomizer: AddWarehouseComponentFunc,
+        addingFormCustomizer: AddWarehouseComponent,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-warehouse",
         componentsForUpdating: []
@@ -48,8 +65,6 @@ async function ListComponent(AddWarehouseComponentFunc) {
         //--Main fields for searching-action.
         tableBody: $('div#center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-warehouse-by-values",
-        objectsQuantityInTableCustomizer: () => $('#quantity').textContent = $$('table tbody tr').length + " kho",
-        allAvatarColorCustomizer: () => {},
         rowFormattingEngine: (row) => `
             <tr id="${row.warehouseId}">
                 <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
@@ -67,23 +82,15 @@ async function ListComponent(AddWarehouseComponentFunc) {
                 </td>
             </tr>`
     };
-    //--Firstly "fetch" data to put into empty-table-as-list.
-    await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
-
-    customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
-    customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
-
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
-    customizeSortingListEvent();
-}
-
-function GeneralMethods() {
-    removePathAttributes();
-    customizeClosingNoticeMessageEvent();
-}
-
-(async function main() {
-    AddEmployeeComponent();
-    await ListComponent(AddEmployeeComponent);
     GeneralMethods();
+    AddWarehouseComponent();
+    await ListComponent(searchingSupportingDataSource, updatingSupportingDataSource);
+    CustomizeFetchingActionSpectator(
+        searchingSupportingDataSource,
+        updatingSupportingDataSource,
+        {
+            tableLabel: "kho",
+            callModules: () => {}
+        }
+    );
 })();

@@ -7,10 +7,9 @@ html {
 }
 
 form {
-    margin: auto;
-    margin-top: 100px;
+    margin: 100px auto auto;
     max-width: 500px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     display: block;
     width: auto;
@@ -31,10 +30,11 @@ form #form-title {
     padding: 24px;
 }
 
+form .form-select,
 form .form-input {
     position: relative;
     width: 350px;
-    min-height: 90px !important;
+    min-height: 70px !important;
     margin: auto;
 }
 
@@ -42,14 +42,32 @@ form .form-input {
     display: block;
     padding: 4px;
 }
+/*-----------------------------------*/
+.form-input label,
+.form-select label {
+    display: block;
+    padding: 4px;
+}
 
-.form-input input,
-.form-input select {
-    width: 350px;
-    height: 44px;
-    border: 2px #d1d0d0 solid;
+.form-input fieldset,
+.form-select fieldset {
+    width: 100%;
+    height: 55px;
+    border: 2px var(--grey-border) solid;
     border-radius: 10px;
-    padding: 0 16px;
+    padding: 0 10px;
+}
+.form-input fieldset legend,
+.form-select fieldset legend {
+    color: var(--black-text);
+    font-weight: 100;
+}
+.form-input input,
+.form-select select {
+    outline: none;
+    border: none;
+    width: 100%;
+    background-color: transparent;
 }
 
 .form-input_err-message {
@@ -65,8 +83,7 @@ form .form-input {
 
 form input[type=submit] {
     padding: 12px 42px;
-    margin: auto;
-    margin-top: 30px;
+    margin: 30px auto auto;
 }
 
 .form-input #forgot-pass a {

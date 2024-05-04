@@ -37,9 +37,26 @@ function AddSupplyComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-async function ListComponent(AddSupplyComponentFunc) {
+async function ListComponent(searchingSupportingDataSource, updatingSupportingDataSource) {
+    //--Firstly "fetch" data to put into empty-table-as-list.
+    await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
+    customizeGeneratingFormUpdateEvent(updatingSupportingDataSource);
+    generatePaginationBar(searchingSupportingDataSource);
+
+    customizeSearchingListEvent(searchingSupportingDataSource);
+    customizeSortingListEvent();
+
+    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+}
+
+function GeneralMethods() {
+    removePathAttributes();
+    customizeClosingNoticeMessageEvent();
+}
+
+(async function main() {
     const updatingSupportingDataSource = {
-        addingFormCustomizer: AddSupplyComponentFunc,
+        addingFormCustomizer: AddSupplyComponent,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-supply",
         componentsForUpdating: []
@@ -54,8 +71,6 @@ async function ListComponent(AddSupplyComponentFunc) {
         //--Main fields for searching-action.
         tableBody: $('div#center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-supply-by-values",
-        objectsQuantityInTableCustomizer: () => $('#quantity').textContent = $$('table tbody tr').length + " vật tư",
-        allAvatarColorCustomizer: () => {},
         rowFormattingEngine: (row) => `
             <tr id="${row.supplyId}">
                 <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
@@ -74,23 +89,16 @@ async function ListComponent(AddSupplyComponentFunc) {
                 </td>
             </tr>`
     };
-    //--Firstly "fetch" data to put into empty-table-as-list.
-    await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
 
-    customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
-    customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
-
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
-    customizeSortingListEvent();
-}
-
-function GeneralMethods() {
-    removePathAttributes();
-    customizeClosingNoticeMessageEvent();
-}
-
-(async function main() {
-    AddSupplyComponent();
-    await ListComponent(AddSupplyComponent);
     GeneralMethods();
+    AddSupplyComponent();
+    await ListComponent(searchingSupportingDataSource, updatingSupportingDataSource);
+    CustomizeFetchingActionSpectator(
+        searchingSupportingDataSource,
+        updatingSupportingDataSource,
+        {
+            tableLabel: "vật tư",
+            callModules: () => {}
+        }
+    );
 })();

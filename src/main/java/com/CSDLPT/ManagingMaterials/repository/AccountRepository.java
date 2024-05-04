@@ -5,6 +5,7 @@ import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Account;
 import com.CSDLPT.ManagingMaterials.model.Enums.Role;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -14,6 +15,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class AccountRepository {
     private final DBConnectionHolder connectionHolder;
+    private final Logger logger;
 
     public ResDtoUserInfo authenticate(Account account) throws SQLException, NoSuchElementException {
         //--Connection from authenticated User.
@@ -42,5 +44,26 @@ public class AccountRepository {
         connectionHolder.removeConnection();
 
         return userInfo;
+    }
+
+    public boolean checkIfEmployeeAccountIsExisting(DBConnectionHolder connectionHolder, String employeeId) {
+        boolean result = false;
+
+        try {
+            CallableStatement statement = connectionHolder.getConnection()
+                .prepareCall("{? = call SP_CHECK_EXIST_LOGIN(?)}");
+            //--Register the output parameter
+            statement.registerOutParameter(1, Types.BOOLEAN);
+            statement.setString(2, String.valueOf(employeeId));
+
+            statement.execute();
+            result = statement.getBoolean(1);
+
+            //--Close all connection.
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'checkIfEmployeeAccountIsExisting' of AccountRepository: " + e);
+        }
+        return result;
     }
 }

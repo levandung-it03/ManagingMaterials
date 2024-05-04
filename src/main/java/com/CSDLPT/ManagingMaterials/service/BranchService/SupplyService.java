@@ -45,7 +45,7 @@ public class SupplyService {
     ) throws SQLException, NoSuchFieldException {
         //--Preparing data to fetch.
         searchingObject.setObjectType(Supply.class);
-        searchingObject.setSearchingTable("Vattu");
+        searchingObject.setSearchingTable("VatTu");
         searchingObject.setSearchingTableIdName("MAVT");
         searchingObject.setSortingCondition("ORDER BY TENVT ASC");
 

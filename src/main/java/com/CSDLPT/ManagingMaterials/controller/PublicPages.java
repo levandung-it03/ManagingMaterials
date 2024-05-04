@@ -1,4 +1,4 @@
-package com.CSDLPT.ManagingMaterials.controller.AuthController;
+package com.CSDLPT.ManagingMaterials.controller;
 
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @Controller
-public class AccountController {
+public class PublicPages {
     private final StaticUtilMethods staticUtilMethods;
 
     @GetMapping("/login")
