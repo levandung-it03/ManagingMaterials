@@ -37,11 +37,9 @@ function AddSupplyComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-async function ListComponent(searchingSupportingDataSource, updatingSupportingDataSource) {
+async function ListComponent(searchingSupportingDataSource) {
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
-    customizeGeneratingFormUpdateEvent(updatingSupportingDataSource);
-    generatePaginationBar(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
@@ -92,8 +90,7 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddSupplyComponent();
-    await ListComponent(searchingSupportingDataSource, updatingSupportingDataSource);
-    CustomizeFetchingActionSpectator(
+    await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         updatingSupportingDataSource,
         {
@@ -101,4 +98,5 @@ function GeneralMethods() {
             callModules: () => {}
         }
     );
+    await ListComponent(searchingSupportingDataSource);
 })();

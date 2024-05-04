@@ -37,7 +37,7 @@ function log(v) {console.log(v);}
 function salaryFormattingEngine(salary) {
     const salaryAsString = salary + "";
     let result = "";
-    for (let index = salaryAsString.length; index >= 0; index-=3)
+    for (let index = salaryAsString.length; index > 0; index-=3)
         result = "," + salaryAsString.substring(index - 3, index) + result;
     return result.slice(1) + "VNĐ";
 }
@@ -424,9 +424,10 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
         });
 }
 
-function CustomizeFetchingActionSpectator(searchingSupportingDataSource, updatingSupportingDataSource, moreFeatures) {
+async function CustomizeFetchingActionSpectator(searchingSupportingDataSource, updatingSupportingDataSource, moreFeatures) {
     //--Create a mutation observer instance when each fetch-action is made.
-    new MutationObserver(async () => {
+    await new MutationObserver(async () => {
+        log("rend");
         //--Re-calculate the quantities.
         $('#quantity').textContent = $$('table tbody tr').length + " " + moreFeatures.tableLabel;
 

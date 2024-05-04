@@ -78,7 +78,7 @@
             <div class="form-input" id="salary">
                 <fieldset>
                     <legend>Lương</legend>
-                    <input name="salary" type="number" value="${employee.salary}" required/>
+                    <input name="salary" type="number" value="${String.format("%.1f", employee.salary)}" required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
