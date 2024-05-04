@@ -63,6 +63,9 @@ public class SupplyController {
         } catch (DuplicateKeyException ignored) {
             redirectAttributes.addFlashAttribute("submittedSupply", supply);
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_04");
+        } catch (SQLException ignored) {
+            redirectAttributes.addFlashAttribute("submittedSupply", supply);
+            redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
         } catch (Exception ignored) {
             redirectAttributes.addFlashAttribute("submittedSupply", supply);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
@@ -83,6 +86,9 @@ public class SupplyController {
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
             logger.info(e.toString());
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_supply_02");
+            logger.info(e.toString());
         } catch (SQLException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
             logger.info(e.toString());
@@ -92,24 +98,30 @@ public class SupplyController {
         }
         return "redirect:" + standingUrl;
     }
-//
-//    @PostMapping("/delete-supply")
-//    public String deleteSupply(
-//            @RequestParam("deleteBtn") String supplyId,
-//            HttpServletRequest request,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        final String standingUrl = request.getHeader("Referer");
-//        try {
-//            supplyService.deleteSupply(supplyId, request);
-//            redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
-//        } catch (NumberFormatException e) {
-//            redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
-//            logger.info(e.toString());
-//        } catch (Exception e) {
-//            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-//            logger.info(e.toString());
-//        }
-//        return "redirect:" + standingUrl;
-//    }
+
+    @PostMapping("/delete-supply")
+    public String deleteSupply(
+            @RequestParam("deleteBtn") String supplyId,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes
+    ) {
+        final String standingUrl = request.getHeader("Referer");
+        try {
+            supplyService.deleteSupply(supplyId, request);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
+        } catch (NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
+            logger.info(e.toString());
+        }catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_supply_02");
+            logger.info(e.toString());
+        } catch (SQLException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_02");
+            logger.info(e.toString());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            logger.info(e.toString());
+        }
+        return "redirect:" + standingUrl;
+    }
 }

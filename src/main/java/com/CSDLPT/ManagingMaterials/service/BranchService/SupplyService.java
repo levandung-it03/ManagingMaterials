@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class SupplyService {
 
         //--If there's an error when handle data with DB, take the submitted-supply-info and give it back to this page
         Supply supply = (Supply) model.asMap().get("submittedSupply");
-        if (supply != null)   modelAndView.addObject("supply", supply);
+        if (supply != null) modelAndView.addObject("supply", supply);
 
         return modelAndView;
     }
@@ -52,7 +53,7 @@ public class SupplyService {
         return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
     }
 
-    public void addSupply(HttpServletRequest request, Supply supply) throws DuplicateKeyException, SQLException {
+    public void addSupply(HttpServletRequest request, Supply supply) throws SQLException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
@@ -62,25 +63,44 @@ public class SupplyService {
 
         //--May throw DuplicateKeyException with 'MAVT'.
         if (supplyRepository.save(connectionHolder, supply) == 0)
-            throw new DuplicateKeyException("There's an error with SQL Server!");
+            throw new SQLException("There's an error with SQL Server!");
 
         //--Close Connection.
         connectionHolder.removeConnection();
     }
 
-//    public void updateSupply(Supply supply, HttpServletRequest request) throws SQLException {
-//        final String updatedId = request.getParameter("supplyId");
-//
-//        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-//        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-//
-//        if (!updatedId.equals(supply.getSupplyId()))
-//            throw new NoSuchElementException("Supply Id is invalid");
-//
-//        if (supplyRepository.update(connectionHolder, supply) == 0)
-//            throw new SQLException("There's an error with SQL Server!");
-//
-//        //--Close Connection.
-//        connectionHolder.removeConnection();
-//    }
+    public void updateSupply(Supply supply, HttpServletRequest request) throws SQLException {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        //--Check If 'MAVT' is already existing or not.
+        if (!supplyRepository.isExistingSupplyBySupplyId(connectionHolder, supply.getSupplyId()))
+            throw new NoSuchElementException("Updated Supply Id not found!");
+
+        //--Check If 'MAVT' is already in use or not.
+        if (supplyRepository.isUsingSupplyBySupplyId(connectionHolder, supply.getSupplyId()))
+            throw new IllegalStateException("Updated Supply is using!");
+
+        if (supplyRepository.update(connectionHolder, supply) == 0)
+            throw new SQLException("There's an error with SQL Server!");
+
+        //--Close Connection.
+        connectionHolder.removeConnection();
+    }
+
+    public void deleteSupply(String supplyId, HttpServletRequest request) throws SQLException {
+        //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+        //--Check If 'MAVT' is already existing or not.
+        if (!supplyRepository.isExistingSupplyBySupplyId(connectionHolder, supplyId))
+            throw new NoSuchElementException("Deleted Supply Id not found!");
+
+        //--Check If 'MAVT' is already in use or not.
+        if (supplyRepository.isUsingSupplyBySupplyId(connectionHolder, supplyId))
+            throw new IllegalStateException("Updated Supply is using!");
+
+        if (supplyRepository.delete(connectionHolder, supplyId) == 0)
+            throw new SQLException("Something wrong happened in your DBMS");
+    }
 }

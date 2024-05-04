@@ -66,7 +66,7 @@ public class SupplyRepository {
             //--Close all connection.
             statement.close();
         } catch (SQLException e) {
-            logger.info("Error In 'existingSupplyId' of SupplyRepository: " + e);
+            logger.info("Error In 'isExistingSupplyBySupplyId' of SupplyRepository: " + e);
         }
         return result;
     }
@@ -77,18 +77,19 @@ public class SupplyRepository {
 
         try {
             //--Prepare data to execute Stored Procedure.
-            CallableStatement statement = connectHolder.getConnection().prepareCall("{call SP_CHECK_USING_SUPPLY(?)}");
-            statement.setString(1, supplyId);
-            ResultSet resultSet = statement.executeQuery();
+            CallableStatement statement = connectHolder.getConnection().prepareCall("{? = call SP_CHECK_USING_SUPPLY(?)}");
+            statement.setString(2, supplyId);
 
-            //--If at least one Employee is existing.
-            if (resultSet.next()) result = true;
+            //--Register the output parameter
+            statement.registerOutParameter(1, Types.BOOLEAN);
+            statement.execute();
+            //--Return 1(true) if supplyId is already exist
+            result = statement.getBoolean(1);
 
             //--Close all connection.
-            resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            logger.info("Error In 'existingEmployeeIdentifier' of EmployeeRepository: " + e);
+            logger.info("Error In 'isUsingSupplyBySupplyId' of SupplyRepository: " + e);
         }
         return result;
     }
@@ -117,7 +118,7 @@ public class SupplyRepository {
     public int update(DBConnectionHolder connectionHolder, Supply supply) {
         try {
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement("""
-                UPDATE Kho SET TENVT = ?, DVT = ?, SOLUONGTON = ? WHERE MAVT = ?;
+                UPDATE Vattu SET TENVT = ?, DVT = ?, SOLUONGTON = ? WHERE MAVT = ?;
             """);
             statement.setString(1, supply.getSupplyName());
             statement.setString(2, supply.getUnit());
@@ -134,6 +135,23 @@ public class SupplyRepository {
             logger.info("Error In 'update' of SupplyRepository: " + e);
             return 0;
         }
+    }
+
+    public int delete(DBConnectionHolder connectionHolder, String supplyId) {
+        int result = 0;
+        try {
+            PreparedStatement statement = connectionHolder.getConnection()
+                    .prepareStatement("DELETE FROM Vattu WHERE MAVT = ?;");
+            statement.setString(1, supplyId);
+
+            //--Retrieve affected rows to know if our Query worked correctly.
+            result = statement.executeUpdate();
+
+            connectionHolder.removeConnection();
+        } catch (SQLException e) {
+            logger.info("Error In 'delete' of SupplyRepository: " + e);
+        }
+        return result;
     }
 
     /**
