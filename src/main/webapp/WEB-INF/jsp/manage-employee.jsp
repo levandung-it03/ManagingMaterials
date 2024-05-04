@@ -116,31 +116,31 @@
         <form action="/service/v1/branch/delete-employee" method="POST">
             <table>
                 <thead>
-                    <tr>
-                        <th id="employeeId">
-                            Mã
-                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                        </th>
-                        <th id="base-profile">
-                            Thông tin cơ bản
-                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                        </th>
-                        <th id="birthday">
-                            Ngày sinh
-                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                        </th>
-                        <th id="address">
-                            Địa chỉ
-                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                        </th>
-                        <th id="salary">
-                            Lương
-                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                        </th>
-                        <th id="update">Cập nhật</th>
-                        <th id="addAccount">Thêm tài khoản</th>
-                        <th id="delete">Xoá</th>
-                    </tr>
+                <tr>
+                    <th id="employeeId">
+                        Mã
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="base-profile">
+                        Thông tin cơ bản
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="birthday">
+                        Ngày sinh
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="address">
+                        Địa chỉ
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="salary">
+                        Lương
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="update">Cập nhật</th>
+                    <th id="addAccount">Thêm tài khoản</th>
+                    <th id="delete">Xoá</th>
+                </tr>
                 </thead>
                 <tbody></tbody>
             </table>
@@ -148,6 +148,66 @@
         <div id="table-footer">
             <div id="table-footer_main"></div>
         </div>
+    </div>
+</div>
+<div id="form-dialog" class="closed">
+    <div id="form-dialog_surrounding-frame"></div>
+    <div id="form-dialog_adding-account">
+        <form action="/service/v1/branch/add-account" method="post" modelAttribute="account">
+            <span id="form-title">Tạo login</span>
+            <div class="form-input" id="employeeId">
+                <fieldset>
+                    <legend>Mã nhân viên</legend>
+                    <input name="employeeId" type="number" value="" readonly/>
+                </fieldset>
+            </div>
+            <div class="form-input strong-text" id="fullName">
+                <fieldset>
+                    <legend>Họ và tên</legend>
+                    <input name="fullName" type="text" value="" maxlength="40" readonly/>
+                </fieldset>
+            </div>
+            <div class="form-select" id="role">
+                <fieldset>
+                    <legend>Vai trò</legend>
+                    <select name="role">
+                        <option value="CHINHANH">Chi nhánh</option>
+                        <option value="USER">Người dùng</option>
+                    </select>
+                </fieldset>
+            </div>
+            <div class="form-input" id="username">
+                <fieldset>
+                    <legend>Tên đăng nhập</legend>
+                    <input name="username" type="passowrd" value="" maxlength="10" required/>
+                </fieldset>
+                <div class="form_text-input_err-message"></div>
+            </div>
+            <div class="form-input" id="password">
+                <fieldset>
+                    <legend>Mật khẩu</legend>
+                    <input name="password" type="password" value="" maxlength="20" required/>
+                    <div class="password_toggle-hidden">
+                        <i id="password" class="show-pass fa-solid fa-eye"></i>
+                        <i id="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
+                    </div>
+                </fieldset>
+                <div class="form_text-input_err-message"></div>
+            </div>
+            <div class="form-input" id="retypePassword">
+                <fieldset>
+                    <legend>Mật khẩu xác nhận</legend>
+                    <input name="retypePassword" type="text" value="" maxlength="20" required/>
+                    <div class="password_toggle-hidden">
+                        <i id="password" class="show-pass fa-solid fa-eye"></i>
+                        <i id="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
+                    </div>
+                </fieldset>
+                <div class="form_text-input_err-message"></div>
+            </div>
+            <input type="submit" value="Thêm nhân viên">
+        </form>
+        <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
     </div>
 </div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>

@@ -4,26 +4,36 @@ html {
     margin: 0;
     padding: 0;
 }
-div#center-page_adding-form form {
+div#center-page_adding-form form,
+div#form-dialog_adding-account form {
     padding: 28px;
-    margin: 20px 0 20px 20px;
-    width: calc(100% - 2 * 20px);
-    background-color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.95);
     border: 1px var(--black-text) solid;
     border-radius: 10px;
     color: var(--grey-text-form);
     font-size: 0.9rem;
     font-weight: 600;
+}
+div#center-page_adding-form form {
+    margin: 20px 0 20px 20px;
     min-height: 94%;
+    width: calc(100% - 2 * 20px);
+}
+div#form-dialog_adding-account form {
+    width: 100%;
 }
 div#center-page_adding-form form .form-input,
-div#center-page_adding-form form .form-select {
+div#center-page_adding-form form .form-select,
+div#form-dialog_adding-account form .form-input,
+div#form-dialog_adding-account form .form-select {
     position: relative;
     min-height: 70px !important;
 }
 
 div#center-page_adding-form .form-input label,
-div#center-page_adding-form .form-select label {
+div#center-page_adding-form .form-select label,
+div#form-dialog_adding-account .form-input label,
+div#form-dialog_adding-account .form-select label {
     display: block;
     padding: 4px;
 }
@@ -42,7 +52,9 @@ div#center-page_adding-form form div#branch {
 /*------------*/
 
 div#center-page_adding-form .form-input fieldset,
-div#center-page_adding-form .form-select fieldset {
+div#center-page_adding-form .form-select fieldset,
+div#form-dialog_adding-account .form-input fieldset,
+div#form-dialog_adding-account .form-select fieldset {
     width: 100%;
     height: 55px;
     border: 2px var(--grey-border) solid;
@@ -50,15 +62,20 @@ div#center-page_adding-form .form-select fieldset {
     padding: 0 10px;
 }
 div#center-page_adding-form .form-input fieldset legend,
-div#center-page_adding-form .form-select fieldset legend {
+div#center-page_adding-form .form-select fieldset legend,
+div#form-dialog_adding-account fieldset legend,
+div#form-dialog_adding-account fieldset legend {
     color: var(--black-text);
     font-weight: 100;
 }
 div#center-page_adding-form .form-input input,
-div#center-page_adding-form .form-select select {
+div#center-page_adding-form .form-select select,
+div#form-dialog_adding-account .form-input input,
+div#form-dialog_adding-account .form-select select {
     outline: none;
     border: none;
     width: 100%;
+    background-color: transparent;
 }
 
 div#center-page_adding-form .form-input_err-message {
@@ -78,7 +95,8 @@ div#center-page_adding-form form span#cancel-updating {
     padding: 8px 0;
     margin: 30px auto auto;
 }
-div#center-page_adding-form form input[type=submit] {
+div#center-page_adding-form form input[type=submit],
+div#form-dialog_adding-account form input[type=submit] {
     padding: 12px 42px;
     margin: 30px auto auto;
 }
@@ -88,10 +106,6 @@ div#center-page_adding-form form input[type=submit] {
 }
 
 /*--Customize Employee List--*/
-div#employee-list {
-    /*background: blue;*/
-}
-
 table tr td {
     height: 60px;
 }
@@ -152,4 +166,59 @@ table tr td.delete {
 table tr th#addAccount,
 table tr td.addAccount {
     width: 9%;
+}
+table tr td.addAccount i:hover {
+    cursor: pointer;
+    background-color: #0dac67;
+    color: #ffffff;
+}
+
+/* Custom form-dialog */
+div#form-dialog {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+div#form-dialog div#form-dialog_adding-account {
+    z-index: 1;
+    position: absolute;
+    width: 30%;
+    min-width: 250px;
+    top: 30px;
+    left: 35%;
+}
+div#form-dialog div#form-dialog_surrounding-frame {
+    z-index: 0;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+div#form-dialog div#form-dialog_surrounding-frame:hover {
+    cursor: pointer;
+}
+
+div#form-dialog span#form-title {
+    display: block;
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    padding: 24px;
+}
+
+div#form-dialog div#closing-dialog-btn {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 2.5rem;
+    transition: color ease 0.2s, scale ease 0.2s;
+}
+div#form-dialog div#closing-dialog-btn:hover {
+    cursor: pointer;
+    color: grey;
+    scale: 1.1;
+}
+
+.closed {
+    display: none!important;
 }

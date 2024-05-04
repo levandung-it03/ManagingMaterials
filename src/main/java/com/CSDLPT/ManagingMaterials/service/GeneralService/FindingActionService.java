@@ -36,7 +36,7 @@ public class FindingActionService {
         List<String> fieldInfo = staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField());
         String conditionOfQuery = String.format(
             "%s AND %s LIKE '%%'+?+'%%' ",
-            searchingObject.getMoreCondition().isEmpty() ? "TRUE" : searchingObject.getMoreCondition(),
+            searchingObject.getMoreCondition().isEmpty() ? "''=''" : searchingObject.getMoreCondition(),
             //--Type-casting syntax of this query corresponding with data-type.
             switch (fieldInfo.getLast()) {
                 case NUM_TYPE -> String.format(

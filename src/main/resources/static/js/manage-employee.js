@@ -32,18 +32,108 @@ function AddEmployeeComponent() {
             validate: (value) => value >= 4000000,
             errorMessage: "Lương phải >= 4.000.000"
         },
+        username: {
+            tag: $('input[name=username]'),
+            validate: function (value) {
+                //--Using function to make "this" works correctly.
+                this.tag.value = value.trim().toUpperCase();
+                return (/^[A-Za-z]+$/).test(value);
+            },
+            errorMessage: "Nhập đúng định dạng"
+        },
+        password: {
+            tag: $('input[name=password]'),
+            validate: (value) => value.length >= 8,
+            errorMessage: "Mật khẩu không đủ dài."
+        },
+        retypePassword: {
+            tag: $('input[name=retypePassword]'),
+            validate: (value) => this.password.tag.value === value,
+            errorMessage: "Mật khẩu không khớp."
+        },
     };
 
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
     customizeSubmitFormAction('div#center-page_adding-form form', validatingBlocks);
+    customizeSubmitFormAction('div#form-dialog_adding-account form', validatingBlocks);
     // recoveryAllSelectTagDataInForm();
     customizeAutoFormatStrongInputTextEvent();
 }
 
-async function ListComponent(AddEmployeeComponentFunc) {
+async function ListComponent(searchingSupportingDataSource, updatingSupportingDataSource) {
+    //--Firstly "fetch" data to put into empty-table-as-list.
+    await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
+    customizeGeneratingFormUpdateEvent(updatingSupportingDataSource);
+    generatePaginationBar(searchingSupportingDataSource);
+    paintAllAvatarColor();
+
+    customizeSearchingListEvent(searchingSupportingDataSource);
+    customizeSortingListEvent();
+
+    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+    await customizeAddAccountFormDialog();
+}
+
+async function customizeAddAccountFormDialog() {
+    const formDialog = $('div#form-dialog');
+
+    //--Customize closing form-dialog action.
+    $('div#form-dialog_surrounding-frame').addEventListener("click", e => formDialog.classList.add("closed"));
+    $('div#closing-dialog-btn').addEventListener("click", e => formDialog.classList.add("closed"));
+
+    function customizeSelectingAddAccountBtn() {
+        [...$$('div#center-page_list table tbody tr td.addAccount a i')].forEach(btn => {
+            btn.addEventListener("click", async e => {
+                const employeeId = e.target.parentElement.id;
+                await fetch(
+                    window.location.origin
+                    + `/service/v1/branch/check-if-employee-account-is-existing?employeeId=${employeeId}`,
+                    {//--Request Options
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ })
+                    }
+                )
+                    .then(response => {
+                        if (response.ok)   return response.json();
+                        else    throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
+                    })
+                    .then(responseObject => {
+                        if (responseObject["isExistingEmployeeAccount"]) {
+                            alert('Error');
+                        } else {
+                            const dataRow = e.target.parentElement.parentElement.parentElement;
+
+                            //--Open form-dialog.
+                            formDialog.classList.remove("closed");
+
+                            //--Mapping data-row into form-dialog.
+                            const mainFormInsideDialog = formDialog.querySelector('form');
+                            mainFormInsideDialog.querySelector('input[name=employeeId]').value =
+                                dataRow.querySelector('td.employeeId').getAttribute("plain-value");
+                            mainFormInsideDialog.querySelector('input[name=fullName]').value =
+                                dataRow.querySelector('b.lastName').getAttribute("plain-value")
+                                +" "+dataRow.querySelector('b.firstName').getAttribute("plain-value");
+
+                        }
+                    });
+            });
+        });
+    }
+
+    customizeSelectingAddAccountBtn();
+    customizeToggleDisplayPasswordEvent();
+}
+
+function GeneralMethods() {
+    removePathAttributes();
+    customizeClosingNoticeMessageEvent();
+}
+
+(async function main() {
     const updatingSupportingDataSource = {
-        addingFormCustomizer: AddEmployeeComponentFunc,
+        addingFormCustomizer: AddEmployeeComponent,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-employee",
         componentsForUpdating: [
@@ -52,12 +142,12 @@ async function ListComponent(AddEmployeeComponentFunc) {
                 <fieldset>
                     <legend>Chi nhánh</legend>
                     <select data="" name="branch">${
-                        [...$$('div#branchesList span.hidden-data-fields')].map(tag => {
-                            const value = tag.textContent.trim();
-                            tag.outerHTML = null;
-                            return `<option value="${value}">${value}</option>`;
-                        }).join("")
-                    }</select>
+                [...$$('div#branchesList span.hidden-data-fields')].map(tag => {
+                    const value = tag.textContent.trim();
+                    tag.outerHTML = null;
+                    return `<option value="${value}">${value}</option>`;
+                }).join("")
+            }</select>
                 </fieldset>
             </div>`
         ]
@@ -72,8 +162,6 @@ async function ListComponent(AddEmployeeComponentFunc) {
         //--Main fields for searching-action.
         tableBody: $('div#center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-employee-by-values",
-        objectsQuantityInTableCustomizer: () => $('#quantity').textContent = $$('table tbody tr').length + " người",
-        allAvatarColorCustomizer: customizeAllAvatarColor,
         rowFormattingEngine: (row) => `
             <tr id="${row.employeeId}">
                 <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
@@ -108,24 +196,21 @@ async function ListComponent(AddEmployeeComponentFunc) {
                 </td>
             </tr>`
     };
-    //--Firstly "fetch" data to put into empty-table-as-list.
-    await fetchPaginatedDataByValues(searchingSupportingDataSource, updatingSupportingDataSource);
 
-    customizeSearchingListEvent(searchingSupportingDataSource, updatingSupportingDataSource);
-    customizeUpdatingFormActionWhenUpdatingBtnIsClicked(updatingSupportingDataSource);
-
-    customizeSortingListEvent();
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
-}
-
-function GeneralMethods() {
-    customizeAllAvatarColor();
-    removePathAttributes();
-    customizeClosingNoticeMessageEvent();
-}
-
-(async function main() {
-    AddEmployeeComponent();
-    await ListComponent(AddEmployeeComponent);
     GeneralMethods();
+    AddEmployeeComponent();
+    await ListComponent(searchingSupportingDataSource, updatingSupportingDataSource);
+    CustomizeFetchingActionSpectator(
+        searchingSupportingDataSource,
+        updatingSupportingDataSource,
+        {
+            tableLabel: "người",
+            callModules: async () => {
+                //--Re-paint the colours of avatars.
+                paintAllAvatarColor();
+                //--Re-customize the listener of all adding-account-buttons.
+                await customizeAddAccountFormDialog();
+            }
+        }
+    );
 })();
