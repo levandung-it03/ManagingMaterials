@@ -61,18 +61,14 @@ function AddEmployeeComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-async function ListComponent(searchingSupportingDataSource, updatingSupportingDataSource) {
+async function ListComponent(searchingSupportingDataSource) {
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
-    customizeGeneratingFormUpdateEvent(updatingSupportingDataSource);
-    generatePaginationBar(searchingSupportingDataSource);
-    paintAllAvatarColor();
 
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
-    await customizeAddAccountFormDialog();
 }
 
 async function customizeAddAccountFormDialog() {
@@ -199,8 +195,7 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddEmployeeComponent();
-    await ListComponent(searchingSupportingDataSource, updatingSupportingDataSource);
-    CustomizeFetchingActionSpectator(
+    await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         updatingSupportingDataSource,
         {
@@ -213,4 +208,5 @@ function GeneralMethods() {
             }
         }
     );
+    await ListComponent(searchingSupportingDataSource);
 })();
