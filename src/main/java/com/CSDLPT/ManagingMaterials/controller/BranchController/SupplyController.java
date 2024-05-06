@@ -86,9 +86,6 @@ public class SupplyController {
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
             logger.info(e.toString());
-        } catch (IllegalStateException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_supply_02");
-            logger.info(e.toString());
         } catch (SQLException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
             logger.info(e.toString());

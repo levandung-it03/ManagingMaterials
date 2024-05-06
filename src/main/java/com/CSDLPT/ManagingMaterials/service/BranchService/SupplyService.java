@@ -77,10 +77,6 @@ public class SupplyService {
         if (!supplyRepository.isExistingSupplyBySupplyId(connectionHolder, supply.getSupplyId()))
             throw new NoSuchElementException("Updated Supply Id not found!");
 
-        //--Check If 'MAVT' is already in use or not.
-        if (supplyRepository.isUsingSupplyBySupplyId(connectionHolder, supply.getSupplyId()))
-            throw new IllegalStateException("Updated Supply is using!");
-
         if (supplyRepository.update(connectionHolder, supply) == 0)
             throw new SQLException("There's an error with SQL Server!");
 
