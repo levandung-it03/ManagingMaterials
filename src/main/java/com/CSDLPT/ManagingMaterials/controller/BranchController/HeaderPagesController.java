@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.controller.BranchController;
 
 import com.CSDLPT.ManagingMaterials.service.BranchService.EmployeeService;
+import com.CSDLPT.ManagingMaterials.service.BranchService.OrderService;
 import com.CSDLPT.ManagingMaterials.service.BranchService.SupplyService;
 import com.CSDLPT.ManagingMaterials.service.BranchService.WarehouseService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ public class HeaderPagesController {
     private final EmployeeService employeeService;
     private final SupplyService supplyService;
     private final WarehouseService warehouseService;
+    private final OrderService orderService;
 
     @GetMapping("/employee/manage-employee")
     public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
@@ -34,5 +36,10 @@ public class HeaderPagesController {
     @GetMapping("/warehouse/manage-warehouse")
     public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) {
         return warehouseService.getManageWarehousePage(request, model);
+    }
+
+    @GetMapping("/order/manage-order")
+    public ModelAndView getManageOrderPage(HttpServletRequest request, Model model) {
+        return orderService.getManageOrderPage(request, model);
     }
 }

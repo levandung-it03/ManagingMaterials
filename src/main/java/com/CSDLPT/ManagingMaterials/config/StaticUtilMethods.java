@@ -67,6 +67,12 @@ public class StaticUtilMethods {
             case "supplyName", "TENVT" -> List.of("TENVT", "supplyName", STR_TYPE);
             case "unit", "DVT" -> List.of("DVT", "unit", STR_TYPE);
             case "quantityInStock", "SOLUONGTON" -> List.of("SOLUONGTON", "quantityInStock", NUM_TYPE);
+            //--Order(DatHang) Entity
+            case "orderId", "MasoDDH" -> List.of("MasoDDH", "orderId", STR_TYPE);
+            case "supplier", "NhaCC" -> List.of("NhaCC", "supplier", STR_TYPE);
+            case "createdDate", "NGAY" -> List.of("NGAY", "createdDate", DATE_TYPE);
+            case "quantitySupply", "SOLUONG" -> List.of("SOLUONG", "quantitySupply", NUM_TYPE);
+            case "price", "DONGIA" -> List.of("DONGIA", "price", NUM_TYPE);
             //--More....
 
             default -> throw new NoSuchFieldException("Field not found");

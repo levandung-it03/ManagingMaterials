@@ -12,7 +12,7 @@
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-supply.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-order-detail.css">
 </head>
 <body>
 <%--    <%@ include file="/WEB-INF/jsp/category.jsp" %>--%>
@@ -33,75 +33,73 @@
 </div>
 <div id="center-page">
     <div id="center-page_adding-form">
-        <form action="/service/v1/branch/add-supply" method="post" modelAttribute="supply">
+        <form action="/service/v1/branch/add-order-detail" method="post" modelAttribute="orderDetail">
+            <div class="form-input" id="orderId">
+                <fieldset>
+                    <legend>Mã đơn đặt hàng</legend>
+                    <input name="orderId" type="text" value="${orderDetail.orderId}" readonly/>
+                </fieldset>
+            </div>
             <div class="form-input" id="supplyId">
                 <fieldset>
                     <legend>Mã vật tư</legend>
-                    <input name="supplyId" type="text" value="${supply.supplyId}" maxlength="4" required/>
+                    <input name="supplyId" type="text" value="${orderDetail.supplyId}" maxlength="4" required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <div class="form-input" id="supplyName">
+            <div class="form-input strong-text" id="quantitySupply">
                 <fieldset>
-                    <legend>Tên vật tư</legend>
-                    <input name="supplyName" type="text" value="${supply.supplyName}" maxlength="30" required/>
+                    <legend>Số lượng</legend>
+                    <input name="quantitySupply" type="number" value="${orderDetail.quantitySupply}" min="0" required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <div class="form-input strong-text" id="unit">
+            <div class="form-input" id="price">
                 <fieldset>
-                    <legend>Đơn vị tính</legend>
-                    <input name="unit" type="text" value="${supply.unit}" maxlength="15" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="quantityInStock">
-                <fieldset>
-                    <legend>Số lượng tồn</legend>
-                    <input name="quantityInStock" type="number" value="${supply.quantityInStock}" min="0" required/>
+                    <legend>Đơn giá</legend>
+                    <input name="price" type="number" value="${String.format('%.0f', orderDetail.price)}" min="0" required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div id="rest-components-for-updating"></div>
-            <input type="submit" value="Thêm vật tư">
+            <input type="submit" value="Thêm chi tiết DDH">
         </form>
     </div>
     <div id="center-page_list">
         <div id="table-tools">
             <div id="table-description">
-                <b>Số lượng </b>
+                <b>Chi tiết đơn đặt hàng </b>
                 <span id="quantity"></span>
             </div>
             <div id="table-search-box">
                 <select id="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
                     <option value="MAVT">Mã vật tư</option>
-                    <option value="TENVT">Tên vật tư</option>
-                    <option value="DVT">Đơn vị tính</option>
-                    <option value="SOLUONGTON">Số lượng tồn</option>
+                    <option value="SOLUONG">Số lượng</option>
+                    <option value="DONGIA">Đơn giá</option>
                 </select>
                 <input type="text" id="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
         </div>
-        <form action="/service/v1/branch/delete-supply" method="POST">
+        <form action="/service/v1/branch/delete-order-detail" method="POST">
             <table>
                 <thead>
                 <tr>
+                    <th id="orderId">
+                        Mã DDH
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
                     <th id="supplyId">
-                        Mã
+                        Mã vật tư
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="supplyName">
-                        Tên vật tư
+                    <th id="quantitySupply">
+                        Số lượng
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="unit">
-                        Đơn vị tính
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="quantityInStock">
-                        Số lượng tồn
+                    <th id="price">
+                        Đơn giá
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
                     <th id="update">Cập nhật</th>
@@ -117,6 +115,6 @@
     </div>
 </div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
-<script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-supply.js"></script>
+<script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-order-detail.js"></script>
 </body>
 </html>

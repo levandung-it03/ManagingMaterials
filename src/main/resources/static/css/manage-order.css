@@ -1,0 +1,130 @@
+html {
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+div#center-page_adding-form form {
+    padding: 28px;
+    margin: 20px 0 20px 20px;
+    width: calc(100% - 2* 20px);
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 1px var(--black-text) solid;
+    border-radius: 10px;
+    color: var(--grey-text-form);
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-height: 94%;
+}
+div#center-page_adding-form form .form-input,
+div#center-page_adding-form form .form-select {
+    position: relative;
+    min-height: 70px !important;
+}
+
+div#center-page_adding-form .form-input label,
+div#center-page_adding-form .form-select label {
+    display: block;
+    padding: 4px;
+}
+
+/*--Customize each input tag--*/
+div#center-page_adding-form form div#orderId,
+div#center-page_adding-form form div#createdDate,
+div#center-page_adding-form form div#supplier,
+div#center-page_adding-form form div#employeeId,
+div#center-page_adding-form form div#warehouseId {
+    width: 100%;
+}
+/*------------*/
+
+div#center-page_adding-form .form-input fieldset,
+div#center-page_adding-form .form-select fieldset {
+    width: 100%;
+    height: 55px;
+    border: 2px var(--grey-border) solid;
+    border-radius: 10px;
+    padding: 0 10px;
+}
+div#center-page_adding-form .form-input fieldset legend,
+div#center-page_adding-form .form-select fieldset legend {
+    color: var(--black-text);
+    font-weight: 100;
+}
+div#center-page_adding-form .form-input input,
+div#center-page_adding-form .form-select select {
+    outline: none;
+    border: none;
+    width: 100%;
+}
+
+div#center-page_adding-form .form-input_err-message {
+    position: relative;
+}
+
+.err-message-block {
+    position: absolute;
+    display: none;
+    color: red;
+    font-size: 12px;
+    padding-left: 10px;
+}
+
+div#center-page_adding-form form span#cancel-updating {
+    display: block;
+    padding: 8px 0;
+    margin: 30px auto auto;
+}
+div#center-page_adding-form form input[type=submit] {
+    padding: 12px 42px;
+    margin: 30px auto auto;
+}
+
+#error-message-close-btn:hover {
+    cursor: pointer;
+}
+
+/*--Customize Order List--*/
+table tr td {
+    height: 60px;
+}
+table tr th#orderId,
+table tr td.orderId {
+    text-align: start;
+    width: 14%;
+    padding-left: 20px
+}
+table tr th#createdDate,
+table tr td.createdDate {
+    width: 15%;
+}
+table tr th#supplier,
+table tr td.supplier {
+    text-align: start;
+    width: 20%;
+}
+table tr th#employeeId,
+table tr td.employeeId {
+    width: 15%;
+}
+table tr th#warehouseId,
+table tr td.warehouseId {
+    width: 10%;
+}
+table tr th#detail,
+table tr td.detail{
+    width: 10%;
+}
+
+table tr th#update,
+table tr td.update,
+table tr th#delete,
+table tr td.delete{
+    width: 8%;
+}
+
+table tr td.detail i:hover {
+    cursor: pointer;
+    background-color: #0dac67;
+    color: #ffffff;
+}

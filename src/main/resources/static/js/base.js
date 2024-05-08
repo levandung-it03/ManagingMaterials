@@ -236,7 +236,8 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
             body: JSON.stringify({
                 page: searchingSupportingDataSource.currentPage,
                 searchingField: searchingSupportingDataSource.searchingField,
-                searchingValue: searchingSupportingDataSource.searchingValue
+                searchingValue: searchingSupportingDataSource.searchingValue,
+                moreCondition: searchingSupportingDataSource.moreCondition
             })
         }
     )
