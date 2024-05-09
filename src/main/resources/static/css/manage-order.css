@@ -16,6 +16,7 @@ div#center-page_adding-form form {
     font-weight: 600;
     min-height: 94%;
 }
+
 div#center-page_adding-form form .form-input,
 div#center-page_adding-form form .form-select {
     position: relative;
@@ -32,9 +33,15 @@ div#center-page_adding-form .form-select label {
 div#center-page_adding-form form div#orderId,
 div#center-page_adding-form form div#createdDate,
 div#center-page_adding-form form div#supplier,
-div#center-page_adding-form form div#employeeId,
+div#center-page_adding-form form div#employeeId
 div#center-page_adding-form form div#warehouseId {
     width: 100%;
+}
+div#center-page_adding-form form div#warehouseId input{
+    width: 90%;
+}
+div#center-page_adding-form form div#warehouseId i{
+    cursor: pointer;
 }
 /*------------*/
 
@@ -127,4 +134,81 @@ table tr td.detail i:hover {
     cursor: pointer;
     background-color: #0dac67;
     color: #ffffff;
+}
+
+/* Custom form-dialog */
+div#form-dialog {
+    position: fixed;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+div#form-dialog div#form-dialog_select-warehouse {
+    width: 40%;
+    padding: 28px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px var(--black-text) solid;
+    border-radius: 10px;
+    color: var(--grey-text-form);
+    font-size: 0.9rem;
+    font-weight: 600;
+    position: relative;
+}
+div#form-dialog div#form-dialog_surrounding-frame:hover {
+    cursor: pointer;
+}
+
+div#form-dialog span#form-title {
+    display: block;
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+}
+
+div#form-dialog div#closing-dialog-btn {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 2.5rem;
+    transition: color ease 0.2s, scale ease 0.2s;
+}
+div#form-dialog div#closing-dialog-btn:hover {
+    cursor: pointer;
+    color: grey;
+    scale: 1.1;
+}
+
+.closed {
+    display: none!important;
+}
+
+/*--Customize Warehouse List--*/
+#form-dialog table {
+    width: 100%;
+}
+#form-dialog table tr:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+#form-dialog table tr td {
+    height: 45px;
+    cursor: pointer;
+}
+#form-dialog table tr th#warehouseId,
+#form-dialog table tr td.warehouseId {
+    text-align: start;
+    width: 20%;
+    padding-left: 20px;
+}
+#form-dialog table tr th#warehouseName,
+#form-dialog table tr td.warehouseName {
+    text-align: start;
+    width: 20%;
+}
+#form-dialog table tr th#address,
+#form-dialog table tr td.address {
+    width: 60%;
 }

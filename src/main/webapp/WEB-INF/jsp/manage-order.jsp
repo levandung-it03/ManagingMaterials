@@ -67,6 +67,7 @@
                     <legend>Mã kho</legend>
                     <input name="warehouseId" type="text" value="${order.warehouseId}" maxlength="4"
                            required/>
+                    <i class="fa-regular fa-pen-to-square"></i>
                 </fieldset>
             </div>
             <div id="rest-components-for-updating"></div>
@@ -127,43 +128,34 @@
         <div id="table-footer">
             <div id="table-footer_main"></div>
         </div>
-        <%--        <div id="order-detail-list">--%>
-        <%--            <div id="table-tools">--%>
-        <%--                <div id="table-description">--%>
-        <%--                    <b>Chi tiết đơn đặt hàng </b>--%>
-        <%--                </div>--%>
-        <%--            </div>--%>
-        <%--            <form action="/service/v1/branch/delete-order-detail" method="POST">--%>
-        <%--                <table>--%>
-        <%--                    <thead>--%>
-        <%--                    <tr>--%>
-        <%--                        <th id="orderId">--%>
-        <%--                            Mã DDH--%>
-        <%--                            <i class="fa-solid fa-arrow-down-a-z"></i>--%>
-        <%--                        </th>--%>
-        <%--                        <th id="supplyId">--%>
-        <%--                            Mã vật tư--%>
-        <%--                            <i class="fa-solid fa-arrow-down-a-z"></i>--%>
-        <%--                        </th>--%>
-        <%--                        <th id="quantitySupply">--%>
-        <%--                            Số lượng--%>
-        <%--                            <i class="fa-solid fa-arrow-down-a-z"></i>--%>
-        <%--                        </th>--%>
-        <%--                        <th id="price">--%>
-        <%--                            Đơn giá--%>
-        <%--                            <i class="fa-solid fa-arrow-down-a-z"></i>--%>
-        <%--                        </th>--%>
-        <%--                        <th id="update">Cập nhật</th>--%>
-        <%--                        <th id="delete">Xoá</th>--%>
-        <%--                    </tr>--%>
-        <%--                    </thead>--%>
-        <%--                    <tbody></tbody>--%>
-        <%--                </table>--%>
-        <%--            </form>--%>
-        <%--            <div id="table-footer">--%>
-        <%--                <div id="table-footer_main"></div>--%>
-        <%--            </div>--%>
-        <%--        </div>--%>
+    </div>
+</div>
+<div id="form-dialog" class="closed">
+    <div id="form-dialog_select-warehouse">
+        <span id="form-title">Kho</span>
+        <table>
+            <thead>
+            <tr>
+                <th id="warehouseId">
+                    Mã
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="warehouseName">
+                    Tên kho
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="address">
+                    Địa chỉ
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="table-footer">
+            <div id="table-footer_main"></div>
+        </div>
+        <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
     </div>
 </div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>

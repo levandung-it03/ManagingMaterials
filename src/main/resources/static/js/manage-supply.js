@@ -61,10 +61,12 @@ function GeneralMethods() {
     };
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
-        currentPage: 1,
-        objectsQuantity: 0,
-        searchingField: "supplyId",
-        searchingValue: "",
+        data: {
+            currentPage: 1,
+            objectsQuantity: 0,
+            searchingField: "supplyId",
+            searchingValue: "",
+        },
 
         //--Main fields for searching-action.
         tableBody: $('div#center-page_list table tbody'),

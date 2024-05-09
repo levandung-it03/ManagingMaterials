@@ -3,7 +3,6 @@ package com.CSDLPT.ManagingMaterials.controller.BranchController;
 import com.CSDLPT.ManagingMaterials.dto.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.model.Order;
-import com.CSDLPT.ManagingMaterials.model.OrderDetail;
 import com.CSDLPT.ManagingMaterials.service.BranchService.OrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Validator;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("${url.post.branch.prefix.v1}")
 public class OrderController {
     private final OrderService orderService;
-    private final Validator hibernateValidator;
     private final Logger logger;
     @PostMapping("/find-order-by-values")
     public ResponseEntity<ResDtoRetrievingData<Order>> findingOrdersByValues(

@@ -52,12 +52,19 @@ function GeneralMethods() {
     };
     //--Searching data for order detail by orderId
     const searchingSupportingDataSource = {
-        //--Initialize field-values for firstly fetch action.
-        currentPage: 1,
-        objectsQuantity: 1,
-        searchingField: "orderId",
-        searchingValue: "",
-        moreCondition: "MasoDDH = '" + $('input[name=orderId]').value + "'",
+        //--Initialize field-values for firstly fetch action
+        data: {
+            currentPage: 1,
+            objectsQuantity: 1,
+            searchingField: "supplyId",
+            searchingValue: "",
+            conditionObjectsList: [
+                {
+                    name: "orderId",
+                    value: $('input[name=orderId]').value,
+                }
+            ]
+        },
 
         //--Main fields for searching-action.
         tableBody: $('div#center-page_list table tbody'),

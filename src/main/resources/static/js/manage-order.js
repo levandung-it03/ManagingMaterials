@@ -44,7 +44,7 @@ async function ListComponentForOrder(searchingSupportingDataSource) {
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
 
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+    customizeSubmitFormAction('div#center-page_list form', {mockTag: {isValid: true}});
 }
 
 function GeneralMethods() {
@@ -62,10 +62,12 @@ function GeneralMethods() {
     //--Searching data for order by orderId
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
-        currentPage: 1,
-        objectsQuantity: 1,
-        searchingField: "orderId",
-        searchingValue: "",
+        data: {
+            currentPage: 1,
+            objectsQuantity: 1,
+            searchingField: "orderId",
+            searchingValue: "",
+        },
 
         //--Main fields for searching-action.
         tableBody: $('div#center-page_list table tbody'),
@@ -98,12 +100,14 @@ function GeneralMethods() {
     GeneralMethods();
     AddOrderComponent();
 
+    // await customizeSelectingWarehouseFormDialog()
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         updatingSupportingDataSource,
         {
             tableLabel: "đơn hàng",
-            callModules: () => {}
+            callModules: () => {
+            }
         }
     );
     await ListComponentForOrder(searchingSupportingDataSource);

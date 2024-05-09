@@ -72,7 +72,7 @@ public class FindingActionService {
     ) {
         List<T> result = new ArrayList<>();
         try {
-            PageObject pageObject = new PageObject(searchingObject.getPage());
+            PageObject pageObject = new PageObject(searchingObject.getCurrentPage());
             String query = String.format(
                 "SELECT * FROM %s WHERE %s %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY",
                 searchingObject.getSearchingTable(),
