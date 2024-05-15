@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Supply</title>
+    <title>Manage Order</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
@@ -130,8 +130,8 @@
         </div>
     </div>
 </div>
-<div id="form-dialog" class="closed">
-    <div id="form-dialog_select-warehouse">
+<div id="select-dialog" class="closed">
+    <div id="select-dialog-container">
         <span id="form-title">Kho</span>
         <table>
             <thead>

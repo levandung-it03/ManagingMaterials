@@ -26,7 +26,7 @@ public class Supply {
     @Pattern(regexp = "^[A-Za-zÀ-ỹ]{1,15}$", message = "error_entity_03")
     private String unit;
 
-    @NotBlank(message = "error_entity_03")
+    @NotNull(message = "error_entity_03")
     @Min(value = 0, message = "error_entity_03")
     private Integer quantityInStock;
 }

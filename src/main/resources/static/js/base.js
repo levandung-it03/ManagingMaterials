@@ -31,13 +31,20 @@ const colorMap = {
     Z: "#0014A8"
 };
 let tempCounter = 0;
-function tst() { tempCounter++; console.log(tempCounter); }
-function log(v) {console.log(v);}
+
+function tst() {
+    tempCounter++;
+    console.log(tempCounter);
+}
+
+function log(v) {
+    console.log(v);
+}
 
 function salaryFormattingEngine(salary) {
     const salaryAsString = salary + "";
     let result = "";
-    for (let index = salaryAsString.length; index > 0; index-=3)
+    for (let index = salaryAsString.length; index > 0; index -= 3)
         result = "," + salaryAsString.substring(index - 3, index) + result;
     return result.slice(1) + "VNĐ";
 }
@@ -74,7 +81,7 @@ function customizeValidateEventInputTags(validatingBlocks) {
     Object.entries(validatingBlocks).forEach(elem => {
         const toggleShowMessage = (elem) => {
             if (elem[1].validate(elem[1].tag.value)) $('span#' + elem[0]).style.display = "none";
-            else    $('span#' + elem[0]).style.display = "inline";
+            else $('span#' + elem[0]).style.display = "inline";
         };
         elem[1].tag.addEventListener("keyup", e => toggleShowMessage(elem));
         elem[1].tag.addEventListener("change", e => toggleShowMessage(elem));
@@ -181,17 +188,17 @@ function customizeSortingListEvent() {
             const firstCellOfSearchingColumn = cellOfFields[0].getAttribute('plain-value');
             let searchingDataFieldType = null;
 
-            if (Number.parseInt(firstCellOfSearchingColumn) !== null)   searchingDataFieldType = "Number";
-            else if (new Date(firstCellOfSearchingColumn) !== null)     searchingDataFieldType = "Date";
-            else    searchingDataFieldType = "String";
+            if (Number.parseInt(firstCellOfSearchingColumn) !== null) searchingDataFieldType = "Number";
+            else if (new Date(firstCellOfSearchingColumn) !== null) searchingDataFieldType = "Date";
+            else searchingDataFieldType = "String";
 
             cellOfFields.sort((a, b) => {
                 const firstCell = a.getAttribute('plain-value');
                 const secondCell = b.getAttribute('plain-value');
 
                 if (searchingDataFieldType === "Number") return Number.parseInt(firstCell) - Number.parseInt(secondCell);
-                else if (searchingDataFieldType === "Date")   return new Date(firstCell) < new Date(secondCell);
-                else    return firstCell.localeCompare(secondCell);
+                else if (searchingDataFieldType === "Date") return new Date(firstCell) < new Date(secondCell);
+                else return firstCell.localeCompare(secondCell);
             });
             alert("Sắp xếp thành công!");
             $('table tbody').innerHTML = cellOfFields.reduce((accumulator, cell) => {
@@ -207,7 +214,7 @@ function customizeSearchingListEvent(searchingSupportingDataSource) {
 
     const handleSearchingListEvent = async e => {
         //--Stop searching if searched-field is not selected yet.
-        if (selectedOption.value === "")   alert("Bạn hãy chọn trường cần tìm kiếm trước!");
+        if (selectedOption.value === "") alert("Bạn hãy chọn trường cần tìm kiếm trước!");
 
         //--Start data with selected field by calling an API.
         else {
@@ -249,8 +256,8 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
         }
     )
         .then(response => {
-            if (response.ok)   return response.json();
-            else    throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
+            if (response.ok) return response.json();
+            else throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
         })
         .then(responseObject => {
             if (responseObject["totalObjectsQuantityResult"] === 0) {
@@ -260,7 +267,7 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
                 //--Render table-data by found result-data-set.
                 searchingSupportingDataSource.tableBody.innerHTML = responseObject["resultDataSet"]
                     .map(dataOfRow => {
-                        for (let field in dataOfRow)    if (dataOfRow[field] === null)  dataOfRow[field] = "";
+                        for (let field in dataOfRow) if (dataOfRow[field] === null) dataOfRow[field] = "";
                         return searchingSupportingDataSource.rowFormattingEngine(dataOfRow);
                     })
                     .join("");
@@ -269,7 +276,9 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
             //--Maybe "0" if data-set is empty.
             searchingSupportingDataSource.data.objectsQuantity = responseObject["totalObjectsQuantityResult"];
         })
-        .catch(error => { console.error("Đã có lỗi xảy ra:", error) });
+        .catch(error => {
+            console.error("Đã có lỗi xảy ra:", error)
+        });
 }
 
 function generatePaginationBar(observedTableContainer, searchingSupportingDataSource) {
@@ -294,7 +303,7 @@ function generatePaginationBar(observedTableContainer, searchingSupportingDataSo
             //--Build the pagination-bar-constructor.
             $(paginationBarSelector).innerHTML = `<div id="index-numbers">${indexNumberBlocks}</div>`;
         }
-        //--case.2 - [<] [1] 2 3 ... 15 [>]
+            //--case.2 - [<] [1] 2 3 ... 15 [>]
         //--Note: the [15] "max-page-number" is just an example, use the "total-pages" instead.
         else {
             //--case.2.1 - [<] 1 2 3 [4] 5 6 ... 15 [>]
@@ -366,10 +375,10 @@ function generatePaginationBar(observedTableContainer, searchingSupportingDataSo
             btn.addEventListener("click", async e => {
                 if (!btn.classList.contains("deactivated")) {
                     //--If the selected btn is not the index-number-page-buttons.
-                    if (btn.id.trim() === "page-moving-previous-btn")   searchingSupportingDataSource.data.currentPage--;
-                    else if (btn.id.trim() === "page-moving-next-btn")  searchingSupportingDataSource.data.currentPage++;
+                    if (btn.id.trim() === "page-moving-previous-btn") searchingSupportingDataSource.data.currentPage--;
+                    else if (btn.id.trim() === "page-moving-next-btn") searchingSupportingDataSource.data.currentPage++;
                     //--Or else.
-                    else    searchingSupportingDataSource.data.currentPage = Number.parseInt(btn.textContent.trim());
+                    else searchingSupportingDataSource.data.currentPage = Number.parseInt(btn.textContent.trim());
 
                     //--Starting fetch data by selected-pagination-bar-buttons.
                     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
@@ -432,17 +441,55 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
         });
 }
 
+async function handlingCreateDialogSelect(searchingSupportingDataSource) {
+    const selectDialog = $('div#select-dialog');
+    //--Open dialog when clicking on icon in the add form
+    $(`div#center-page_adding-form #${searchingSupportingDataSource.data.searchingField} i`)
+        .addEventListener("click", async e => {
+            await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource)
+            //--Open select-dialog.
+            selectDialog.classList.remove("closed");
+        });
+
+    //--Auto fill input value when clicking on any row in select dialog
+    $(`div#select-dialog tbody`).addEventListener("click", e =>{
+        $(`div#center-page_adding-form #${searchingSupportingDataSource.data.searchingField} input`)
+            .value = e.target.closest("tr").id
+        selectDialog.classList.add("closed")
+    })
+
+    //--Customize closing dialog action.
+    //--Stop propagation when clicking on dialog container so when select from list, it won't close the dialog
+    $('div#select-dialog-container').addEventListener("click", e => e.stopPropagation());
+    //--Close dialog when clicking on dialog
+    selectDialog.addEventListener("click", e => selectDialog.classList.add("closed"));
+    //--Close dialog when clicking on close button
+    $('div#closing-dialog-btn').addEventListener("click", e => selectDialog.classList.add("closed"));
+
+    await CustomizeFetchingActionSpectator(
+        searchingSupportingDataSource,
+        {},
+        {
+            callModulesOfExtraFeatures: () => {
+            }
+        },
+        "div#select-dialog"
+    );
+}
+
 async function CustomizeFetchingActionSpectator(
     searchingSupportingDataSource,
     updatingSupportingDataSource,
     moreFeatures,
-    observedTableContainer='div#center-page_list'
+    observedTableContainer = 'div#center-page_list'
 ) {
     //--Create a mutation observer instance when each fetch-action is made.
     await new MutationObserver(async () => {
         //--Re-calculate the quantities.
-        $(observedTableContainer + ' #quantity').textContent =
-            $$(observedTableContainer + ' tbody tr').length + " " + moreFeatures.tableLabel;
+        if (moreFeatures.tableLabel) {
+            $(observedTableContainer + ' #quantity').textContent =
+                $$(observedTableContainer + ' tbody tr').length + " " + moreFeatures.tableLabel;
+        }
 
         //--Re-customize the listener of all updating-buttons.
         customizeGeneratingFormUpdateEvent(observedTableContainer, updatingSupportingDataSource);
@@ -454,5 +501,5 @@ async function CustomizeFetchingActionSpectator(
         await moreFeatures.callModulesOfExtraFeatures();
 
         //--Configure the observer to observe changes to the table's child list
-    }).observe($(observedTableContainer + ' tbody'), { childList: true, subtree: true });
+    }).observe($(observedTableContainer + ' tbody'), {childList: true, subtree: true});
 }

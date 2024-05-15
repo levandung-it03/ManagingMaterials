@@ -96,18 +96,36 @@ function GeneralMethods() {
                 </td>
             </tr>`
     };
+    const searchingSupportingDataSourceForDialog = {
+        //--Initialize field-values for firstly fetch action.
+        data: {
+            currentPage: 1,
+            objectsQuantity: 0,
+            searchingField: "warehouseId",
+            searchingValue: "",
+        },
+
+        //--Main fields for searching-action.
+        tableBody: $('div#select-dialog table tbody'),
+        fetchDataAction: "/service/v1/branch/find-warehouse-by-values",
+        rowFormattingEngine: (row) => `
+            <tr id="${row.warehouseId}">
+                <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
+                <td plain-value="${row.warehouseName}" class="warehouseName">${row.warehouseName}</td>
+                <td plain-value="${row.address}" class="address">${row.address}</td>
+            </tr>`
+    };
 
     GeneralMethods();
     AddOrderComponent();
 
-    // await customizeSelectingWarehouseFormDialog()
+    await handlingCreateDialogSelect(searchingSupportingDataSourceForDialog)
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         updatingSupportingDataSource,
         {
             tableLabel: "đơn hàng",
-            callModulesOfExtraFeatures: () => {
-            }
+            callModulesOfExtraFeatures: () => {}
         }
     );
     await ListComponentForOrder(searchingSupportingDataSource);

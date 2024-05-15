@@ -13,8 +13,9 @@ function AddSupplyComponent() {
             tag: $('input[name=supplyName]'),
             validate: function (value) {
                 //--Using function to make "this" works correctly.
-                this.tag.value = value.split(' ').map((word) => word.slice(0, 1).toUpperCase() + word.slice(1)).join(" ");
-                return (/^[A-Za-zÀ-ỹ]{1,50}( [A-Za-zÀ-ỹ0-9]{1,30})*$/).test(this.tag.value) && this.tag.value.length !== 0;
+                this.tag.value = value.split(' ').map(word => word.slice(0, 1).toUpperCase() + word.slice(1)).join(' ');
+                return (/^( *[A-Za-zÀ-ỹ]{1,50}(?: [A-Za-zÀ-ỹ0-9]{1,30})* *)$/)
+                    .test(this.tag.value) && this.tag.value.length !== 0;
             },
             errorMessage: "Tên vật tư không hợp lệ."
         },
@@ -44,7 +45,7 @@ async function ListComponent(searchingSupportingDataSource) {
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
 
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+    customizeSubmitFormAction('div#center-page_list form', {mockTag: {isValid: true}});
 }
 
 function GeneralMethods() {
@@ -97,7 +98,8 @@ function GeneralMethods() {
         updatingSupportingDataSource,
         {
             tableLabel: "vật tư",
-            callModulesOfExtraFeatures: () => {}
+            callModulesOfExtraFeatures: () => {
+            }
         }
     );
     await ListComponent(searchingSupportingDataSource);
