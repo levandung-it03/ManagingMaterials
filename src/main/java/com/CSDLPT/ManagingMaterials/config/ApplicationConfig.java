@@ -43,7 +43,7 @@ public class ApplicationConfig {
         messagePairs.put("error_entity_04", "Mã đối tượng bị trùng, vui lòng thay đổi!");
 
         messagePairs.put("error_account_01", "Thông tin đăng nhập không đúng!");
-        messagePairs.put("error_account_02", "Username đã tồn tại!");
+        messagePairs.put("error_account_02", "Thông tin tài khoản đã tồn tại!");
 
         messagePairs.put("error_employee_01", "Mã nhân viên, hoặc CMND đã tồn tại!");
 

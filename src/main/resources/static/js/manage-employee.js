@@ -43,12 +43,16 @@ function AddEmployeeComponent() {
         },
         password: {
             tag: $('input[name=password]'),
-            validate: (value) => value.length >= 8,
+            validate: function (value) {
+                if (validatingBlocks.retypePassword.tag.value !== "")
+                    validatingBlocks.retypePassword.tag.dispatchEvent(new Event("keyup"));
+                return value.length >= 8;
+            },
             errorMessage: "Mật khẩu không đủ dài."
         },
         retypePassword: {
             tag: $('input[name=retypePassword]'),
-            validate: (value) => this.password.tag.value === value,
+            validate: (value) => validatingBlocks.password.tag.value === value,
             errorMessage: "Mật khẩu không khớp."
         },
     };
@@ -96,22 +100,31 @@ async function customizeAddAccountFormDialog() {
                         else    throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
                     })
                     .then(responseObject => {
+                        log(responseObject["isExistingEmployeeAccount"]);
                         if (responseObject["isExistingEmployeeAccount"]) {
-                            alert('Error');
+                            $('div#message-block').innerHTML = `
+                                <div class="error-service-message">
+                                    <span>Nhân viên đã tồn tại tài khoản.</span>
+                                    <i id="error-service-message_close-btn" class="fa fa-times-circle" aria-hidden="true"></i>
+                                </div>`;
+                            customizeClosingNoticeMessageEvent();
                         } else {
                             const dataRow = e.target.parentElement.parentElement.parentElement;
+
+                            //--Clear form-dialog
+                            [...formDialog.querySelectorAll('input')].forEach(inputTag => inputTag.value = "");
+                            [...formDialog.querySelectorAll('.err-message-block')]
+                                .forEach(errTag => errTag.style.display = "none");
 
                             //--Open form-dialog.
                             formDialog.classList.remove("closed");
 
                             //--Mapping data-row into form-dialog.
                             const mainFormInsideDialog = formDialog.querySelector('form');
-                            mainFormInsideDialog.querySelector('input[name=employeeId]').value =
-                                dataRow.querySelector('td.employeeId').getAttribute("plain-value");
+                            mainFormInsideDialog.querySelector('input[name=employeeId]').value = employeeId;
                             mainFormInsideDialog.querySelector('input[name=fullName]').value =
                                 dataRow.querySelector('b.lastName').getAttribute("plain-value")
                                 +" "+dataRow.querySelector('b.firstName').getAttribute("plain-value");
-
                         }
                     });
             });

@@ -259,7 +259,6 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
             }
             //--Update objects-quantity value of hidden-input-tag to build pagination-bar.
             //--Maybe "0" if data-set is empty.
-            console.log(responseObject["totalObjectsQuantityResult"]);
             searchingSupportingDataSource.objectsQuantity = responseObject["totalObjectsQuantityResult"];
         })
         .catch(error => { console.error("Đã có lỗi xảy ra:", error) });
@@ -427,7 +426,6 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
 async function CustomizeFetchingActionSpectator(searchingSupportingDataSource, updatingSupportingDataSource, moreFeatures) {
     //--Create a mutation observer instance when each fetch-action is made.
     await new MutationObserver(async () => {
-        log("rend");
         //--Re-calculate the quantities.
         $('#quantity').textContent = $$('table tbody tr').length + " " + moreFeatures.tableLabel;
 

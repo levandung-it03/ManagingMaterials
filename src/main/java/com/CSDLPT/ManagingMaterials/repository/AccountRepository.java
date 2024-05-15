@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.repository;
 
 import com.CSDLPT.ManagingMaterials.connection.DBConnectionHolder;
+import com.CSDLPT.ManagingMaterials.dto.ReqDtoAddingAccount;
 import com.CSDLPT.ManagingMaterials.dto.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.model.Account;
 import com.CSDLPT.ManagingMaterials.model.Enums.Role;
@@ -65,5 +66,30 @@ public class AccountRepository {
             logger.info("Error In 'checkIfEmployeeAccountIsExisting' of AccountRepository: " + e);
         }
         return result;
+    }
+
+    public int save(DBConnectionHolder connectionHolder, ReqDtoAddingAccount account) {
+        try {
+            CallableStatement statement = connectionHolder.getConnection()
+                .prepareCall("{? = call SP_CREATE_LOGIN(?, ?, ?, ?)}");
+
+            //--Register the output parameter
+            statement.registerOutParameter(1, Types.BOOLEAN);
+            statement.setString(2, account.getUsername());
+            statement.setString(3, account.getPassword());
+            statement.setString(4, account.getEmployeeId().toString());
+            statement.setString(5, account.getRole());
+
+            statement.execute();
+            int result = statement.getInt(1);
+
+            //--Close all connection.
+            statement.close();
+
+            return result;
+        } catch (SQLException e) {
+            logger.info("Error In 'save' of AccountRepository: " + e);
+            return 0;
+        }
     }
 }

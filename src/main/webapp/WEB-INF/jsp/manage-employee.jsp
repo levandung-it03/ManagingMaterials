@@ -83,7 +83,7 @@
                 <div class="form_text-input_err-message"></div>
             </div>
             <div id="rest-components-for-updating"></div>
-            <input type="submit" value="Thêm nhân viên">
+            <input type="submit" value="Thêm nhân viên" />
         </form>
         <div id="branchesList" style="display:none">
             <c:forEach items="${branchesList}" var="branch">
@@ -179,7 +179,7 @@
             <div class="form-input" id="username">
                 <fieldset>
                     <legend>Tên đăng nhập</legend>
-                    <input name="username" type="passowrd" value="" maxlength="10" required/>
+                    <input name="username" type="text" value="" maxlength="10" required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
@@ -197,7 +197,7 @@
             <div class="form-input" id="retypePassword">
                 <fieldset>
                     <legend>Mật khẩu xác nhận</legend>
-                    <input name="retypePassword" type="text" value="" maxlength="20" required/>
+                    <input name="retypePassword" type="password" value="" maxlength="20" required/>
                     <div class="password_toggle-hidden">
                         <i id="password" class="show-pass fa-solid fa-eye"></i>
                         <i id="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
@@ -205,7 +205,7 @@
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <input type="submit" value="Thêm nhân viên">
+            <input type="submit" value="Xác nhận" />
         </form>
         <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
     </div>
