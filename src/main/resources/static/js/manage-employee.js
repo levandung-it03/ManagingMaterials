@@ -163,10 +163,12 @@ function GeneralMethods() {
     };
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
-        currentPage: 1,
-        objectsQuantity: 0,
-        searchingField: "employeeId",
-        searchingValue: "",
+        data: {
+            currentPage: 1,
+            objectsQuantity: 0,
+            searchingField: "employeeId",
+            searchingValue: "",
+        },
 
         //--Main fields for searching-action.
         tableBody: $('div#center-page_list table tbody'),
@@ -213,7 +215,7 @@ function GeneralMethods() {
         updatingSupportingDataSource,
         {
             tableLabel: "người",
-            callModules: async () => {
+            callModulesOfExtraFeatures: async () => {
                 //--Re-paint the colours of avatars.
                 paintAllAvatarColor();
                 //--Re-customize the listener of all adding-account-buttons.

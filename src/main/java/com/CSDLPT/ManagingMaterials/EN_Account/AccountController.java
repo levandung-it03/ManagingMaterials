@@ -1,0 +1,85 @@
+package com.CSDLPT.ManagingMaterials.EN_Account;
+
+import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ReqDtoAddingAccount;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Set;
+
+@Controller
+@RequiredArgsConstructor
+public class AccountController {
+    private final AccountService.PublicServices publicServices;
+    private final AccountService.BranchServices branchServices;
+    private final Validator hibernateValidator;
+    private final Logger logger;
+
+    /** Spring MVC: Public controllers **/
+    /*_____________RequestMethod.GET: Public-components_____________*/
+    @GetMapping("/login")
+    public ModelAndView getLoginPage(HttpServletRequest request, Model model) {
+        return publicServices.getLoginPage(request, model);
+    }
+    @GetMapping("/home")
+    public ModelAndView getHomePage(HttpServletRequest request, Model model) {
+        return publicServices.getHomePage(request, model);
+    }
+
+    /*_________________________________________Role_Components_Separator____________________________________________
+     *____________________________________________________________________________________________________________*/
+
+
+    /** Spring MVC: Branch-role controllers **/
+    /*_____________RequestMethod.POST: Account-entity-interaction_____________*/
+    @PostMapping("${url.post.branch.prefix.v1}/check-if-employee-account-is-existing")
+    public ResponseEntity<String> checkIfEmployeeAccountIsExisting(
+        @RequestParam("employeeId") String employeeId,
+        HttpServletRequest request
+    ) {
+        try {
+                return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(branchServices.checkIfEmployeeAccountIsExisting(request, employeeId));
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+    @PostMapping("${url.post.branch.prefix.v1}/add-account")
+    public String addAccount(
+        @RequestBody ReqDtoAddingAccount account,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
+    ) {
+        final String standingUrl = request.getHeader("Referer");
+        Set<ConstraintViolation<ReqDtoAddingAccount>> violations = hibernateValidator.validate(account);
+        if (!violations.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
+            return "redirect:" + standingUrl;
+        }
+
+        try {
+            branchServices.addAccount(request, account);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
+        } catch (DuplicateKeyException ignored) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_account_02");
+        } catch (Exception ignored) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+        }
+        return "redirect:" + standingUrl;
+    }
+}

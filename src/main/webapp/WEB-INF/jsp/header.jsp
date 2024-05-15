@@ -13,7 +13,7 @@
                 </a>
                 <div>
                     <ul class="subnav">
-                        <li><a href="#">ĐƠN ĐẶT HÀNG</a></li>
+                        <li><a href="/branch/order/manage-order">ĐƠN ĐẶT HÀNG</a></li>
                         <li><a href="#">PHIẾU NHẬP</a></li>
                         <li><a href="#">PHIẾU XUẤT</a></li>
                     </ul>

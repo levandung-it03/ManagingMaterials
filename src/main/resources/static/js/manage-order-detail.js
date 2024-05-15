@@ -1,4 +1,4 @@
-function AddSupplyComponent() {
+function AddOrderDetailComponent() {
     const validatingBlocks = {
         supplyId: {
             tag: $('input[name=supplyId]'),
@@ -9,24 +9,15 @@ function AddSupplyComponent() {
             },
             errorMessage: "Mã vật tư không hợp lệ."
         },
-        supplyName: {
-            tag: $('input[name=supplyName]'),
-            validate: function (value) {
-                //--Using function to make "this" works correctly.
-                this.tag.value = value.split(' ').map((word) => word.slice(0, 1).toUpperCase() + word.slice(1)).join(" ");
-                return (/^[A-Za-zÀ-ỹ]{1,50}( [A-Za-zÀ-ỹ0-9]{1,30})*$/).test(this.tag.value) && this.tag.value.length !== 0;
-            },
-            errorMessage: "Tên vật tư không hợp lệ."
-        },
-        unit: {
-            tag: $('input[name=unit]'),
-            validate: (value) => (/^[A-Za-zÀ-ỹ]{1,50}$/).test(value),
-            errorMessage: "Đơn vị tính không được để trống."
-        },
-        quantityInStock: {
-            tag: $('input[name=quantityInStock]'),
+        quantitySupply: {
+            tag: $('input[name=quantitySupply]'),
             validate: (value) => value >= 0,
-            errorMessage: "Số lượng tồn phải >= 0."
+            errorMessage: "Số lượng phải >= 0."
+        },
+        price: {
+            tag: $('input[name=price]'),
+            validate: (value) => value >= 0,
+            errorMessage: "Đơn giá phải >= 0"
         },
     };
 
@@ -37,7 +28,7 @@ function AddSupplyComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-async function ListComponent(searchingSupportingDataSource) {
+async function ListComponentForOrderDetail(searchingSupportingDataSource) {
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
@@ -48,42 +39,49 @@ async function ListComponent(searchingSupportingDataSource) {
 }
 
 function GeneralMethods() {
-    removePathAttributes();
+    // removePathAttributes();
     customizeClosingNoticeMessageEvent();
 }
 
 (async function main() {
     const updatingSupportingDataSource = {
-        addingFormCustomizer: AddSupplyComponent,
+        addingFormCustomizer: AddOrderDetailComponent,
         plainAddingForm: $('div#center-page div#center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-supply",
+        updatingAction: "/service/v1/branch/update-order-detail",
         componentsForUpdating: []
     };
+    //--Searching data for order detail by orderId
     const searchingSupportingDataSource = {
-        //--Initialize field-values for firstly fetch action.
+        //--Initialize field-values for firstly fetch action
         data: {
             currentPage: 1,
-            objectsQuantity: 0,
+            objectsQuantity: 1,
             searchingField: "supplyId",
             searchingValue: "",
+            conditionObjectsList: [
+                {
+                    name: "orderId",
+                    value: $('input[name=orderId]').value,
+                }
+            ]
         },
 
         //--Main fields for searching-action.
         tableBody: $('div#center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-supply-by-values",
+        fetchDataAction: "/service/v1/branch/find-order-detail-by-values",
         rowFormattingEngine: (row) => `
-            <tr id="${row.supplyId}">
+            <tr id="${row.orderId}">
+                <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
                 <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
-                <td plain-value="${row.supplyName}" class="supplyName">${row.supplyName}</td>
-                <td plain-value="${row.unit}" class="unit">${row.unit}</td>
-                <td plain-value="${row.quantityInStock}" class="quantityInStock">${row.quantityInStock}</td>
+                <td plain-value="${row.quantitySupply}" class="quantitySupply">${row.quantitySupply}</td>
+                <td plain-value="${row.price}" class="price">${salaryFormattingEngine(row.price)}</td>
                 <td class="table-row-btn update">
-                    <a id="${row.supplyId}">
+                    <a id="${row.orderId} ${row.supplyId}">
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a>
                 </td>
                 <td class="table-row-btn delete">
-                    <button name="deleteBtn" value="${row.supplyId}">
+                    <button name="deleteBtn" value="${row.orderId} ${row.supplyId}">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
                 </td>
@@ -91,14 +89,15 @@ function GeneralMethods() {
     };
 
     GeneralMethods();
-    AddSupplyComponent();
+    AddOrderDetailComponent();
+
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         updatingSupportingDataSource,
         {
-            tableLabel: "vật tư",
+            tableLabel: "chi tiết đơn đặt hàng",
             callModulesOfExtraFeatures: () => {}
         }
     );
-    await ListComponent(searchingSupportingDataSource);
+    await ListComponentForOrderDetail(searchingSupportingDataSource);
 })();
