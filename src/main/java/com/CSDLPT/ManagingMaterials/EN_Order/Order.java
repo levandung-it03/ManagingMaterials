@@ -17,6 +17,7 @@ import java.util.Date;
 public class Order {
     @NotBlank(message = "error_entity_03")
     @Pattern(regexp = "^[A-Z]{1,7}\\d{1,7}$", message = "error_entity_03")
+    @Length(max = 8, message = "error_entity_03")
     private String orderId;
 
     @DateTimeFormat(iso= DateTimeFormat.ISO.DATE)
@@ -32,6 +33,7 @@ public class Order {
     private Integer employeeId;
 
     @NotBlank(message = "error_entity_03")
-    @Pattern(regexp = "^[A-Z]{1,4}$", message = "error_entity_03")
+    @Pattern(regexp = "^[A-Z]{1,4}\\d{0,3}", message = "error_entity_03")
+    @Length(max = 4, message = "error_entity_03")
     private String warehouseId;
 }

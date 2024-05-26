@@ -5,7 +5,7 @@ function AddWarehouseComponent() {
             validate: function (value) {
                 //--Using function to make "this" works correctly.
                 this.tag.value = value.trim().toUpperCase();
-                return (/^[A-Z]{1,4}$/).test(this.tag.value)
+                return (/^[A-Z]{1,3}\d{1,3}$/).test(this.tag.value) && value.length <= 4;
             },
             errorMessage: "Mã kho không hợp lệ."
         },
