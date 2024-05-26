@@ -1,11 +1,13 @@
-package com.CSDLPT.ManagingMaterials.EN_Order;
+package com.CSDLPT.ManagingMaterials.EN_BillCreation;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -14,19 +16,19 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Order {
+public class BillCreation {
     @NotBlank(message = "error_entity_03")
     @Pattern(regexp = "^[A-Z]{1,7}\\d{1,7}$", message = "error_entity_03")
-    private String orderId;
+    private String billCreationId;
 
     @DateTimeFormat(iso= DateTimeFormat.ISO.DATE)
     @NotNull(message = "error_entity_03")
     @FutureOrPresent(message = "error_entity_03")
-    private Date createdDate;
+    private Date creatingDate;
 
     @NotBlank(message = "error_entity_03")
-    @Length(min = 1, max = 100, message = "error_entity_03")
-    private String supplier;
+    @Pattern(regexp = "^[A-Z]{1,7}\\d{1,7}$", message = "error_entity_03")
+    private String orderId;
 
     @NotNull(message = "error_entity_03")
     private Integer employeeId;
