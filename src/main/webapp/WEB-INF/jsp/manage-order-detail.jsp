@@ -76,9 +76,9 @@
             <div id="table-search-box">
                 <select id="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                    <option value="MAVT">Mã vật tư</option>
-                    <option value="SOLUONG">Số lượng</option>
-                    <option value="DONGIA">Đơn giá</option>
+                    <option value="supplyId">Mã vật tư</option>
+                    <option value="quantitySupply">Số lượng</option>
+                    <option value="price">Đơn giá</option>
                 </select>
                 <input type="text" id="search">
                 <i class="fa-solid fa-magnifying-glass"></i>

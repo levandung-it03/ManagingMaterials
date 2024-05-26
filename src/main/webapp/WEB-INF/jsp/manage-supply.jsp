@@ -75,10 +75,10 @@
             <div id="table-search-box">
                 <select id="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                    <option value="MAVT">Mã vật tư</option>
-                    <option value="TENVT">Tên vật tư</option>
-                    <option value="DVT">Đơn vị tính</option>
-                    <option value="SOLUONGTON">Số lượng tồn</option>
+                    <option value="supplyId">Mã vật tư</option>
+                    <option value="supplyName">Tên vật tư</option>
+                    <option value="unit">Đơn vị tính</option>
+                    <option value="quantityInStock">Số lượng tồn</option>
                 </select>
                 <input type="text" id="search">
                 <i class="fa-solid fa-magnifying-glass"></i>

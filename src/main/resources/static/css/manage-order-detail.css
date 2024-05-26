@@ -193,15 +193,13 @@ div#select-dialog div#closing-dialog-btn:hover {
 #select-dialog table tr th#supplyName,
 #select-dialog table tr td.supplyName {
     text-align: start;
-    width: 35%;
+    width: 38%;
 }
 #select-dialog table tr th#unit,
 #select-dialog table tr td.unit {
-    text-align: start;
     width: 20%;
 }
 #select-dialog table tr th#quantityInStock,
 #select-dialog table tr td.quantityInStock {
-    text-align: start;
-    width: 25%;
+    width: 22%;
 }

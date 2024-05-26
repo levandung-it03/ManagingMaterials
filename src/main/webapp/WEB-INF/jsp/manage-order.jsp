@@ -40,26 +40,12 @@
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
                 </div>
-                <div class="form-input" id="createdDate">
-                    <fieldset>
-                        <legend>Ngày tạo</legend>
-                        <input name="createdDate" type="date"
-                               value="<fmt:formatDate pattern="yyyy-MM-dd" value="${order.createdDate}" />" required/>
-                    </fieldset>
-                    <div class="form_text-input_err-message"></div>
-                </div>
                 <div class="form-input strong-text" id="supplier">
                     <fieldset>
                         <legend>Nhà cung cấp</legend>
                         <input name="supplier" type="text" value="${order.supplier}" maxlength="100" required/>
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
-                </div>
-                <div class="form-input" id="employeeId">
-                    <fieldset>
-                        <legend>Mã nhân viên</legend>
-                        <input name="employeeId" type="number" value="${order.employeeId}" readonly/>
-                    </fieldset>
                 </div>
                 <div class="form-input" id="warehouseId">
                     <fieldset>
@@ -82,11 +68,11 @@
                 <div id="table-search-box">
                     <select id="search">
                         <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                        <option value="MasoDDH">Mã đơn đặt hàng</option>
-                        <option value="NhaCC">Nhà cung cấp</option>
-                        <option value="NGAY">Ngày tạo</option>
-                        <option value="MANV">Mã nhân viên</option>
-                        <option value="MAKHO">Mã kho</option>
+                        <option value="orderId">Mã đơn đặt hàng</option>
+                        <option value="supplier">Nhà cung cấp</option>
+                        <option value="createdDate">Ngày tạo</option>
+                        <option value="employeeId">Mã nhân viên</option>
+                        <option value="warehouseId">Mã kho</option>
                     </select>
                     <input type="text" id="search">
                     <i class="fa-solid fa-magnifying-glass"></i>

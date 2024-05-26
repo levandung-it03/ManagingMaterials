@@ -14,11 +14,6 @@ function AddOrderComponent() {
             validate: (value) => value.length !== 0,
             errorMessage: "Tên nhà cung cấp không được trống."
         },
-        createdDate: {
-            tag: $('input[name=createdDate]'),
-            validate: (value) => (!isNaN(new Date(value)) && new Date(value).toDateString() >= new Date().toDateString()),
-            errorMessage: "Ngày tạo phải >= ngày hiện tại."
-        },
         warehouseId: {
             tag: $('input[name=warehouseId]'),
             validate: function (value) {
