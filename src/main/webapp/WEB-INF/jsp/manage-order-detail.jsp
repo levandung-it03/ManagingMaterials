@@ -44,6 +44,7 @@
                 <fieldset>
                     <legend>Mã vật tư</legend>
                     <input name="supplyId" type="text" value="${orderDetail.supplyId}" maxlength="4" required/>
+                    <i class="fa-regular fa-pen-to-square"></i>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
@@ -57,7 +58,8 @@
             <div class="form-input" id="price">
                 <fieldset>
                     <legend>Đơn giá</legend>
-                    <input name="price" type="number" value="${String.format('%.0f', orderDetail.price)}" min="0" required/>
+                    <input name="price" type="number" value="${String.format('%.0f', orderDetail.price)}" min="0"
+                           required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
@@ -112,6 +114,38 @@
         <div id="table-footer">
             <div id="table-footer_main"></div>
         </div>
+    </div>
+</div>
+<div id="select-dialog" class="closed">
+    <div id="select-dialog-container">
+        <span id="form-title">Vật tư</span>
+        <table>
+            <thead>
+            <tr>
+                <th id="supplyId">
+                    Mã
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="supplyName">
+                    Tên vật tư
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="unit">
+                    Đơn vị tính
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="quantityInStock">
+                    Số lượng tồn
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="table-footer">
+            <div id="table-footer_main"></div>
+        </div>
+        <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
     </div>
 </div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>

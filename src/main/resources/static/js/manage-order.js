@@ -16,7 +16,7 @@ function AddOrderComponent() {
         },
         createdDate: {
             tag: $('input[name=createdDate]'),
-            validate: (value) => (!isNaN(new Date(value)) && new Date(value) >= new Date()),
+            validate: (value) => (!isNaN(new Date(value)) && new Date(value).toDateString() >= new Date().toDateString()),
             errorMessage: "Ngày tạo phải >= ngày hiện tại."
         },
         warehouseId: {

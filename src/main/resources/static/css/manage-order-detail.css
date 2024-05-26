@@ -35,6 +35,12 @@ div#center-page_adding-form form div#quantitySupply,
 div#center-page_adding-form form div#price {
     width: 100%;
 }
+div#center-page_adding-form form div#supplyId input{
+    width: 90%;
+}
+div#center-page_adding-form form div#supplyId i{
+    cursor: pointer;
+}
 /*------------*/
 
 div#center-page_adding-form .form-input fieldset,
@@ -116,4 +122,86 @@ table tr td.update,
 table tr th#delete,
 table tr td.delete {
     width: 10%;
+}
+
+/* Custom select-dialog */
+div#select-dialog {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+div#select-dialog div#select-dialog-container {
+    width: 40%;
+    padding: 28px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px var(--black-text) solid;
+    border-radius: 10px;
+    color: var(--grey-text-form);
+    font-size: 0.9rem;
+    font-weight: 600;
+    position: relative;
+}
+
+div#select-dialog span#form-title {
+    display: block;
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+}
+
+div#select-dialog div#closing-dialog-btn {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 2.5rem;
+    transition: color ease 0.2s, scale ease 0.2s;
+}
+div#select-dialog div#closing-dialog-btn:hover {
+    cursor: pointer;
+    color: grey;
+    scale: 1.1;
+}
+
+.closed {
+    display: none!important;
+}
+
+/*--Customize Warehouse List--*/
+#select-dialog table {
+    width: 100%;
+}
+#select-dialog table tr:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+#select-dialog table tr td {
+    height: 45px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+#select-dialog table tr th#supplyId,
+#select-dialog table tr td.supplyId {
+    text-align: start;
+    width: 20%;
+    padding-left: 20px;
+}
+#select-dialog table tr th#supplyName,
+#select-dialog table tr td.supplyName {
+    text-align: start;
+    width: 35%;
+}
+#select-dialog table tr th#unit,
+#select-dialog table tr td.unit {
+    text-align: start;
+    width: 20%;
+}
+#select-dialog table tr th#quantityInStock,
+#select-dialog table tr td.quantityInStock {
+    text-align: start;
+    width: 25%;
 }
