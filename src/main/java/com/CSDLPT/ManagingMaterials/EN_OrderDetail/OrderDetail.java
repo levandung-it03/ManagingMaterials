@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class OrderDetail {
-    @NotNull(message = "error_entity_03")
+    @NotBlank(message = "error_entity_03")
     @Pattern(regexp = "^[A-Z]{1,7}\\d{1,7}$", message = "error_entity_03")
     private String orderId;
 
-    @NotNull(message = "error_entity_03")
+    @NotBlank(message = "error_entity_03")
     @Pattern(regexp = "^[A-Z]{1,2}\\d{1,2}$", message = "error_entity_03")
     private String supplyId;
 
-    @NotBlank(message = "error_entity_03")
+    @NotNull(message = "error_entity_03")
     @Min(value = 0, message = "error_entity_03")
     private Integer quantitySupply;
 

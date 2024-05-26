@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
 @AllArgsConstructor
 @Builder
 public class Supply {
-    @NotNull(message = "error_entity_03")
+    @NotBlank(message = "error_entity_03")
     @Pattern(regexp = "^[A-Z]{1,3}\\d{1,3}$", message = "error_entity_03")
     private String supplyId;
 
