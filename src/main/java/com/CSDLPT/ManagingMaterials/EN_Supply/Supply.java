@@ -13,7 +13,8 @@ import org.hibernate.validator.constraints.Length;
 @Builder
 public class Supply {
     @NotBlank(message = "error_entity_03")
-    @Pattern(regexp = "^[A-Z]{1,3}\\d{1,3}$", message = "error_entity_03")
+    @Pattern(regexp = "^[A-Z]{1,4}\\d{0,3}", message = "error_entity_03")
+    @Length(max = 4, message = "error_entity_03")
     private String supplyId;
 
     @NotBlank(message = "error_entity_03")

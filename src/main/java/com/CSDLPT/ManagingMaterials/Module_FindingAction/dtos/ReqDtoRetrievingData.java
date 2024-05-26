@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos;
 
 import com.CSDLPT.ManagingMaterials.EN_OrderDetail.dtos.ReqDtoDataForDetail;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,7 @@ public class ReqDtoRetrievingData<T> {
     //--Data from client
     @NotNull
     private Integer currentPage = 1;
+    @NotBlank
     private String searchingField;
     private String searchingValue;
     private List<ReqDtoDataForDetail> conditionObjectsList;
