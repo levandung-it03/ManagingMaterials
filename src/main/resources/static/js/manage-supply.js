@@ -95,10 +95,14 @@ function GeneralMethods() {
     AddSupplyComponent();
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
-        updatingSupportingDataSource,
         {
             tableLabel: "vật tư",
             callModulesOfExtraFeatures: () => {
+                //--Re-customize the listener of all updating-buttons.
+                customizeGeneratingFormUpdateEvent(
+                    'div#center-page_list',
+                    updatingSupportingDataSource
+                );
             }
         }
     );

@@ -441,8 +441,11 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
         });
 }
 
-async function handlingCreateDialogSelect(searchingSupportingDataSource) {
-    const selectDialog = $('div#select-dialog');
+async function CustomizeToggleOpeningAddingFormDialogSupporter(
+    searchingSupportingDataSource,
+    addingFormDialogSupporterSelector='div#select-dialog'
+) {
+    const selectDialog = $(addingFormDialogSupporterSelector);
     //--Open dialog when clicking on icon in the add form
     $(`div#center-page_adding-form #${searchingSupportingDataSource.data.searchingField} i`)
         .addEventListener("click", async e => {
@@ -454,9 +457,9 @@ async function handlingCreateDialogSelect(searchingSupportingDataSource) {
     //--Auto fill input value when clicking on any row in select dialog
     $(`div#select-dialog tbody`).addEventListener("click", e =>{
         $(`div#center-page_adding-form #${searchingSupportingDataSource.data.searchingField} input`)
-            .value = e.target.closest("tr").id
-        selectDialog.classList.add("closed")
-    })
+            .value = e.target.closest("tr").id;
+        selectDialog.classList.add("closed");
+    });
 
     //--Customize closing dialog action.
     //--Stop propagation when clicking on dialog container so when select from list, it won't close the dialog
@@ -468,18 +471,15 @@ async function handlingCreateDialogSelect(searchingSupportingDataSource) {
 
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
-        {},
         {
-            callModulesOfExtraFeatures: () => {
-            }
+            callModulesOfExtraFeatures: () => {}
         },
-        "div#select-dialog"
+        addingFormDialogSupporterSelector
     );
 }
 
 async function CustomizeFetchingActionSpectator(
     searchingSupportingDataSource,
-    updatingSupportingDataSource,
     moreFeatures,
     observedTableContainer = 'div#center-page_list'
 ) {
@@ -490,9 +490,6 @@ async function CustomizeFetchingActionSpectator(
             $(observedTableContainer + ' #quantity').textContent =
                 $$(observedTableContainer + ' tbody tr').length + " " + moreFeatures.tableLabel;
         }
-
-        //--Re-customize the listener of all updating-buttons.
-        customizeGeneratingFormUpdateEvent(observedTableContainer, updatingSupportingDataSource);
 
         //--Rebuild pagination-bar.
         generatePaginationBar(observedTableContainer, searchingSupportingDataSource);

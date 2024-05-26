@@ -119,13 +119,18 @@ function GeneralMethods() {
     GeneralMethods();
     AddOrderComponent();
 
-    await handlingCreateDialogSelect(searchingSupportingDataSourceForDialog)
+    await CustomizeToggleOpeningAddingFormDialogSupporter(searchingSupportingDataSourceForDialog)
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
-        updatingSupportingDataSource,
         {
             tableLabel: "đơn hàng",
-            callModulesOfExtraFeatures: () => {}
+            callModulesOfExtraFeatures: () => {
+                //--Re-customize the listener of all updating-buttons.
+                customizeGeneratingFormUpdateEvent(
+                    'div#center-page_list',
+                    updatingSupportingDataSource
+                );
+            }
         }
     );
     await ListComponentForOrder(searchingSupportingDataSource);

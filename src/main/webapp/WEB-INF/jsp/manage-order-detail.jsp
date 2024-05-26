@@ -68,7 +68,7 @@
     <div id="center-page_list">
         <div id="table-tools">
             <div id="table-description">
-                <b>Chi tiết đơn đặt hàng </b>
+                <b><a style="color:blue" href="/branch/order/manage-order">Danh sách đơn</a> > Chi tiết đơn </b>
                 <span id="quantity"></span>
             </div>
             <div id="table-search-box">

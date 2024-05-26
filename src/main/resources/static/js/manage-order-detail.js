@@ -93,10 +93,15 @@ function GeneralMethods() {
 
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
-        updatingSupportingDataSource,
         {
-            tableLabel: "chi tiết đơn đặt hàng",
-            callModulesOfExtraFeatures: () => {}
+            tableLabel: "chi tiết đơn",
+            callModulesOfExtraFeatures: () => {
+                //--Re-customize the listener of all updating-buttons.
+                customizeGeneratingFormUpdateEvent(
+                    'div#center-page_list',
+                    updatingSupportingDataSource
+                );
+            }
         }
     );
     await ListComponentForOrderDetail(searchingSupportingDataSource);

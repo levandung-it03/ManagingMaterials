@@ -212,7 +212,6 @@ function GeneralMethods() {
     AddEmployeeComponent();
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
-        updatingSupportingDataSource,
         {
             tableLabel: "người",
             callModulesOfExtraFeatures: async () => {
@@ -220,6 +219,11 @@ function GeneralMethods() {
                 paintAllAvatarColor();
                 //--Re-customize the listener of all adding-account-buttons.
                 await customizeAddAccountFormDialog();
+                //--Re-customize the listener of all updating-buttons.
+                customizeGeneratingFormUpdateEvent(
+                    'div#center-page_list',
+                    updatingSupportingDataSource
+                );
             }
         }
     );

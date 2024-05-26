@@ -86,10 +86,15 @@ function GeneralMethods() {
     AddWarehouseComponent();
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
-        updatingSupportingDataSource,
         {
             tableLabel: "kho",
-            callModulesOfExtraFeatures: () => {}
+            callModulesOfExtraFeatures: () => {
+                //--Re-customize the listener of all updating-buttons.
+                customizeGeneratingFormUpdateEvent(
+                    'div#center-page_list',
+                    updatingSupportingDataSource
+                );
+            }
         }
     );
     await ListComponent(searchingSupportingDataSource);
