@@ -21,7 +21,6 @@ import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("")
 public class EmployeeController {
     private final EmployeeService.BranchServices branchServices;
     private final Validator hibernateValidator;

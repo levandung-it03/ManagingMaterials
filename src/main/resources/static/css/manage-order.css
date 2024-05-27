@@ -158,7 +158,7 @@ div#select-dialog div#select-dialog-container {
     position: relative;
 }
 
-div#select-dialog span#form-title {
+div#select-dialog span.form-title {
     display: block;
     text-align: center;
     font-size: 2.4rem;

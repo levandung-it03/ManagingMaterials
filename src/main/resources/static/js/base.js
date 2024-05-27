@@ -283,7 +283,7 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
 
 function generatePaginationBar(observedTableContainer, searchingSupportingDataSource) {
     (function customizePaginationBar() {
-        const paginationBarSelector = observedTableContainer + ' div#table-footer_main';
+        const paginationBarSelector = observedTableContainer + ' div.table-footer_main';
         const indexNumberFormatter = (page) => `<span class="interact-page-btn page-${page}">${page}</span>`;
         const dotsSeparatorBlock = '<span style="align-self: end; padding: 0 10px; font-size: 1.4rem;">...</span>';
 

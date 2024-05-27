@@ -111,14 +111,14 @@
                 <tbody></tbody>
             </table>
         </form>
-        <div id="table-footer">
-            <div id="table-footer_main"></div>
+        <div class="table-footer">
+            <div class="table-footer_main"></div>
         </div>
     </div>
 </div>
 <div id="select-dialog" class="closed">
     <div id="select-dialog-container">
-        <span id="form-title">Vật tư</span>
+        <span class="form-title">Vật tư</span>
         <table>
             <thead>
             <tr>
@@ -142,8 +142,8 @@
             </thead>
             <tbody></tbody>
         </table>
-        <div id="table-footer">
-            <div id="table-footer_main"></div>
+        <div class="table-footer">
+            <div class="table-footer_main"></div>
         </div>
         <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
     </div>

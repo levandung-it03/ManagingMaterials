@@ -198,7 +198,7 @@ div#form-dialog div#form-dialog_surrounding-frame:hover {
     cursor: pointer;
 }
 
-div#form-dialog span#form-title {
+div#form-dialog span.form-title {
     display: block;
     text-align: center;
     font-size: 2.4rem;

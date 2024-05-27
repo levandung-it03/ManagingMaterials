@@ -23,7 +23,7 @@
         </c:if>
     </div>
     <form method="POST" action="/service/v1/auth/authenticate" modelAttribute="authObject">
-        <span id="form-title">Đăng nhập</span>
+        <span class="form-title">Đăng nhập</span>
         <div class="form-select" id="branch">
             <fieldset>
                 <legend>Chọn chi nhánh</legend>

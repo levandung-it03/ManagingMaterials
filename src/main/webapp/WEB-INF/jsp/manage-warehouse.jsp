@@ -97,8 +97,8 @@
                 </tbody>
             </table>
         </form>
-        <div id="table-footer">
-            <div id="table-footer_main"></div>
+        <div class="table-footer">
+            <div class="table-footer_main"></div>
         </div>
     </div>
 </div>

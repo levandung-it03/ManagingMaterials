@@ -145,8 +145,8 @@
                 <tbody></tbody>
             </table>
         </form>
-        <div id="table-footer">
-            <div id="table-footer_main"></div>
+        <div class="table-footer">
+            <div class="table-footer_main"></div>
         </div>
     </div>
 </div>
@@ -154,7 +154,7 @@
     <div id="form-dialog_surrounding-frame"></div>
     <div id="form-dialog_adding-account">
         <form action="/service/v1/branch/add-account" method="post" modelAttribute="account">
-            <span id="form-title">Tạo login</span>
+            <span class="form-title">Tạo login</span>
             <div class="form-input" id="employeeId">
                 <fieldset>
                     <legend>Mã nhân viên</legend>

@@ -109,14 +109,14 @@
                     <tbody></tbody>
                 </table>
             </form>
-            <div id="table-footer">
-                <div id="table-footer_main"></div>
+            <div class="table-footer">
+                <div class="table-footer_main"></div>
             </div>
         </div>
     </div>
-    <div id="select-dialog_order" class="closed">
+    <div class="select-dialog closed" id="select-dialog_order">
         <div id="select-dialog-container">
-            <span id="form-title">Phiếu nhập</span>
+            <span class="form-title">Phiếu nhập</span>
             <table>
                 <thead>
                 <tr>
@@ -140,15 +140,15 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <div id="table-footer">
-                <div id="table-footer_main"></div>
+            <div class="table-footer">
+                <div class="table-footer_main"></div>
             </div>
             <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
         </div>
     </div>
-    <div id="select-dialog_warehouse" class="closed">
+    <div class="select-dialog closed" id="select-dialog_warehouse">
         <div id="select-dialog-container">
-            <span id="form-title">Kho</span>
+            <span class="form-title">Kho</span>
             <table>
                 <thead>
                 <tr>
@@ -168,8 +168,8 @@
                 </thead>
                 <tbody></tbody>
             </table>
-            <div id="table-footer">
-                <div id="table-footer_main"></div>
+            <div class="table-footer">
+                <div class="table-footer_main"></div>
             </div>
             <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
         </div>

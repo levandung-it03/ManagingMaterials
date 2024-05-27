@@ -22,7 +22,7 @@ form {
     font-weight: 600;
 }
 
-form #form-title {
+form .form-title {
     display: block;
     text-align: center;
     font-size: 2.4rem;
