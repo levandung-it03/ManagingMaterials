@@ -467,7 +467,7 @@ async function CustomizeToggleOpeningAddingFormDialogSupporter(
     //--Close dialog when clicking on dialog
     selectDialog.addEventListener("click", e => selectDialog.classList.add("closed"));
     //--Close dialog when clicking on close button
-    $('div#closing-dialog-btn').addEventListener("click", e => selectDialog.classList.add("closed"));
+    $('div.closing-dialog-btn').addEventListener("click", e => selectDialog.classList.add("closed"));
 
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,

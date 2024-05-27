@@ -206,14 +206,14 @@ div#form-dialog span.form-title {
     padding: 24px;
 }
 
-div#form-dialog div#closing-dialog-btn {
+div#form-dialog div.closing-dialog-btn {
     position: absolute;
     top: 0;
     right: 15px;
     font-size: 2.5rem;
     transition: color ease 0.2s, scale ease 0.2s;
 }
-div#form-dialog div#closing-dialog-btn:hover {
+div#form-dialog div.closing-dialog-btn:hover {
     cursor: pointer;
     color: grey;
     scale: 1.1;

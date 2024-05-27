@@ -110,12 +110,12 @@ function GeneralMethods() {
         rowFormattingEngine: (row) => `
             <tr id="${row.orderId}">
                 <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
-                <td plain-value="${row.employeeId}" class="employeeId">
-                    ${row.employeeId} - ${row.lastName + " " + row.firstName}
+                <td plain-value="${row.employeeIdAsFk}" class="employeeId">
+                    ${row.employeeIdAsFk} - ${row.lastName + " " + row.firstName}
                 </td>
                 <td plain-value="${row.supplier}" class="supplier">${row.supplier}</td>
-                <td plain-value="${row.warehouseId}" class="warehouseId">
-                    ${row.warehouseId} - ${row.warehouseName}
+                <td plain-value="${row.warehouseIdAsFk}" class="warehouseId">
+                    ${row.warehouseIdAsFk} - ${row.warehouseName}
                 </td>
                 <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
             </tr>`

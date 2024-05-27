@@ -136,6 +136,10 @@
                         Kho
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
+                    <th id="createdDate">
+                        Ngày tạo
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -143,7 +147,7 @@
             <div class="table-footer">
                 <div class="table-footer_main"></div>
             </div>
-            <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
+            <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
         </div>
     </div>
     <div class="select-dialog closed" id="select-dialog_warehouse">
@@ -171,7 +175,7 @@
             <div class="table-footer">
                 <div class="table-footer_main"></div>
             </div>
-            <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
+            <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
         </div>
     </div>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>

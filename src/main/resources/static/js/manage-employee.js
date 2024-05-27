@@ -80,7 +80,7 @@ async function customizeAddAccountFormDialog() {
 
     //--Customize closing form-dialog action.
     $('div#form-dialog_surrounding-frame').addEventListener("click", e => formDialog.classList.add("closed"));
-    $('div#closing-dialog-btn').addEventListener("click", e => formDialog.classList.add("closed"));
+    $('div.closing-dialog-btn').addEventListener("click", e => formDialog.classList.add("closed"));
 
     function customizeSelectingAddAccountBtn() {
         [...$$('div#center-page_list table tbody tr td.addAccount a i')].forEach(btn => {

@@ -165,14 +165,14 @@ div#select-dialog span.form-title {
     font-weight: 700;
 }
 
-div#select-dialog div#closing-dialog-btn {
+div#select-dialog div.closing-dialog-btn {
     position: absolute;
     top: 0;
     right: 15px;
     font-size: 2.5rem;
     transition: color ease 0.2s, scale ease 0.2s;
 }
-div#select-dialog div#closing-dialog-btn:hover {
+div#select-dialog div.closing-dialog-btn:hover {
     cursor: pointer;
     color: grey;
     scale: 1.1;

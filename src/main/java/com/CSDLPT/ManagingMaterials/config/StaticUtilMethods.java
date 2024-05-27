@@ -55,7 +55,7 @@ public class StaticUtilMethods {
         return switch (fieldName) {
             //--Employee(NhanVien) Entity
             case "employeeId", "MANV" -> List.of("MANV", "employeeId", NUM_TYPE);
-            case "employeeIdAsFk" -> List.of("EmployeeFromFk.MANV", "employeeIdAsFk", NUM_TYPE);
+            case "employeeIdAsFk" -> List.of("MANV", "EmployeeFromFk.MANV", "employeeIdAsFk", NUM_TYPE);
             case "identifier", "CMND" -> List.of("CMND", "identifier", STR_TYPE);
             case "lastName", "HO" -> List.of("HO", "lastName", STR_TYPE);
             case "firstName", "TEN" -> List.of("TEN", "firstName", STR_TYPE);
@@ -68,7 +68,7 @@ public class StaticUtilMethods {
 
             //--Warehouse(Kho) Entity
             case "warehouseId", "MAKHO" -> List.of("MAKHO", "warehouseId", STR_TYPE);
-            case "warehouseIdAsFk" -> List.of("WarehouseFromFk.MAKHO", "warehouseIdAsFk", STR_TYPE);
+            case "warehouseIdAsFk" -> List.of("MAKHO", "WarehouseFromFk.MAKHO", "warehouseIdAsFk", STR_TYPE);
             case "warehouseName", "TENKHO" -> List.of("TENKHO", "warehouseName", STR_TYPE);
 
             //--Supply(VatTu) Entity

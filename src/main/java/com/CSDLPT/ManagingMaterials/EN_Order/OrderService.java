@@ -65,10 +65,10 @@ public class OrderService {
             searchingObject.setSearchingTable("DatHang");
             searchingObject.setSearchingTableIdName("MasoDDH");
             searchingObject.setSortingCondition("ORDER BY NGAY ASC");
-            searchingObject.setJoiningCondition("""
-                INNER JOIN (SELECT MANV, HO, TEN FROM NHANVIEN) AS EmployeeFromFk ON DatHang.MANV = EmployeeFromFk.MANV
-                INNER JOIN (SELECT MAKHO, TENKHO FROM KHO) AS WarehouseFromFk ON DatHang.MAKHO = WarehouseFromFk.MAKHO
-            """);
+            searchingObject.setJoiningCondition(
+                "INNER JOIN (SELECT MANV, HO, TEN FROM NHANVIEN) AS EmployeeFromFk ON DatHang.MANV = EmployeeFromFk.MANV "
+                + "INNER JOIN (SELECT MAKHO, TENKHO FROM KHO) AS WarehouseFromFk ON DatHang.MAKHO = WarehouseFromFk.MAKHO"
+            );
 
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }

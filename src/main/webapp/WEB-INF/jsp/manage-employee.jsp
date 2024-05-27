@@ -207,7 +207,7 @@
             </div>
             <input type="submit" value="Xác nhận" />
         </form>
-        <div id="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
+        <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
     </div>
 </div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>

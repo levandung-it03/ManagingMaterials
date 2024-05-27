@@ -35,9 +35,9 @@ public class FindingActionService {
         //--Generate the condition syntax of query.
         String conditionOfQuery = String.format(
             "%s WHERE %s %s LIKE '%%'+?+'%%' ",
-            searchingObject.getJoiningCondition().isEmpty() ? "" : searchingObject.getJoiningCondition(),
-            searchingObject.getMoreCondition().isEmpty() ? "" : " AND " + searchingObject.getMoreCondition(),
-            this.getCastedSqlDataTypeOfSearchedField(searchingObject.getSearchingField())
+            searchingObject.getJoiningCondition().isEmpty() ? "" : searchingObject.getJoiningCondition().trim(),
+            searchingObject.getMoreCondition().isEmpty() ? "" : " AND " + searchingObject.getMoreCondition().trim(),
+            this.getCastedSqlDataTypeOfSearchedField(searchingObject.getSearchingField()).trim()
         );
 
         //--IoC here.
@@ -161,9 +161,11 @@ public class FindingActionService {
         try {
             StringBuilder result = new StringBuilder();
             for (java.lang.reflect.Field field : objectType.getDeclaredFields()) {
-                result.append(
-                    staticUtilMethods.columnNameStaticDictionary(field.getName()).getFirst()
-                ).append(", ");
+                if (field.getName().toUpperCase().contains("FK")) {
+                    result.append(staticUtilMethods.columnNameStaticDictionary(field.getName()).get(1)).append(", ");
+                } else {
+                    result.append(staticUtilMethods.columnNameStaticDictionary(field.getName()).getFirst()).append(", ");
+                }
             }
             return result.substring(0, result.length() - 2);
         } catch (Exception e) {
