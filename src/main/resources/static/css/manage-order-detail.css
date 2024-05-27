@@ -134,7 +134,7 @@ div#select-dialog {
     align-items: center;
     background-color: rgba(0, 0, 0, 0.2);
 }
-div#select-dialog div#select-dialog-container {
+div#select-dialog div.select-dialog-container {
     width: 40%;
     padding: 28px;
     background-color: rgba(255, 255, 255, 0.95);

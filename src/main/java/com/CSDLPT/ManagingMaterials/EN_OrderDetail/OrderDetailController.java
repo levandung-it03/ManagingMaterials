@@ -30,13 +30,13 @@ public class OrderDetailController {
     /*_____________RequestMethod.POST: OrderDetail-entity-interaction_____________*/
     @PostMapping("${url.post.branch.prefix.v1}/find-order-detail-by-values")
     public ResponseEntity<ResDtoRetrievingData<OrderDetail>> findingOrderDetailsByValues(
-            @RequestBody ReqDtoRetrievingData<OrderDetail> searchingObject,
-            HttpServletRequest request
+        @RequestBody ReqDtoRetrievingData<OrderDetail> searchingObject,
+        HttpServletRequest request
     ) {
         try {
             return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(branchServices.findOrderDetail(request, searchingObject));
+                .status(HttpStatus.OK)
+                .body(branchServices.findOrderDetail(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;

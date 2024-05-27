@@ -106,7 +106,7 @@ function GeneralMethods() {
 
         //--Main fields for searching-action.
         tableBody: $('div#select-dialog_order table tbody'),
-        fetchDataAction: "/service/v1/branch/find-order-by-values",
+        fetchDataAction: "/service/v1/branch/find-order-for-supplies-importation-by-values",
         rowFormattingEngine: (row) => `
             <tr id="${row.orderId}">
                 <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>

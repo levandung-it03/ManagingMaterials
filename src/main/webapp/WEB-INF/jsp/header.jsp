@@ -14,7 +14,7 @@
                 <div>
                     <ul class="subnav">
                         <li><a href="/branch/order/manage-order">ĐƠN ĐẶT HÀNG</a></li>
-                        <li><a href="#">PHIẾU NHẬP</a></li>
+                        <li><a href="/branch/supplies-importation/manage-supplies-importation">PHIẾU NHẬP</a></li>
                         <li><a href="#">PHIẾU XUẤT</a></li>
                     </ul>
                 </div>

@@ -28,4 +28,6 @@ public class ReqDtoRetrievingData<T> {
     private String searchingTableIdName = "";
     private String moreCondition = "";
     private String sortingCondition = "";
+    //--Data for joining query.
+    private String joiningCondition = "";
 }

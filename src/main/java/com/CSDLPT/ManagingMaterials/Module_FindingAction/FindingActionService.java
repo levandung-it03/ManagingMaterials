@@ -24,7 +24,7 @@ public class FindingActionService {
     private final Logger logger;
     private final StaticUtilMethods staticUtilMethods;
 
-    /**Spring JdbcTemplate: Combination between .findingDataWithPagination() and .countAllByCondition() **/
+    /**Spring JdbcTemplate: Combination between .findingDataWithPagination(), .countAllByCondition() and JOIN Query **/
     public <T> ResDtoRetrievingData<T> findingDataAndServePaginationBarFormat(
         HttpServletRequest request,
         ReqDtoRetrievingData<T> searchingObject
@@ -33,28 +33,19 @@ public class FindingActionService {
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
         //--Generate the condition syntax of query.
-        List<String> fieldInfo = staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField());
         String conditionOfQuery = String.format(
-            "%s AND %s LIKE '%%'+?+'%%' ",
-            searchingObject.getMoreCondition().isEmpty() ? "''=''" : searchingObject.getMoreCondition(),
-            //--Type-casting syntax of this query corresponding with data-type.
-            switch (fieldInfo.getLast()) {
-                case NUM_TYPE -> String.format(
-                    "CAST(CAST(%s AS BIGINT) AS NVARCHAR(50))",
-                    staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst()
-                );
-                case DATE_TYPE -> String.format(
-                    "CAST(CONVERT(DATE, %s) AS NVARCHAR(10))",
-                    staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst()
-                );
-                default -> staticUtilMethods.columnNameStaticDictionary(searchingObject.getSearchingField()).getFirst();
-            }
+            "%s WHERE %s %s LIKE '%%'+?+'%%' ",
+            searchingObject.getJoiningCondition().isEmpty() ? "" : searchingObject.getJoiningCondition(),
+            searchingObject.getMoreCondition().isEmpty() ? "" : " AND " + searchingObject.getMoreCondition(),
+            this.getCastedSqlDataTypeOfSearchedField(searchingObject.getSearchingField())
         );
 
         //--IoC here.
+        String orderedFields = searchingObject.getJoiningCondition().isEmpty()
+            ? "*" : this.getOrderedFieldsForJoiningQuery(searchingObject.getObjectType());
         ResDtoRetrievingData<T> resDtoRetrievingData = new ResDtoRetrievingData<>();
         resDtoRetrievingData.setResultDataSet(
-            this.findingDataWithPagination(connectionHolder, searchingObject, conditionOfQuery));
+            this.findingDataWithPagination(connectionHolder, searchingObject, conditionOfQuery, orderedFields));
         resDtoRetrievingData.setTotalObjectsQuantityResult(
             this.countAllByCondition(connectionHolder, searchingObject, conditionOfQuery));
 
@@ -68,13 +59,15 @@ public class FindingActionService {
     public <T> List<T> findingDataWithPagination(
         DBConnectionHolder connectionHolder,
         ReqDtoRetrievingData<T> searchingObject,
-        String conditionOfQuery
+        String conditionOfQuery,
+        String orderedFields
     ) {
         List<T> result = new ArrayList<>();
         try {
             PageObject pageObject = new PageObject(searchingObject.getCurrentPage());
             String query = String.format(
-                "SELECT * FROM %s WHERE %s %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY",
+                "SELECT %s FROM %s %s %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY",
+                orderedFields,
                 searchingObject.getSearchingTable(),
                 conditionOfQuery,
                 searchingObject.getSortingCondition()
@@ -99,7 +92,39 @@ public class FindingActionService {
         return result;
     }
 
-    /**Spring JdbcTemplate: This method help us to map each "ResultSet" into any Models as generic type "T"**/
+    /**Spring JdbcTemplate: Counting all entities quantity by input-condition**/
+    public <T> int countAllByCondition(
+        DBConnectionHolder connectionHolder,
+        ReqDtoRetrievingData<T> searchingObject,
+        String conditionOfQuery
+    ) {
+        int result = 0;
+        try {
+            String query = String.format(
+                "SELECT SOLUONG = COUNT(%s) FROM %s %s",
+                searchingObject.getSearchingTableIdName(),
+                searchingObject.getSearchingTable(),
+                conditionOfQuery
+            );
+
+            //--Prepare data to execute Stored Procedure.
+            PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
+            statement.setString(1, searchingObject.getSearchingValue());
+            ResultSet resultSet = statement.executeQuery();
+
+            //--If at least one Employee is existing.
+            if (resultSet.next()) result = resultSet.getInt("SOLUONG");
+
+            //--Close all connection.
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'countAll' of FindingActionService: " + e);
+        }
+        return result;
+    }
+
+    /**Spring JdbcTemplate: This method help us map each "ResultSet" into any Models as generic type "T"**/
     public <T> T mapResultSetToObject(ResultSet resultSet, Class<T> objectType) {
         try {
             //--Get an object type "T" with all empty values of fields.
@@ -120,35 +145,30 @@ public class FindingActionService {
         }
     }
 
-    /**Spring JdbcTemplate: Counting all entities quantity by input-condition**/
-    public <T> int countAllByCondition(
-        DBConnectionHolder connectionHolder,
-        ReqDtoRetrievingData<T> searchingObject,
-        String conditionOfQuery
-    ) {
-        int result = 0;
+    /**Spring JdbcTemplate: This method help us find the corresponding SQL data by Java Data type**/
+    public String getCastedSqlDataTypeOfSearchedField(String fieldName) throws NoSuchFieldException {
+        List<String> fieldInfo = staticUtilMethods.columnNameStaticDictionary(fieldName);
+        //--Type-casting syntax of this query corresponding with data-type.
+        return switch (fieldInfo.getLast()) {
+            case NUM_TYPE -> String.format("CAST(CAST(%s AS BIGINT) AS NVARCHAR(50))", fieldInfo.getFirst());
+            case DATE_TYPE -> String.format("CAST(CONVERT(DATE, %s) AS NVARCHAR(10))", fieldInfo.getFirst());
+            default -> fieldInfo.getFirst();
+        };
+    }
+
+    /**Spring JdbcTemplate: This method help us map the corresponding Java Obj Name to SQL column name**/
+    public <T> String getOrderedFieldsForJoiningQuery(Class<T> objectType) {
         try {
-            String query = String.format(
-                "SELECT SOLUONG = COUNT(%s) FROM %s WHERE %s",
-                searchingObject.getSearchingTableIdName(),
-                searchingObject.getSearchingTable(),
-                conditionOfQuery
-            );
-
-            //--Prepare data to execute Stored Procedure.
-            PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
-            statement.setString(1, searchingObject.getSearchingValue());
-            ResultSet resultSet = statement.executeQuery();
-
-            //--If at least one Employee is existing.
-            if (resultSet.next()) result = resultSet.getInt("SOLUONG");
-
-            //--Close all connection.
-            resultSet.close();
-            statement.close();
-        } catch (SQLException e) {
-            logger.info("Error In 'countAll' of EmployeeRepository: " + e);
+            StringBuilder result = new StringBuilder();
+            for (java.lang.reflect.Field field : objectType.getDeclaredFields()) {
+                result.append(
+                    staticUtilMethods.columnNameStaticDictionary(field.getName()).getFirst()
+                ).append(", ");
+            }
+            return result.substring(0, result.length() - 2);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return "";
         }
-        return result;
     }
 }

@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Order;
 
+import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ResDtoOrderWithImportantInfo;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,6 +38,20 @@ public class OrderController {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(branchServices.findOrder(request, searchingObject));
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return null;
+        }
+    }
+    @PostMapping("${url.post.branch.prefix.v1}/find-order-for-supplies-importation-by-values")
+    public ResponseEntity<ResDtoRetrievingData<ResDtoOrderWithImportantInfo>> findOrderToMakeSuppliesImportation(
+        @RequestBody ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject,
+        HttpServletRequest request
+    ) {
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(branchServices.findOrderToMakeSuppliesImportation(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;

@@ -116,7 +116,7 @@
         </div>
     </div>
     <div id="select-dialog" class="closed">
-        <div id="select-dialog-container">
+        <div class="select-dialog-container">
             <span class="form-title">Kho</span>
             <table>
                 <thead>

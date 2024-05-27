@@ -54,7 +54,8 @@ public class StaticUtilMethods {
     public List<String> columnNameStaticDictionary(String fieldName) throws NoSuchFieldException{
         return switch (fieldName) {
             //--Employee(NhanVien) Entity
-            case "employeeId", "MANV" ->List.of("MANV", "employeeId", NUM_TYPE);
+            case "employeeId", "MANV" -> List.of("MANV", "employeeId", NUM_TYPE);
+            case "employeeIdAsFk" -> List.of("EmployeeFromFk.MANV", "employeeIdAsFk", NUM_TYPE);
             case "identifier", "CMND" -> List.of("CMND", "identifier", STR_TYPE);
             case "lastName", "HO" -> List.of("HO", "lastName", STR_TYPE);
             case "firstName", "TEN" -> List.of("TEN", "firstName", STR_TYPE);
@@ -67,6 +68,7 @@ public class StaticUtilMethods {
 
             //--Warehouse(Kho) Entity
             case "warehouseId", "MAKHO" -> List.of("MAKHO", "warehouseId", STR_TYPE);
+            case "warehouseIdAsFk" -> List.of("WarehouseFromFk.MAKHO", "warehouseIdAsFk", STR_TYPE);
             case "warehouseName", "TENKHO" -> List.of("TENKHO", "warehouseName", STR_TYPE);
 
             //--Supply(VatTu) Entity
@@ -74,12 +76,16 @@ public class StaticUtilMethods {
             case "supplyName", "TENVT" -> List.of("TENVT", "supplyName", STR_TYPE);
             case "unit", "DVT" -> List.of("DVT", "unit", STR_TYPE);
             case "quantityInStock", "SOLUONGTON" -> List.of("SOLUONGTON", "quantityInStock", NUM_TYPE);
+
             //--Order(DatHang) Entity
             case "orderId", "MasoDDH" -> List.of("MasoDDH", "orderId", STR_TYPE);
             case "supplier", "NhaCC" -> List.of("NhaCC", "supplier", STR_TYPE);
             case "createdDate", "NGAY" -> List.of("NGAY", "createdDate", DATE_TYPE);
             case "quantitySupply", "SOLUONG" -> List.of("SOLUONG", "quantitySupply", NUM_TYPE);
             case "price", "DONGIA" -> List.of("DONGIA", "price", NUM_TYPE);
+
+            //--SuppliesImportation(PhieuNhap) Entity
+            case "suppliesImportationId", "MAPN" -> List.of("MAPN", "suppliesImportationId", STR_TYPE);
             //--More....
 
             default -> throw new NoSuchFieldException("Field not found");

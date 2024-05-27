@@ -455,7 +455,7 @@ async function CustomizeToggleOpeningAddingFormDialogSupporter(
         });
 
     //--Auto fill input value when clicking on any row in select dialog
-    $(`div#select-dialog tbody`).addEventListener("click", e =>{
+    $(addingFormDialogSupporterSelector + ` tbody`).addEventListener("click", e =>{
         $(`div#center-page_adding-form #${searchingSupportingDataSource.data.searchingField} input`)
             .value = e.target.closest("tr").id;
         selectDialog.classList.add("closed");
@@ -463,7 +463,7 @@ async function CustomizeToggleOpeningAddingFormDialogSupporter(
 
     //--Customize closing dialog action.
     //--Stop propagation when clicking on dialog container so when select from list, it won't close the dialog
-    $('div#select-dialog-container').addEventListener("click", e => e.stopPropagation());
+    $('div.select-dialog-container').addEventListener("click", e => e.stopPropagation());
     //--Close dialog when clicking on dialog
     selectDialog.addEventListener("click", e => selectDialog.classList.add("closed"));
     //--Close dialog when clicking on close button
