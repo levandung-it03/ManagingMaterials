@@ -463,15 +463,11 @@ async function CustomizeToggleOpeningAddingFormDialogSupporter(
 
     //--Customize closing dialog action.
     //--Stop propagation when clicking on dialog container so when select from list, it won't close the dialog
-    $$('div.select-dialog-container').forEach(dialog => {
-        dialog.addEventListener("click", e => e.stopPropagation())
-    })
+    selectDialog.querySelector('div.select-dialog-container').addEventListener("click", e => e.stopPropagation())
     //--Close dialog when clicking on dialog
     selectDialog.addEventListener("click", () => selectDialog.classList.add("closed"));
     //--Close dialog when clicking on close button
-    $$('div.closing-dialog-btn').forEach(btn => {
-        btn.addEventListener("click", () => selectDialog.classList.add("closed"));
-    })
+    selectDialog.querySelector('div.closing-dialog-btn').addEventListener("click", ()=> selectDialog.classList.add("closed"))
 
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
