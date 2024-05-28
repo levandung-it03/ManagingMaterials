@@ -116,7 +116,7 @@
     </div>
     <div class="select-dialog closed" id="select-dialog_order">
         <div class="select-dialog-container">
-            <span class="form-title">Phiếu nhập</span>
+            <span class="form-title">Danh sách đơn đặt hàng</span>
             <table>
                 <thead>
                 <tr>

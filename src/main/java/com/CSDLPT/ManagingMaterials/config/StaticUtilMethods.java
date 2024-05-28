@@ -3,7 +3,10 @@ package com.CSDLPT.ManagingMaterials.config;
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -13,9 +16,10 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Component
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class StaticUtilMethods {
-    private final Map<String, String> responseMessages;
+    private Map<String, String> responseMessages;
     public static final String NUM_TYPE = "NUMBER";
     public static final String STR_TYPE = "TEXT";
     public static final String DATE_TYPE = "DATE";
@@ -54,8 +58,9 @@ public class StaticUtilMethods {
     public List<String> columnNameStaticDictionary(String fieldName) throws NoSuchFieldException{
         return switch (fieldName) {
             //--Employee(NhanVien) Entity
+            case "Employee" -> List.of("NHANVIEN", "MANV", NUM_TYPE);
             case "employeeId", "MANV" -> List.of("MANV", "employeeId", NUM_TYPE);
-            case "employeeIdAsFk" -> List.of("MANV", "EmployeeFromFk.MANV", "employeeIdAsFk", NUM_TYPE);
+            case "employeeIdAsFk", "NHANVIEN" -> List.of("MANV", "EmployeeFromFk.MANV", "EmployeeFromFk", NUM_TYPE);
             case "identifier", "CMND" -> List.of("CMND", "identifier", STR_TYPE);
             case "lastName", "HO" -> List.of("HO", "lastName", STR_TYPE);
             case "firstName", "TEN" -> List.of("TEN", "firstName", STR_TYPE);
@@ -67,8 +72,9 @@ public class StaticUtilMethods {
             case "deletedStatus", "TrangThaiXoa" -> List.of("TrangThaiXoa", "deletedStatus", NUM_TYPE);
 
             //--Warehouse(Kho) Entity
+            case "Warehouse" -> List.of("KHO", "MAKHO", STR_TYPE);
             case "warehouseId", "MAKHO" -> List.of("MAKHO", "warehouseId", STR_TYPE);
-            case "warehouseIdAsFk" -> List.of("MAKHO", "WarehouseFromFk.MAKHO", "warehouseIdAsFk", STR_TYPE);
+            case "warehouseIdAsFk", "KHO" -> List.of("MAKHO", "WarehouseFromFk.MAKHO", "WarehouseFromFk", STR_TYPE);
             case "warehouseName", "TENKHO" -> List.of("TENKHO", "warehouseName", STR_TYPE);
 
             //--Supply(VatTu) Entity
@@ -85,7 +91,10 @@ public class StaticUtilMethods {
             case "price", "DONGIA" -> List.of("DONGIA", "price", NUM_TYPE);
 
             //--SuppliesImportation(PhieuNhap) Entity
+            case "suppliesImportation" -> List.of("PhieuNhap", "MAPN", STR_TYPE);
             case "suppliesImportationId", "MAPN" -> List.of("MAPN", "suppliesImportationId", STR_TYPE);
+            case "suppliesImportationIdAsFk", "PhieuNhap" ->
+                List.of("MAPN", "SuppliesImportationFromFk.MAPN", "SuppliesImportationFromFk", STR_TYPE);
             //--More....
 
             default -> throw new NoSuchFieldException("Field not found");
