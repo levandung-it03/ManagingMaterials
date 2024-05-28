@@ -31,7 +31,7 @@ public class AccountRepository {
                 .username(account.getUsername())
                 .password(account.getPassword())
                 .branch(account.getBranch())
-                .employeeId(resultSet.getString("MANV"))
+                .employeeId(resultSet.getInt("MANV"))
                 .fullName(resultSet.getString("HOTEN"))
                 .role(RoleEnum.valueOf(resultSet.getString("TENNHOM")))
                 .build();

@@ -18,7 +18,10 @@ public class WarehouseRepository {
             PreparedStatement statement = connectHolder.getConnection().prepareStatement("""
                 INSERT INTO Kho (MAKHO ,TENKHO ,DIACHI ,MACN) VALUES (?, ?, ?, ?)
             """);
-            this.mapDataIntoStatement(statement, warehouse);
+            statement.setString(1, warehouse.getWarehouseId());
+            statement.setString(2, warehouse.getWarehouseName());
+            statement.setString(3, warehouse.getAddress());
+            statement.setString(4, warehouse.getBranch());
 
             //--Retrieve affected rows to know if our Query worked correctly.
             int result = statement.executeUpdate();
@@ -90,13 +93,6 @@ public class WarehouseRepository {
             logger.info("Error In 'delete' of WarehouseRepository: " + e);
         }
         return result;
-    }
-
-    public void mapDataIntoStatement(PreparedStatement statement, Warehouse warehouse) throws SQLException {
-        statement.setString(1, warehouse.getWarehouseId());
-        statement.setString(2, warehouse.getWarehouseName());
-        statement.setString(3, warehouse.getAddress());
-        statement.setString(4, warehouse.getBranch());
     }
 
 }

@@ -14,7 +14,7 @@ public class ResDtoUserInfo {
     private String username;
     private String password;
     private String branch;
-    private String employeeId;
+    private Integer employeeId;
     private String fullName;
     private RoleEnum role;
 }

@@ -36,7 +36,7 @@ public class FindingActionService {
         String conditionOfQuery = String.format(
             "%s WHERE %s %s LIKE '%%'+?+'%%' ",
             searchingObject.getJoiningCondition().isEmpty() ? "" : searchingObject.getJoiningCondition().trim(),
-            searchingObject.getMoreCondition().isEmpty() ? "" : " AND " + searchingObject.getMoreCondition().trim(),
+            searchingObject.getMoreCondition().isEmpty() ? "" : searchingObject.getMoreCondition().trim() + " AND ",
             this.getCastedSqlDataTypeOfSearchedField(searchingObject.getSearchingField()).trim()
         );
 

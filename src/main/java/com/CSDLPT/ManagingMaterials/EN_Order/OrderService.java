@@ -58,7 +58,7 @@ public class OrderService {
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }
 
-        public ResDtoRetrievingData<ResDtoOrderWithImportantInfo> findOrderToMakeSuppliesImportation(
+        public ResDtoRetrievingData<ResDtoOrderWithImportantInfo> findOrderToServeSuppliesImportation(
             HttpServletRequest request,
             ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject
         ) throws SQLException, NoSuchFieldException {

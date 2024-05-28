@@ -44,14 +44,14 @@ public class OrderController {
         }
     }
     @PostMapping("${url.post.branch.prefix.v1}/find-order-for-supplies-importation-by-values")
-    public ResponseEntity<ResDtoRetrievingData<ResDtoOrderWithImportantInfo>> findOrderToMakeSuppliesImportation(
+    public ResponseEntity<ResDtoRetrievingData<ResDtoOrderWithImportantInfo>> findOrderToServeSuppliesImportation(
         @RequestBody ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject,
         HttpServletRequest request
     ) {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findOrderToMakeSuppliesImportation(request, searchingObject));
+                .body(branchServices.findOrderToServeSuppliesImportation(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;

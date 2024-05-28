@@ -1,20 +1,27 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation;
 
-import com.CSDLPT.ManagingMaterials.EN_Warehouse.Warehouse;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoAddSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -44,5 +51,36 @@ public class SuppliesImportationController {
             logger.info(e.toString());
             return null;
         }
+    }
+
+    @PostMapping("${url.post.branch.prefix.v1}/add-supplies-importation")
+    public String addSuppliesImportation(
+        @ModelAttribute("suppliesImportation") ReqDtoAddSuppliesImportation importation,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
+    ) {
+        final String standingUrl = request.getHeader("Referer");
+        Set<ConstraintViolation<ReqDtoAddSuppliesImportation>> violations = hibernateValidator.validate(importation);
+        if (!violations.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
+            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
+            return "redirect:" + standingUrl;
+        }
+
+        try {
+            branchServices.addSuppliesImportation(importation, request);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
+        } catch (NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
+            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
+        } catch (DuplicateKeyException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_suppliesImportation_01");
+            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
+        } catch (Exception e) {
+            logger.info("Error from AddSuppliesImportationController: " + e);
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
+        }
+        return "redirect:" + standingUrl;
     }
 }

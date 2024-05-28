@@ -8,10 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 @Configuration
 @RequiredArgsConstructor
@@ -51,6 +49,11 @@ public class ApplicationConfig {
         messagePairs.put("error_supply_02", "Vật tư đang được sử dụng!");
 
         messagePairs.put("error_warehouse_01", "Mã kho hoặc tên kho đã tồn tại!");
+        messagePairs.put("error_warehouse_02", "Không tìm thấy Mã Kho");
+
+        messagePairs.put("error_order_01", "Không tìm thấy Mã Đơn Đặt Hàng");
+
+        messagePairs.put("error_suppliesImportation_01", "Mã Phiếu Nhập đã tồn tại!");
 
         messagePairs.put("ngu", "ngu vai cac!");
 

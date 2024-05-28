@@ -19,7 +19,7 @@ public class InnerJoinObject {
     private String rightEntityConditions;
 
     public String buildQuery() throws NoSuchFieldException {
-        StaticUtilMethods staticUtilMethods = new StaticUtilMethods();
+        StaticUtilMethods staticUtilMethods = new StaticUtilMethods(null);
         String subNameOfRightEntity = staticUtilMethods.columnNameStaticDictionary(this.right).get(2);
         
         //--INNER JOIN (SELECT %s FROM %s%s) AS %s ON %s.%s = %s.%s
@@ -37,11 +37,7 @@ public class InnerJoinObject {
     public static String mergeQuery(List<InnerJoinObject> objs) {
         StringBuilder result = new StringBuilder();
         objs.forEach(obj -> {
-            try {
-                result.append(
-                    obj.buildQuery()
-                ).append(" ");
-            }
+            try { result.append(obj.buildQuery()).append(" "); }
             catch (NoSuchFieldException e) { System.out.println(e.getMessage() + ", " + e.getCause()); }
         });
         return result.toString();
