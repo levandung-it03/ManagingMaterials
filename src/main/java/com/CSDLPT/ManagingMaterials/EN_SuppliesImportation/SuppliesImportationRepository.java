@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation;
 
+import com.CSDLPT.ManagingMaterials.EN_Order.Order;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import lombok.RequiredArgsConstructor;
@@ -64,9 +65,8 @@ public class SuppliesImportationRepository {
     public Optional<SuppliesImportation> findById(DBConnectionHolder conHolder, String suppliesImportationId) {
         Optional<SuppliesImportation> result = Optional.empty();
         try {
-            //--Prepare data to execute Stored Procedure.
             PreparedStatement statement = conHolder.getConnection()
-                .prepareStatement("SELECT * FROM PhieuNhap WHERE MAPN=?");
+                .prepareStatement("SELECT TOP 1 * FROM PhieuNhap WHERE MAPN=?");
             statement.setString(1, suppliesImportationId);
 
             ResultSet resultSet = statement.executeQuery();
@@ -90,7 +90,6 @@ public class SuppliesImportationRepository {
     public int updateById(DBConnectionHolder conHolder, SuppliesImportation importation) {
         int result = 0;
         try {
-            //--Prepare data to execute Stored Procedure.
             PreparedStatement statement = conHolder.getConnection().prepareStatement(
                 "UPDATE PhieuNhap SET MAKHO=?,MasoDDH=? WHERE MAPN=?"
             );
@@ -122,6 +121,60 @@ public class SuppliesImportationRepository {
             statement.close();
         } catch (Exception e) {
             logger.info("Error In 'deleteById' of SuppliesImportationRepository: " + e);
+        }
+        return result;
+    }
+
+    public Optional<SuppliesImportation> findByOrderId(DBConnectionHolder conHolder, String orderId) {
+        Optional<SuppliesImportation> result = Optional.empty();
+        try {
+            PreparedStatement statement = conHolder.getConnection().prepareStatement("""
+                SELECT TOP 1 * FROM PhieuNhap
+                INNER JOIN (SELECT TOP 1 MasoDDH FROM DatHang WHERE MasoDDH=?) AS SimpleOrder
+                ON SimpleOrder.MasoDDH = PhieuNhap.MasoDDH
+            """);
+            statement.setString(1, orderId);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                result = Optional.of(SuppliesImportation.builder()
+                    .suppliesImportationId(resultSet.getString("MAPN"))
+                    .warehouseId(resultSet.getString("MAKHO"))
+                    .employeeId(resultSet.getInt("MANV"))
+                    .orderId(resultSet.getString("MasoDDH"))
+                    .createdDate(resultSet.getDate("NGAY"))
+                    .build());
+
+            //--Close all connection.
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'findById' of SuppliesImportationRepository: " + e);
+        }
+        return result;
+    }
+
+    public Optional<SuppliesImportation> findByOrderIdToServeUpdate(DBConnectionHolder conHolder, String importationId, String orderId) {
+        Optional<SuppliesImportation> result = Optional.empty();
+        try {
+            PreparedStatement statement = conHolder.getConnection()
+                .prepareStatement("SELECT TOP 1 * FROM PhieuNhap WHERE MasoDDH=? AND NOT MAPN=?");
+            statement.setString(1, orderId);
+            statement.setString(2, importationId);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                result = Optional.of(SuppliesImportation.builder()
+                    .suppliesImportationId(resultSet.getString("MAPN"))
+                    .warehouseId(resultSet.getString("MAKHO"))
+                    .employeeId(resultSet.getInt("MANV"))
+                    .orderId(resultSet.getString("MasoDDH"))
+                    .createdDate(resultSet.getDate("NGAY"))
+                    .build());
+
+            //--Close all connection.
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'findByOrderIdToServeUpdate' of OrderRepository: " + e);
         }
         return result;
     }

@@ -457,7 +457,7 @@ async function CustomizeToggleOpeningFormDialogDateSupporter(
     //--Auto fill input value when clicking on any row in select dialog
     $(addingFormDialogSupporterSelector + ` tbody`).addEventListener("click", e =>{
         $(`div#center-page_adding-form #${searchingSupportingDataSource.data.searchingField} input`)
-            .value = e.target.closest("tr").id;
+            .value = e.target.closest("tr").id.trim();
         selectDialog.classList.add("closed");
     });
 

@@ -42,9 +42,8 @@ public class OrderRepository {
     public Optional<Order> findById(DBConnectionHolder conHolder, String orderId) {
         Optional<Order> result = Optional.empty();
         try {
-            //--Prepare data to execute Stored Procedure.
             PreparedStatement statement = conHolder.getConnection()
-                .prepareStatement("SELECT * FROM DonHang WHERE MasoDDH=?");
+                .prepareStatement("SELECT TOP 1 * FROM DatHang WHERE MasoDDH=?");
             statement.setString(1, orderId);
 
             ResultSet resultSet = statement.executeQuery();
@@ -65,14 +64,4 @@ public class OrderRepository {
         return result;
     }
 
-    /**
-     * SQL Server: This method is used to map data into the common PreparedStatement, which has all fields of Order.
-     **/
-    public void mapDataIntoStatement(PreparedStatement statement, Order order) throws SQLException {
-        statement.setString(1, order.getOrderId());
-        statement.setString(2, order.getSupplier());
-        statement.setDate(3, staticUtilMethods.dateUtilToSqlDate(order.getCreatedDate()));
-        statement.setInt(4, order.getEmployeeId());
-        statement.setString(5, order.getWarehouseId());
-    }
 }

@@ -89,7 +89,6 @@ public class SuppliesImportationController {
         Set<ConstraintViolation<ReqDtoSuppliesImportation>> violations = hibernateValidator.validate(importation);
         if (!violations.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
             return "redirect:" + standingUrl;
         }
 
@@ -98,11 +97,9 @@ public class SuppliesImportationController {
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException | DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
         } catch (Exception e) {
             logger.info("Error from UpdateSuppliesImportationController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
         }
         return "redirect:" + standingUrl;
     }

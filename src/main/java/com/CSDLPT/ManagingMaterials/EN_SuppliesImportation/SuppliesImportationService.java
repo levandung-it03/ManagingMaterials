@@ -20,7 +20,6 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 public class SuppliesImportationService {
     @Service
@@ -64,14 +63,14 @@ public class SuppliesImportationService {
             if (suppliesImportationRepository
                 .isExistingSuppliesImportationBySuppliesImportationId(connectHolder, importation.getSuppliesImportationId()))
                 throw new DuplicateKeyException("error_suppliesImportation_01");
-            
+
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseId()))
                 throw new NoSuchElementException("error_warehouse_02");
 
-            if (!orderRepository.isExistingOrderByOrderId(connectHolder, importation.getOrderId()))
+            if (orderRepository.findById(connectHolder, importation.getOrderId()).isEmpty())
                 throw new NoSuchElementException("error_order_01");
 
-            if (!orderRepository.isExistingOrderBySuppliesImportationId(connectHolder, importation.getSuppliesImportationId()))
+            if (suppliesImportationRepository.findByOrderId(connectHolder, importation.getOrderId()).isPresent())
                 throw new DuplicateKeyException("error_order_02");
 
             ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
@@ -99,7 +98,9 @@ public class SuppliesImportationService {
             if (orderRepository.findById(connectHolder, importation.getOrderId()).isEmpty())
                 throw new NoSuchElementException("error_order_01");
 
-            if (!orderRepository.isExistingOrderBySuppliesImportationId(connectHolder, importation.getSuppliesImportationId()))
+            if (suppliesImportationRepository.findByOrderIdToServeUpdate(
+                connectHolder, importation.getSuppliesImportationId(), importation.getOrderId()
+            ).isPresent())
                 throw new DuplicateKeyException("error_order_02");
 
             SuppliesImportation updatedImportation = suppliesImportationRepository
@@ -120,7 +121,7 @@ public class SuppliesImportationService {
             if (suppliesImportationRepository.findById(connectHolder, importationId).isEmpty())
                 throw new NoSuchElementException("Supplies Importation Id is invalid");
 
-            //--Import validation code here
+            //--Import validation (PhieuNhap can't be deleted if there's a PhieuXuat is already existing) code here
 
             suppliesImportationRepository.deleteById(connectHolder, importationId);
 
