@@ -48,7 +48,7 @@
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <div class="form-input strong-text" id="quantitySupply">
+            <div class="form-input" id="quantitySupply">
                 <fieldset>
                     <legend>Số lượng</legend>
                     <input name="quantitySupply" type="number" value="${orderDetail.quantitySupply}" min="0" required/>

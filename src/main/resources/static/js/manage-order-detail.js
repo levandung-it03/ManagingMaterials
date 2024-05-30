@@ -110,7 +110,7 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddOrderDetailComponent();
-    await CustomizeToggleOpeningAddingFormDialogSupporter(searchingSupportingDataSourceForDialog)
+    await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForDialog)
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {

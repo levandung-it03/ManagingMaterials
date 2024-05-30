@@ -143,14 +143,6 @@ function GeneralMethods() {
     GeneralMethods();
     AddSuppliesImportationComponent();
 
-    await CustomizeToggleOpeningAddingFormDialogSupporter(
-        searchingSupportingDataSourceForOrderDialog,
-        'div#select-dialog_order'
-    )
-    await CustomizeToggleOpeningAddingFormDialogSupporter(
-        searchingSupportingDataSourceForWarehouseDialog,
-        'div#select-dialog_warehouse'
-    )
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
@@ -161,8 +153,18 @@ function GeneralMethods() {
                     'div#center-page_list',
                     updatingSupportingDataSource
                 );
+
             }
         }
+    );
+    await CustomizeBuildingFormSpectator(
+        async () => {
+            await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForOrderDialog,
+                'div#select-dialog_order');
+            await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForWarehouseDialog,
+                'div#select-dialog_warehouse');
+        },
+        'div#center-page_adding-form'
     );
     await ListComponentForSuppliesImportation(searchingSupportingDataSource);
 })();

@@ -40,7 +40,7 @@
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
                 </div>
-                <div class="form-input strong-text" id="orderId">
+                <div class="form-input" id="orderId">
                     <fieldset>
                         <legend>Mã đơn đặt hàng</legend>
                         <input name="orderId" type="text" value="${suppliesImportation.orderId}" maxlength="100" required/>

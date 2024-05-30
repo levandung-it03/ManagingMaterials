@@ -2,7 +2,7 @@ package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation;
 
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Order.OrderRepository;
-import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoAddSuppliesImportation;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.EN_Warehouse.WarehouseRepository;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
@@ -17,8 +17,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class SuppliesImportationService {
     @Service
@@ -36,7 +38,7 @@ public class SuppliesImportationService {
                 .customResponsiveModelView(request, model, "manage-supplies-importation");
 
             //--Check if there's a response SuppliesImportation to map into adding-form when an error occurred.
-            SuppliesImportation importation = (SuppliesImportation) model.asMap().get("submittedSuppliesImportation");
+            ReqDtoSuppliesImportation importation = (ReqDtoSuppliesImportation) model.asMap().get("submittedSuppliesImportation");
             if (importation != null) modelAndView.addObject("suppliesImportation", importation);
 
             return modelAndView;
@@ -55,7 +57,7 @@ public class SuppliesImportationService {
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }
 
-        public void addSuppliesImportation(ReqDtoAddSuppliesImportation importation, HttpServletRequest request) {
+        public void addSuppliesImportation(ReqDtoSuppliesImportation importation, HttpServletRequest request) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
             importation.trimAllFieldValues();
 
@@ -80,6 +82,31 @@ public class SuppliesImportationService {
                 .createdDate(new Date())
                 .build()
             );
+
+            //--Close connection
+            connectHolder.removeConnection();
+        }
+
+        public void updateSuppliesImportation(ReqDtoSuppliesImportation importation, HttpServletRequest request) throws SQLException {
+            DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            importation.trimAllFieldValues();
+
+            if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseId()))
+                throw new NoSuchElementException("error_warehouse_02");
+
+            if (orderRepository.findById(connectHolder, importation.getOrderId()).isEmpty())
+                throw new NoSuchElementException("error_order_01");
+
+            SuppliesImportation updatedImportation = suppliesImportationRepository
+                .findById(connectHolder, importation.getSuppliesImportationId())
+                .orElseThrow(() -> new NoSuchElementException("error_suppliesImportation_02"));
+
+            updatedImportation.setWarehouseId(importation.getWarehouseId());
+            updatedImportation.setOrderId(importation.getOrderId());
+            suppliesImportationRepository.updateById(connectHolder, updatedImportation);
+
+            //--Close connection
+            connectHolder.removeConnection();
         }
     }
 

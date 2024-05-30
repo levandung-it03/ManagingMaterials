@@ -1,6 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation;
 
-import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoAddSuppliesImportation;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,12 +55,12 @@ public class SuppliesImportationController {
 
     @PostMapping("${url.post.branch.prefix.v1}/add-supplies-importation")
     public String addSuppliesImportation(
-        @ModelAttribute("suppliesImportation") ReqDtoAddSuppliesImportation importation,
+        @ModelAttribute("suppliesImportation") ReqDtoSuppliesImportation importation,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         final String standingUrl = request.getHeader("Referer");
-        Set<ConstraintViolation<ReqDtoAddSuppliesImportation>> violations = hibernateValidator.validate(importation);
+        Set<ConstraintViolation<ReqDtoSuppliesImportation>> violations = hibernateValidator.validate(importation);
         if (!violations.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
             redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
@@ -78,6 +78,34 @@ public class SuppliesImportationController {
             redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
         } catch (Exception e) {
             logger.info("Error from AddSuppliesImportationController: " + e);
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
+        }
+        return "redirect:" + standingUrl;
+    }
+
+    @PostMapping("${url.post.branch.prefix.v1}/update-supplies-importation")
+    public String updateSuppliesImportation(
+        @ModelAttribute("suppliesImportation") ReqDtoSuppliesImportation importation,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
+    ) {
+        final String standingUrl = request.getHeader("Referer");
+        Set<ConstraintViolation<ReqDtoSuppliesImportation>> violations = hibernateValidator.validate(importation);
+        if (!violations.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
+            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
+            return "redirect:" + standingUrl;
+        }
+
+        try {
+            branchServices.updateSuppliesImportation(importation, request);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
+        } catch (NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
+            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
+        } catch (Exception e) {
+            logger.info("Error from UpdateSuppliesImportationController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
             redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
         }

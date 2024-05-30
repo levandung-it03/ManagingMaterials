@@ -1,15 +1,14 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation;
 
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -17,12 +16,12 @@ public class SuppliesImportationRepository {
     private final Logger logger;
     private final StaticUtilMethods staticUtilMethods;
 
-    public int save(DBConnectionHolder connectHolder, SuppliesImportation importation) {
+    public int save(DBConnectionHolder conHolder, SuppliesImportation importation) {
         try {
             //--Prepare data to execute Query Statement.
-            PreparedStatement statement = connectHolder.getConnection().prepareStatement("""
-                INSERT INTO PhieuNhap (MAPN ,MAKHO ,MasoDDH ,MANV, NGAY) VALUES (?, ?, ?, ?, ?)
-            """);
+            PreparedStatement statement = conHolder.getConnection().prepareStatement("""
+                    INSERT INTO PhieuNhap (MAPN ,MAKHO ,MasoDDH ,MANV, NGAY) VALUES (?, ?, ?, ?, ?)
+                """);
             statement.setString(1, importation.getSuppliesImportationId());
             statement.setString(2, importation.getWarehouseId());
             statement.setString(3, importation.getOrderId());
@@ -58,9 +57,56 @@ public class SuppliesImportationRepository {
             //--Close all connection.
             statement.close();
         } catch (SQLException e) {
-            logger.info("Error In 'isExistingSuppliesImportationBySuppliesImportationId' of SuppliesImportationRepository: "+e);
+            logger.info("Error In 'isExistingSuppliesImportationBySuppliesImportationId' of SuppliesImportationRepository: " + e);
         }
         return result;
     }
 
+    public Optional<SuppliesImportation> findById(DBConnectionHolder conHolder, String suppliesImportationId) {
+        Optional<SuppliesImportation> result = Optional.empty();
+        try {
+            //--Prepare data to execute Stored Procedure.
+            PreparedStatement statement = conHolder.getConnection()
+                .prepareStatement("SELECT * FROM PhieuNhap WHERE MAPN=?");
+            statement.setString(1, suppliesImportationId);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                result = Optional.of(SuppliesImportation.builder()
+                    .suppliesImportationId(resultSet.getString("MAPN"))
+                    .warehouseId(resultSet.getString("MAKHO"))
+                    .employeeId(resultSet.getInt("MANV"))
+                    .orderId(resultSet.getString("MasoDDH"))
+                    .createdDate(resultSet.getDate("NGAY"))
+                    .build());
+
+            //--Close all connection.
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'findById' of SuppliesImportationRepository: " + e);
+        }
+        return result;
+    }
+
+    public int updateById(DBConnectionHolder conHolder, SuppliesImportation importation) {
+        int result = 0;
+        try {
+            //--Prepare data to execute Stored Procedure.
+            PreparedStatement statement = conHolder.getConnection().prepareStatement(
+                "UPDATE PhieuNhap SET MAKHO=?,MasoDDH=? WHERE MAPN=?"
+            );
+            //--Register the output parameter
+            statement.setString(1, importation.getWarehouseId());
+            statement.setString(2, importation.getOrderId());
+            statement.setString(3, importation.getSuppliesImportationId());
+
+            result = statement.executeUpdate();
+
+            //--Close all connection.
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'findById' of SuppliesImportationRepository: " + e);
+        }
+        return result;
+    }
 }

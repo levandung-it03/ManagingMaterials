@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReqDtoAddSuppliesImportation {
+public class ReqDtoSuppliesImportation {
     @NotBlank(message = "error_entity_03")
     @Pattern(regexp = "^[A-Z]{1,7}\\d{1,7}$", message = "error_entity_03")
     @Length(max = 8, message = "error_entity_03")

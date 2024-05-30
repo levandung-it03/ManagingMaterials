@@ -441,7 +441,7 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
         });
 }
 
-async function CustomizeToggleOpeningAddingFormDialogSupporter(
+async function CustomizeToggleOpeningFormDialogDateSupporter(
     searchingSupportingDataSource,
     addingFormDialogSupporterSelector='div#select-dialog'
 ) {
@@ -499,4 +499,13 @@ async function CustomizeFetchingActionSpectator(
 
         //--Configure the observer to observe changes to the table's child list
     }).observe($(observedTableContainer + ' tbody'), {childList: true, subtree: true});
+}
+
+async function CustomizeBuildingFormSpectator(dialogBuilders, observedForm = 'div#center-page_adding-form') {
+    //--Firstly calling when HTML is renders.
+    await dialogBuilders();
+
+    //--Create a mutation observer instance to track if update-form is generated.
+    await new MutationObserver(async () => await dialogBuilders())
+        .observe($(observedForm), {childList: true, subtree: true});
 }
