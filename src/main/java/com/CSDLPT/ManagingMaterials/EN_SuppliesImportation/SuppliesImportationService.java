@@ -61,16 +61,18 @@ public class SuppliesImportationService {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
             importation.trimAllFieldValues();
 
-            if (suppliesImportationRepository.isExistingSuppliesImportationBySuppliesImportationId(
-                connectHolder, importation.getSuppliesImportationId()
-            ))
-                throw new DuplicateKeyException("Supplies Importation Id is already existing");
+            if (suppliesImportationRepository
+                .isExistingSuppliesImportationBySuppliesImportationId(connectHolder, importation.getSuppliesImportationId()))
+                throw new DuplicateKeyException("error_suppliesImportation_01");
             
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseId()))
                 throw new NoSuchElementException("error_warehouse_02");
 
             if (!orderRepository.isExistingOrderByOrderId(connectHolder, importation.getOrderId()))
                 throw new NoSuchElementException("error_order_01");
+
+            if (!orderRepository.isExistingOrderBySuppliesImportationId(connectHolder, importation.getSuppliesImportationId()))
+                throw new DuplicateKeyException("error_order_02");
 
             ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             //--May throw SQLException if id is already existing.
@@ -97,6 +99,9 @@ public class SuppliesImportationService {
             if (orderRepository.findById(connectHolder, importation.getOrderId()).isEmpty())
                 throw new NoSuchElementException("error_order_01");
 
+            if (!orderRepository.isExistingOrderBySuppliesImportationId(connectHolder, importation.getSuppliesImportationId()))
+                throw new DuplicateKeyException("error_order_02");
+
             SuppliesImportation updatedImportation = suppliesImportationRepository
                 .findById(connectHolder, importation.getSuppliesImportationId())
                 .orElseThrow(() -> new NoSuchElementException("error_suppliesImportation_02"));
@@ -104,6 +109,20 @@ public class SuppliesImportationService {
             updatedImportation.setWarehouseId(importation.getWarehouseId());
             updatedImportation.setOrderId(importation.getOrderId());
             suppliesImportationRepository.updateById(connectHolder, updatedImportation);
+
+            //--Close connection
+            connectHolder.removeConnection();
+        }
+
+        public void deleteSuppliesImportation(String importationId, HttpServletRequest request) throws SQLException {
+            DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            if (suppliesImportationRepository.findById(connectHolder, importationId).isEmpty())
+                throw new NoSuchElementException("Supplies Importation Id is invalid");
+
+            //--Import validation code here
+
+            suppliesImportationRepository.deleteById(connectHolder, importationId);
 
             //--Close connection
             connectHolder.removeConnection();

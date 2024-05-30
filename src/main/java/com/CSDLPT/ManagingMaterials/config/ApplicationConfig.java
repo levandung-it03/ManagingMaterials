@@ -52,9 +52,11 @@ public class ApplicationConfig {
         messagePairs.put("error_warehouse_02", "Không tìm thấy Mã Kho");
 
         messagePairs.put("error_order_01", "Không tìm thấy Mã Đơn Đặt Hàng");
+        messagePairs.put("error_order_02", "Mã Đơn Đặt Hàng đã tồn tại Phiếu Nhập");
 
         messagePairs.put("error_suppliesImportation_01", "Mã Phiếu Nhập đã tồn tại!");
         messagePairs.put("error_suppliesImportation_02", "Không tìm thấy Mã Phiếu Nhập");
+        messagePairs.put("error_suppliesImportation_03", "Không thể xoá Phiếu Nhập do đã tồn tại Phiếu Xuất tương ứng");
 
         messagePairs.put("ngu", "ngu vai cac!");
 

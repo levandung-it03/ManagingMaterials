@@ -1,6 +1,5 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation;
 
-import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import lombok.RequiredArgsConstructor;
@@ -95,7 +94,6 @@ public class SuppliesImportationRepository {
             PreparedStatement statement = conHolder.getConnection().prepareStatement(
                 "UPDATE PhieuNhap SET MAKHO=?,MasoDDH=? WHERE MAPN=?"
             );
-            //--Register the output parameter
             statement.setString(1, importation.getWarehouseId());
             statement.setString(2, importation.getOrderId());
             statement.setString(3, importation.getSuppliesImportationId());
@@ -106,6 +104,24 @@ public class SuppliesImportationRepository {
             statement.close();
         } catch (Exception e) {
             logger.info("Error In 'findById' of SuppliesImportationRepository: " + e);
+        }
+        return result;
+    }
+
+    public int deleteById(DBConnectionHolder conHolder, String importationId) {
+        int result = 0;
+        try {
+            //--Prepare data to execute Stored Procedure.
+            PreparedStatement statement = conHolder.getConnection().prepareStatement(
+                "DELETE FROM PhieuNhap WHERE MAPN=?"
+            );
+            statement.setString(1, importationId);
+            result = statement.executeUpdate();
+
+            //--Close all connection.
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'deleteById' of SuppliesImportationRepository: " + e);
         }
         return result;
     }

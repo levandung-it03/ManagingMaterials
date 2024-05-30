@@ -13,13 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -70,11 +68,8 @@ public class SuppliesImportationController {
         try {
             branchServices.addSuppliesImportation(importation, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException | DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
-        } catch (DuplicateKeyException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_suppliesImportation_01");
             redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
         } catch (Exception e) {
             logger.info("Error from AddSuppliesImportationController: " + e);
@@ -101,7 +96,7 @@ public class SuppliesImportationController {
         try {
             branchServices.updateSuppliesImportation(importation, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException | DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
             redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
         } catch (Exception e) {
@@ -110,5 +105,25 @@ public class SuppliesImportationController {
             redirectAttributes.addFlashAttribute("submittedSuppliesImportation", importation);
         }
         return "redirect:" + standingUrl;
+    }
+
+    @PostMapping("${url.post.branch.prefix.v1}/delete-supplies-importation")
+    public String deleteSuppliesImportation(
+        @RequestParam("deleteBtn") String importationId,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
+    ) {
+        try {
+            branchServices.deleteSuppliesImportation(importationId, request);
+            redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
+        } catch (NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_suppliesImportation_02");
+        } catch (SQLIntegrityConstraintViolationException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_suppliesImportation_03");
+        } catch (Exception e) {
+            logger.info("Error from UpdateSuppliesImportationController: " + e);
+            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
+        }
+        return "redirect:" + request.getHeader("Referer");
     }
 }
