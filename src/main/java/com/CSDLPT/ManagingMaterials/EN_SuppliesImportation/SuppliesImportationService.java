@@ -121,8 +121,6 @@ public class SuppliesImportationService {
             if (suppliesImportationRepository.findById(connectHolder, importationId).isEmpty())
                 throw new NoSuchElementException("Supplies Importation Id is invalid");
 
-            //--Import validation (PhieuNhap can't be deleted if there's a PhieuXuat is already existing) code here
-
             suppliesImportationRepository.deleteById(connectHolder, importationId);
 
             //--Close connection

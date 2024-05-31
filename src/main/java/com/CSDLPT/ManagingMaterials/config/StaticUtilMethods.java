@@ -94,6 +94,12 @@ public class StaticUtilMethods {
             case "suppliesImportationId", "MAPN" -> List.of("MAPN", "suppliesImportationId", STR_TYPE);
             case "suppliesImportationIdAsFk", "PhieuNhap" ->
                 List.of("MAPN", "SuppliesImportationFromFk.MAPN", "SuppliesImportationFromFk", STR_TYPE);
+
+            //--SuppliesExportation(PhieuXuat) Entity
+            case "suppliesExportation" -> List.of("PhieuXuat", "MAPX", STR_TYPE);
+            case "suppliesExportationId", "MAPX" -> List.of("MAPX", "suppliesExportationId", STR_TYPE);
+            case "suppliesExportationIdAsFk", "PhieuXuat" ->
+                List.of("MAPX", "SuppliesExportationFromFk.MAPX", "SuppliesExportationFromFk", STR_TYPE);
             //--More....
 
             default -> throw new NoSuchFieldException("Field not found");
