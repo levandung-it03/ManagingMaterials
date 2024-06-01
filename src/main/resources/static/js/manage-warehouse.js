@@ -27,7 +27,7 @@ function AddWarehouseComponent() {
 
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
-    customizeSubmitFormAction('div#center-page_adding-form form', validatingBlocks);
+    customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
     customizeAutoFormatStrongInputTextEvent();
 }
 
@@ -38,7 +38,7 @@ async function ListComponent(searchingSupportingDataSource) {
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
 
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+    customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
 }
 
 function GeneralMethods() {
@@ -49,9 +49,10 @@ function GeneralMethods() {
 (async function main() {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddWarehouseComponent,
-        plainAddingForm: $('div#center-page div#center-page_adding-form form'),
+        plainAddingForm: $('div.center-page div.center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-warehouse",
-        componentsForUpdating: []
+        componentsForUpdating: [],
+        moreActions: (updatedObjectRow) => {}
     };
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
@@ -63,7 +64,7 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
-        tableBody: $('div#center-page_list table tbody'),
+        tableBody: $('div.center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-warehouse-by-values",
         rowFormattingEngine: (row) => `
             <tr id="${row.warehouseId}">
@@ -91,7 +92,7 @@ function GeneralMethods() {
             callModulesOfExtraFeatures: () => {
                 //--Re-customize the listener of all updating-buttons.
                 customizeGeneratingFormUpdateEvent(
-                    'div#center-page_list',
+                    'div.center-page_list',
                     updatingSupportingDataSource
                 );
             }

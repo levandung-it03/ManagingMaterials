@@ -141,6 +141,7 @@ public class FindingActionService {
 
             return object;
         } catch (Exception e) {
+            logger.info("Error in 'mapResultSetToObject' of FindingActionService: " + e);
             return null;
         }
     }

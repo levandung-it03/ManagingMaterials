@@ -30,8 +30,8 @@
             </div>
         </c:if>
     </div>
-    <div id="center-page">
-        <div id="center-page_adding-form">
+    <div class="center-page">
+        <div class="center-page_adding-form">
             <form action="/service/v1/branch/add-order" method="post" modelAttribute="order">
                 <div class="form-input" id="orderId">
                     <fieldset>
@@ -59,14 +59,14 @@
                 <input type="submit" value="Thêm đơn đặt hàng">
             </form>
         </div>
-        <div id="center-page_list">
-            <div id="table-tools">
-                <div id="table-description">
+        <div class="center-page_list">
+            <div class="table-tools">
+                <div class="table-description">
                     <b>Danh sách đơn đặt hàng </b>
-                    <span id="quantity"></span>
+                    <span class="quantity"></span>
                 </div>
-                <div id="table-search-box">
-                    <select id="search">
+                <div class="table-search-box">
+                    <select class="search">
                         <option value="" selected disabled hidden>Chọn trường cần tìm</option>
                         <option value="orderId">Mã đơn đặt hàng</option>
                         <option value="supplier">Nhà cung cấp</option>
@@ -74,7 +74,7 @@
                         <option value="employeeId">Mã nhân viên</option>
                         <option value="warehouseId">Mã kho</option>
                     </select>
-                    <input type="text" id="search">
+                    <input type="text" class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </div>
@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    <div id="select-dialog" class="closed">
+    <div class="select-dialog closed">
         <div class="select-dialog-container">
             <span class="form-title">Kho</span>
             <table>

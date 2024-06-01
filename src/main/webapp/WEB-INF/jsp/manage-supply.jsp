@@ -31,8 +31,8 @@
         </div>
     </c:if>
 </div>
-<div id="center-page">
-    <div id="center-page_adding-form">
+<div class="center-page">
+    <div class="center-page_adding-form">
         <form action="/service/v1/branch/add-supply" method="post" modelAttribute="supply">
             <div class="form-input" id="supplyId">
                 <fieldset>
@@ -66,21 +66,21 @@
             <input type="submit" value="Thêm vật tư">
         </form>
     </div>
-    <div id="center-page_list">
-        <div id="table-tools">
-            <div id="table-description">
+    <div class="center-page_list">
+        <div class="table-tools">
+            <div class="table-description">
                 <b>Số lượng </b>
-                <span id="quantity"></span>
+                <span class="quantity"></span>
             </div>
-            <div id="table-search-box">
-                <select id="search">
+            <div class="table-search-box">
+                <select class="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
                     <option value="supplyId">Mã vật tư</option>
                     <option value="supplyName">Tên vật tư</option>
                     <option value="unit">Đơn vị tính</option>
                     <option value="quantityInStock">Số lượng tồn</option>
                 </select>
-                <input type="text" id="search">
+                <input type="text" class="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
         </div>

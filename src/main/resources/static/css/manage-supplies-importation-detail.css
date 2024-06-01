@@ -16,7 +16,6 @@ div.center-page_adding-form form {
     font-weight: 600;
     min-height: 94%;
 }
-
 div.center-page_adding-form form .form-input,
 div.center-page_adding-form form .form-select {
     position: relative;
@@ -30,17 +29,16 @@ div.center-page_adding-form .form-select label {
 }
 
 /*--Customize each input tag--*/
-div.center-page_adding-form form div#orderId,
-div.center-page_adding-form form div#createdDate,
-div.center-page_adding-form form div#supplier,
-div.center-page_adding-form form div#employeeId
-div.center-page_adding-form form div#warehouseId {
+div.center-page_adding-form form div#suppliesImportationId,
+div.center-page_adding-form form div#supplyId,
+div.center-page_adding-form form div#suppliesQuantity,
+div.center-page_adding-form form div#price {
     width: 100%;
 }
-div.center-page_adding-form form div#warehouseId input{
+div.center-page_adding-form form div#supplyId input{
     width: 90%;
 }
-div.center-page_adding-form form div#warehouseId i{
+div.center-page_adding-form form div#supplyId i{
     cursor: pointer;
 }
 /*------------*/
@@ -91,49 +89,39 @@ div.center-page_adding-form form input[type=submit] {
     cursor: pointer;
 }
 
-/*--Customize Order List--*/
+/*--Customize Supply List--*/
+div#order-list {
+    /*background: blue;*/
+}
+
 table tr td {
     height: 60px;
 }
-table tr th#orderId,
-table tr td.orderId {
+
+table tr th#suppliesImportationId,
+table tr td.suppliesImportationId {
     text-align: start;
-    width: 14%;
+    width: 20%;
     padding-left: 20px
 }
-table tr th#createdDate,
-table tr td.createdDate {
-    width: 15%;
-}
-table tr th#supplier,
-table tr td.supplier {
+table tr th#supplyId,
+table tr td.supplyId {
     text-align: start;
     width: 20%;
 }
-table tr th#employeeId,
-table tr td.employeeId {
-    width: 15%;
+table tr th#suppliesQuantity,
+table tr td.suppliesQuantity {
+    width: 20%;
 }
-table tr th#warehouseId,
-table tr td.warehouseId {
-    width: 10%;
+table tr th#price,
+table tr td.price {
+    width: 20%;
 }
-table tr th#detail,
-table tr td.detail{
-    width: 10%;
-}
-
 table tr th#update,
 table tr td.update,
 table tr th#delete,
-table tr td.delete{
-    width: 8%;
-}
-
-table tr td.detail i:hover {
-    cursor: pointer;
-    background-color: #0dac67;
-    color: #ffffff;
+table tr td.delete {
+    width: 10%;
 }
 
 /* Custom select-dialog */
@@ -196,19 +184,22 @@ div.select-dialog div.closing-dialog-btn:hover {
     text-overflow: ellipsis;
     cursor: pointer;
 }
-.select-dialog table tr th#warehouseId,
-.select-dialog table tr td.warehouseId {
+.select-dialog table tr th#supplyId,
+.select-dialog table tr td.supplyId {
     text-align: start;
     width: 20%;
     padding-left: 20px;
 }
-.select-dialog table tr th#warehouseName,
-.select-dialog table tr td.warehouseName {
+.select-dialog table tr th#supplyName,
+.select-dialog table tr td.supplyName {
     text-align: start;
-    width: 35%;
+    width: 38%;
 }
-.select-dialog table tr th#address,
-.select-dialog table tr td.address {
-    text-align: start;
-    width: 45%;
+.select-dialog table tr th#unit,
+.select-dialog table tr td.unit {
+    width: 20%;
+}
+.select-dialog table tr th#quantityInStock,
+.select-dialog table tr td.quantityInStock {
+    width: 22%;
 }

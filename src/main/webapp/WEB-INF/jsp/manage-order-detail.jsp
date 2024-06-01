@@ -31,8 +31,8 @@
         </div>
     </c:if>
 </div>
-<div id="center-page">
-    <div id="center-page_adding-form">
+<div class="center-page">
+    <div class="center-page_adding-form">
         <form action="/service/v1/branch/add-order-detail" method="post" modelAttribute="orderDetail">
             <div class="form-input" id="orderId">
                 <fieldset>
@@ -48,10 +48,10 @@
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <div class="form-input" id="quantitySupply">
+            <div class="form-input" id="suppliesQuantity">
                 <fieldset>
                     <legend>Số lượng</legend>
-                    <input name="quantitySupply" type="number" value="${orderDetail.quantitySupply}" min="0" required/>
+                    <input name="suppliesQuantity" type="number" value="${orderDetail.suppliesQuantity}" min="0" required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
@@ -67,20 +67,20 @@
             <input type="submit" value="Thêm chi tiết DDH">
         </form>
     </div>
-    <div id="center-page_list">
-        <div id="table-tools">
-            <div id="table-description">
+    <div class="center-page_list">
+        <div class="table-tools">
+            <div class="table-description">
                 <b><a style="color:blue" href="/branch/order/manage-order">Danh sách đơn</a> > Chi tiết đơn </b>
-                <span id="quantity"></span>
+                <span class="quantity"></span>
             </div>
-            <div id="table-search-box">
-                <select id="search">
+            <div class="table-search-box">
+                <select class="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
                     <option value="supplyId">Mã vật tư</option>
-                    <option value="quantitySupply">Số lượng</option>
+                    <option value="suppliesQuantity">Số lượng</option>
                     <option value="price">Đơn giá</option>
                 </select>
-                <input type="text" id="search">
+                <input type="text" class="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
         </div>
@@ -96,7 +96,7 @@
                         Mã vật tư
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="quantitySupply">
+                    <th id="suppliesQuantity">
                         Số lượng
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
@@ -116,7 +116,7 @@
         </div>
     </div>
 </div>
-<div id="select-dialog" class="closed">
+<div class="select-dialog closed">
     <div class="select-dialog-container">
         <span class="form-title">Vật tư</span>
         <table>

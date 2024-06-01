@@ -3,10 +3,7 @@ package com.CSDLPT.ManagingMaterials.config;
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -86,7 +83,7 @@ public class StaticUtilMethods {
             case "orderId", "MasoDDH" -> List.of("MasoDDH", "orderId", STR_TYPE);
             case "supplier", "NhaCC" -> List.of("NhaCC", "supplier", STR_TYPE);
             case "createdDate", "NGAY" -> List.of("NGAY", "createdDate", DATE_TYPE);
-            case "quantitySupply", "SOLUONG" -> List.of("SOLUONG", "quantitySupply", NUM_TYPE);
+            case "suppliesQuantity", "SOLUONG" -> List.of("SOLUONG", "suppliesQuantity", NUM_TYPE);
             case "price", "DONGIA" -> List.of("DONGIA", "price", NUM_TYPE);
 
             //--SuppliesImportation(PhieuNhap) Entity

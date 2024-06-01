@@ -4,7 +4,7 @@ html {
     margin: 0;
     padding: 0;
 }
-div#center-page_adding-form form,
+div.center-page_adding-form form,
 div#form-dialog_adding-account form {
     padding: 28px;
     background-color: rgba(255, 255, 255, 0.95);
@@ -14,7 +14,7 @@ div#form-dialog_adding-account form {
     font-size: 0.9rem;
     font-weight: 600;
 }
-div#center-page_adding-form form {
+div.center-page_adding-form form {
     margin: 20px 0 20px 20px;
     min-height: 94%;
     width: calc(100% - 2 * 20px);
@@ -22,16 +22,16 @@ div#center-page_adding-form form {
 div#form-dialog_adding-account form {
     width: 100%;
 }
-div#center-page_adding-form form .form-input,
-div#center-page_adding-form form .form-select,
+div.center-page_adding-form form .form-input,
+div.center-page_adding-form form .form-select,
 div#form-dialog_adding-account form .form-input,
 div#form-dialog_adding-account form .form-select {
     position: relative;
     min-height: 70px !important;
 }
 
-div#center-page_adding-form .form-input label,
-div#center-page_adding-form .form-select label,
+div.center-page_adding-form .form-input label,
+div.center-page_adding-form .form-select label,
 div#form-dialog_adding-account .form-input label,
 div#form-dialog_adding-account .form-select label {
     display: block;
@@ -39,20 +39,20 @@ div#form-dialog_adding-account .form-select label {
 }
 
 /*--Customize each input tag--*/
-div#center-page_adding-form form div#employeeId,
-div#center-page_adding-form form div#identifier,
-div#center-page_adding-form form div#lastName,
-div#center-page_adding-form form div#firstName,
-div#center-page_adding-form form div#address,
-div#center-page_adding-form form div#birthday,
-div#center-page_adding-form form div#salary,
-div#center-page_adding-form form div#branch {
+div.center-page_adding-form form div#employeeId,
+div.center-page_adding-form form div#identifier,
+div.center-page_adding-form form div#lastName,
+div.center-page_adding-form form div#firstName,
+div.center-page_adding-form form div#address,
+div.center-page_adding-form form div#birthday,
+div.center-page_adding-form form div#salary,
+div.center-page_adding-form form div#branch {
     width: 100%;
 }
 /*------------*/
 
-div#center-page_adding-form .form-input fieldset,
-div#center-page_adding-form .form-select fieldset,
+div.center-page_adding-form .form-input fieldset,
+div.center-page_adding-form .form-select fieldset,
 div#form-dialog_adding-account .form-input fieldset,
 div#form-dialog_adding-account .form-select fieldset {
     width: 100%;
@@ -61,15 +61,15 @@ div#form-dialog_adding-account .form-select fieldset {
     border-radius: 10px;
     padding: 0 10px;
 }
-div#center-page_adding-form .form-input fieldset legend,
-div#center-page_adding-form .form-select fieldset legend,
+div.center-page_adding-form .form-input fieldset legend,
+div.center-page_adding-form .form-select fieldset legend,
 div#form-dialog_adding-account fieldset legend,
 div#form-dialog_adding-account fieldset legend {
     color: var(--black-text);
     font-weight: 100;
 }
-div#center-page_adding-form .form-input input,
-div#center-page_adding-form .form-select select,
+div.center-page_adding-form .form-input input,
+div.center-page_adding-form .form-select select,
 div#form-dialog_adding-account .form-input input,
 div#form-dialog_adding-account .form-select select {
     outline: none;
@@ -78,7 +78,7 @@ div#form-dialog_adding-account .form-select select {
     background-color: transparent;
 }
 
-div#center-page_adding-form .form-input_err-message {
+div.center-page_adding-form .form-input_err-message {
     position: relative;
 }
 
@@ -90,12 +90,12 @@ div#center-page_adding-form .form-input_err-message {
     padding-left: 10px;
 }
 
-div#center-page_adding-form form span#cancel-updating {
+div.center-page_adding-form form span#cancel-updating {
     display: block;
     padding: 8px 0;
     margin: 30px auto auto;
 }
-div#center-page_adding-form form input[type=submit],
+div.center-page_adding-form form input[type=submit],
 div#form-dialog_adding-account form input[type=submit] {
     padding: 12px 42px;
     margin: 30px auto auto;

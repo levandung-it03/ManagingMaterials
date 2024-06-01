@@ -31,7 +31,7 @@ public class SuppliesImportationController {
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
     @GetMapping("/branch/supplies-importation/manage-supplies-importation")
-    public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) {
+    public ModelAndView getManageSuppliesImportationPage(HttpServletRequest request, Model model) {
         return branchServices.getManageSuppliesImportationPage(request, model);
     }
 

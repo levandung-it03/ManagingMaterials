@@ -4,7 +4,7 @@ html {
     margin: 0;
     padding: 0;
 }
-div#center-page_adding-form form {
+div.center-page_adding-form form {
     padding: 28px;
     margin: 20px 0 20px 20px;
     width: calc(100% - 2 * 20px);
@@ -16,43 +16,43 @@ div#center-page_adding-form form {
     font-weight: 600;
     min-height: 94%;
 }
-div#center-page_adding-form form .form-input {
+div.center-page_adding-form form .form-input {
     position: relative;
     min-height: 70px !important;
 }
 
-div#center-page_adding-form .form-input label {
+div.center-page_adding-form .form-input label {
     display: block;
     padding: 4px;
 }
 
 /*--Customize each input tag--*/
-div#center-page_adding-form form div#warehouseId,
-div#center-page_adding-form form div#warehouseName,
-div#center-page_adding-form form div#address {
+div.center-page_adding-form form div#warehouseId,
+div.center-page_adding-form form div#warehouseName,
+div.center-page_adding-form form div#address {
     width: 100%;
 }
 /*------------*/
 
-div#center-page_adding-form .form-input fieldset,
-div#center-page_adding-form .form-select fieldset {
+div.center-page_adding-form .form-input fieldset,
+div.center-page_adding-form .form-select fieldset {
     width: 100%;
     height: 55px;
     border: 2px var(--grey-border) solid;
     border-radius: 10px;
     padding: 0 10px;
 }
-div#center-page_adding-form .form-input fieldset legend {
+div.center-page_adding-form .form-input fieldset legend {
     color: var(--black-text);
     font-weight: 100;
 }
-div#center-page_adding-form .form-input input {
+div.center-page_adding-form .form-input input {
     outline: none;
     border: none;
     width: 100%;
 }
 
-div#center-page_adding-form .form-input_err-message {
+div.center-page_adding-form .form-input_err-message {
     position: relative;
 }
 
@@ -64,12 +64,12 @@ div#center-page_adding-form .form-input_err-message {
     padding-left: 10px;
 }
 
-div#center-page_adding-form form span#cancel-updating {
+div.center-page_adding-form form span#cancel-updating {
     display: block;
     padding: 8px 0;
     margin: 30px auto auto;
 }
-div#center-page_adding-form form input[type=submit] {
+div.center-page_adding-form form input[type=submit] {
     padding: 12px 42px;
     margin: 30px auto auto;
 }

@@ -31,7 +31,7 @@ function AddSuppliesImportationComponent() {
 
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
-    customizeSubmitFormAction('div#center-page_adding-form form', validatingBlocks);
+    customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
     // recoveryAllSelectTagDataInForm();
     customizeAutoFormatStrongInputTextEvent();
 }
@@ -43,7 +43,7 @@ async function ListComponentForSuppliesImportation(searchingSupportingDataSource
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
 
-    customizeSubmitFormAction('div#center-page_list form', {mockTag: {isValid: true}});
+    customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
 }
 
 function GeneralMethods() {
@@ -54,9 +54,10 @@ function GeneralMethods() {
 (async function main() {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSuppliesImportationComponent,
-        plainAddingForm: $('div#center-page div#center-page_adding-form form'),
+        plainAddingForm: $('div.center-page div.center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-supplies-importation",
-        componentsForUpdating: []
+        componentsForUpdating: [],
+        moreActions: (updatedObjectRow) => {}
     };
     //--Searching data for order by orderId
     const searchingSupportingDataSource = {
@@ -69,7 +70,7 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
-        tableBody: $('div#center-page_list table tbody'),
+        tableBody: $('div.center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-supplies-importation-by-values",
         rowFormattingEngine: (row) => `
             <tr id="${row.orderId}">
@@ -79,7 +80,7 @@ function GeneralMethods() {
                 <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
                 <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
                 <td class="table-row-btn detail">
-                    <a href="/branch/order-detail/manage-order-detail?orderId=${row.suppliesImportationId}">
+                    <a href="/branch/supplies-importation-detail/manage-supplies-importation-detail?suppliesImportationId=${row.suppliesImportationId}">
                         <i class="fa-solid fa-eye"></i>
                     </a>
                 </td>
@@ -150,7 +151,7 @@ function GeneralMethods() {
             callModulesOfExtraFeatures: () => {
                 //--Re-customize the listener of all updating-buttons.
                 customizeGeneratingFormUpdateEvent(
-                    'div#center-page_list',
+                    'div.center-page_list',
                     updatingSupportingDataSource
                 );
 
@@ -164,7 +165,7 @@ function GeneralMethods() {
             await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForWarehouseDialog,
                 'div#select-dialog_warehouse');
         },
-        'div#center-page_adding-form'
+        'div.center-page_adding-form'
     );
     await ListComponentForSuppliesImportation(searchingSupportingDataSource);
 })();

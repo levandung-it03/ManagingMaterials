@@ -27,7 +27,7 @@ function AddOrderComponent() {
 
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
-    customizeSubmitFormAction('div#center-page_adding-form form', validatingBlocks);
+    customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
     // recoveryAllSelectTagDataInForm();
     customizeAutoFormatStrongInputTextEvent();
 }
@@ -39,7 +39,7 @@ async function ListComponentForOrder(searchingSupportingDataSource) {
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
 
-    customizeSubmitFormAction('div#center-page_list form', {mockTag: {isValid: true}});
+    customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
 }
 
 function GeneralMethods() {
@@ -50,9 +50,10 @@ function GeneralMethods() {
 (async function main() {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddOrderComponent,
-        plainAddingForm: $('div#center-page div#center-page_adding-form form'),
+        plainAddingForm: $('div.center-page div.center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-order",
-        componentsForUpdating: []
+        componentsForUpdating: [],
+        moreActions: (updatedObjectRow) => {}
     };
     //--Searching data for order by orderId
     const searchingSupportingDataSource = {
@@ -65,7 +66,7 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
-        tableBody: $('div#center-page_list table tbody'),
+        tableBody: $('div.center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-order-by-values",
         rowFormattingEngine: (row) => `
             <tr id="${row.orderId}">
@@ -101,7 +102,7 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
-        tableBody: $('div#select-dialog table tbody'),
+        tableBody: $('div.select-dialog table tbody'),
         fetchDataAction: "/service/v1/branch/find-warehouse-by-values",
         rowFormattingEngine: (row) => `
             <tr id="${row.warehouseId}">
@@ -113,8 +114,6 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddOrderComponent();
-
-    await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForDialog)
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
@@ -122,10 +121,15 @@ function GeneralMethods() {
             callModulesOfExtraFeatures: () => {
                 //--Re-customize the listener of all updating-buttons.
                 customizeGeneratingFormUpdateEvent(
-                    'div#center-page_list',
+                    'div.center-page_list',
                     updatingSupportingDataSource
                 );
             }
+        }
+    );
+    await CustomizeBuildingFormSpectator(
+        async () => {
+            await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForDialog)
         }
     );
     await ListComponentForOrder(searchingSupportingDataSource);

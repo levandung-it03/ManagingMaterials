@@ -31,8 +31,8 @@
         </div>
     </c:if>
 </div>
-<div id="center-page">
-    <div id="center-page_adding-form">
+<div class="center-page">
+    <div class="center-page_adding-form">
         <form action="/service/v1/branch/add-employee" method="post" modelAttribute="employee">
             <div class="form-input" id="employeeId">
                 <fieldset>
@@ -91,14 +91,14 @@
             </c:forEach>
         </div>
     </div>
-    <div id="center-page_list">
-        <div id="table-tools">
-            <div id="table-description">
+    <div class="center-page_list">
+        <div class="table-tools">
+            <div class="table-description">
                 <b>Số lượng </b>
-                <span id="quantity"></span>
+                <span class="quantity"></span>
             </div>
-            <div id="table-search-box">
-                <select id="search">
+            <div class="table-search-box">
+                <select class="search">
                     <option value="" selected disabled hidden>Chọn trường cần tìm</option>
                     <option value="employeeId">Mã nhân viên</option>
                     <option value="identifier">CMND</option>
@@ -109,7 +109,7 @@
                     <option value="address">Địa chỉ</option>
                     <option value="salary">Lương</option>
                 </select>
-                <input type="text" id="search">
+                <input type="text" class="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
         </div>

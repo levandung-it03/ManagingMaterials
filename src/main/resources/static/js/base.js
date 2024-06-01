@@ -209,8 +209,8 @@ function customizeSortingListEvent() {
 }
 
 function customizeSearchingListEvent(searchingSupportingDataSource) {
-    const searchingInputTag = $('#table-search-box input#search');
-    const selectedOption = $('#table-search-box select#search');
+    const searchingInputTag = $('.table-search-box input.search');
+    const selectedOption = $('.table-search-box select.search');
 
     const handleSearchingListEvent = async e => {
         //--Stop searching if searched-field is not selected yet.
@@ -230,7 +230,7 @@ function customizeSearchingListEvent(searchingSupportingDataSource) {
         return null;
     }
 
-    $('#table-search-box i').addEventListener("click", handleSearchingListEvent);
+    $('.table-search-box i').addEventListener("click", handleSearchingListEvent);
     searchingInputTag.addEventListener("keyup", handleSearchingListEvent);
 }
 
@@ -262,7 +262,7 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
         .then(responseObject => {
             if (responseObject["totalObjectsQuantityResult"] === 0) {
                 searchingSupportingDataSource.tableBody.innerHTML =
-                    '<tr><td style="width: 100%">Không tìm thấy dữ liệu vừa nhập</td></tr>';
+                    '<tr><td style="width: 100%">Không tìm thấy dữ liệu</td></tr>';
             } else {
                 //--Render table-data by found result-data-set.
                 searchingSupportingDataSource.tableBody.innerHTML = responseObject["resultDataSet"]
@@ -429,13 +429,14 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
     newForm.querySelector('input[type=submit]').value = "Cập nhật";
     newForm.querySelector('input[name*="Id"]').readOnly = true;
     //--Print-out updating-form.
-    $('div#center-page div#center-page_adding-form form').outerHTML = newForm.outerHTML;
+    $('div.center-page div.center-page_adding-form form').outerHTML = newForm.outerHTML;
     updatingSupportingDataSource.addingFormCustomizer();
+    updatingSupportingDataSource.moreActions(updatedObjectRow);
 
     //--Customize bringing back adding-form when cancel-updating-btn is clicked.
-    $('div#center-page div#center-page_adding-form form #cancel-updating')
+    $('div.center-page div.center-page_adding-form form #cancel-updating')
         .addEventListener("click", e => {
-            $('div#center-page div#center-page_adding-form form').outerHTML =
+            $('div.center-page div.center-page_adding-form form').outerHTML =
                 updatingSupportingDataSource.plainAddingForm.outerHTML;
             updatingSupportingDataSource.addingFormCustomizer();
         });
@@ -443,12 +444,13 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
 
 async function CustomizeToggleOpeningFormDialogDateSupporter(
     searchingSupportingDataSource,
-    addingFormDialogSupporterSelector='div#select-dialog'
+    addingFormDialogSupporterSelector='div.select-dialog'
 ) {
     const selectDialog = $(addingFormDialogSupporterSelector);
     //--Open dialog when clicking on icon in the add form
-    $(`div#center-page_adding-form #${searchingSupportingDataSource.data.searchingField} i`)
-        .addEventListener("click", async e => {
+    const openDialogBtn = $(`div.center-page_adding-form #${searchingSupportingDataSource.data.searchingField} i`);
+    if (openDialogBtn != null)
+        openDialogBtn.addEventListener("click", async e => {
             await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource)
             //--Open select-dialog.
             selectDialog.classList.remove("closed");
@@ -456,7 +458,7 @@ async function CustomizeToggleOpeningFormDialogDateSupporter(
 
     //--Auto fill input value when clicking on any row in select dialog
     $(addingFormDialogSupporterSelector + ` tbody`).addEventListener("click", e =>{
-        $(`div#center-page_adding-form #${searchingSupportingDataSource.data.searchingField} input`)
+        $(`div.center-page_adding-form #${searchingSupportingDataSource.data.searchingField} input`)
             .value = e.target.closest("tr").id.trim();
         selectDialog.classList.add("closed");
     });
@@ -481,13 +483,13 @@ async function CustomizeToggleOpeningFormDialogDateSupporter(
 async function CustomizeFetchingActionSpectator(
     searchingSupportingDataSource,
     moreFeatures,
-    observedTableContainer = 'div#center-page_list'
+    observedTableContainer = 'div.center-page_list'
 ) {
     //--Create a mutation observer instance when each fetch-action is made.
     await new MutationObserver(async () => {
         //--Re-calculate the quantities.
         if (moreFeatures.tableLabel) {
-            $(observedTableContainer + ' #quantity').textContent =
+            $(observedTableContainer + ' .quantity').textContent =
                 $$(observedTableContainer + ' tbody tr').length + " " + moreFeatures.tableLabel;
         }
 
@@ -501,7 +503,7 @@ async function CustomizeFetchingActionSpectator(
     }).observe($(observedTableContainer + ' tbody'), {childList: true, subtree: true});
 }
 
-async function CustomizeBuildingFormSpectator(dialogBuilders, observedForm = 'div#center-page_adding-form') {
+async function CustomizeBuildingFormSpectator(dialogBuilders, observedForm = 'div.center-page_adding-form') {
     //--Firstly calling when HTML is renders.
     await dialogBuilders();
 

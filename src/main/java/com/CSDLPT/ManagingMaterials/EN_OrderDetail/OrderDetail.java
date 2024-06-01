@@ -24,7 +24,7 @@ public class OrderDetail {
 
     @NotNull(message = "error_entity_03")
     @Min(value = 0, message = "error_entity_03")
-    private Integer quantitySupply;
+    private Integer suppliesQuantity;
 
     @NotNull(message = "error_entity_03")
     @Min(value = 0, message = "error_entity_03")

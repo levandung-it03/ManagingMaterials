@@ -59,7 +59,7 @@ function AddEmployeeComponent() {
 
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
-    customizeSubmitFormAction('div#center-page_adding-form form', validatingBlocks);
+    customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
     customizeSubmitFormAction('div#form-dialog_adding-account form', validatingBlocks);
     // recoveryAllSelectTagDataInForm();
     customizeAutoFormatStrongInputTextEvent();
@@ -72,7 +72,7 @@ async function ListComponent(searchingSupportingDataSource) {
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
 
-    customizeSubmitFormAction('div#center-page_list form', { mockTag: { isValid: true } });
+    customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
 }
 
 async function customizeAddAccountFormDialog() {
@@ -83,7 +83,7 @@ async function customizeAddAccountFormDialog() {
     $('div.closing-dialog-btn').addEventListener("click", e => formDialog.classList.add("closed"));
 
     function customizeSelectingAddAccountBtn() {
-        [...$$('div#center-page_list table tbody tr td.addAccount a i')].forEach(btn => {
+        [...$$('div.center-page_list table tbody tr td.addAccount a i')].forEach(btn => {
             btn.addEventListener("click", async e => {
                 const employeeId = e.target.parentElement.id;
                 await fetch(
@@ -143,7 +143,7 @@ function GeneralMethods() {
 (async function main() {
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddEmployeeComponent,
-        plainAddingForm: $('div#center-page div#center-page_adding-form form'),
+        plainAddingForm: $('div.center-page div.center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-employee",
         componentsForUpdating: [
             //--Create 'select' block to serve selecting-another-branch.
@@ -159,7 +159,8 @@ function GeneralMethods() {
             }</select>
                 </fieldset>
             </div>`
-        ]
+        ],
+        moreActions: (updatedObjectRow) => {}
     };
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
@@ -171,7 +172,7 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
-        tableBody: $('div#center-page_list table tbody'),
+        tableBody: $('div.center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-employee-by-values",
         rowFormattingEngine: (row) => `
             <tr id="${row.employeeId}">
@@ -221,7 +222,7 @@ function GeneralMethods() {
                 await customizeAddAccountFormDialog();
                 //--Re-customize the listener of all updating-buttons.
                 customizeGeneratingFormUpdateEvent(
-                    'div#center-page_list',
+                    'div.center-page_list',
                     updatingSupportingDataSource
                 );
             }
