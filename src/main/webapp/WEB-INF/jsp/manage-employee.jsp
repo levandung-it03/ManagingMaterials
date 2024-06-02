@@ -205,7 +205,7 @@
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
-            <input type="submit" value="Xác nhận" />
+            <button name="submit">Thêm tài khoản</button>
         </form>
         <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
     </div>

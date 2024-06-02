@@ -96,7 +96,7 @@ div.center-page_adding-form form span#cancel-updating {
     margin: 30px auto auto;
 }
 div.center-page_adding-form form input[type=submit],
-div#form-dialog_adding-account form input[type=submit] {
+div#form-dialog_adding-account form button[name=submit] {
     padding: 12px 42px;
     margin: 30px auto auto;
 }

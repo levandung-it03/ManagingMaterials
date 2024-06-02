@@ -139,6 +139,7 @@ div.center-page_adding-form {
 .form-input .password_toggle-hidden>.hidden {
     display: none;
 }
+form button[name=submit],
 form input[type=submit],
 form span#cancel-updating {
     display: block;
@@ -154,6 +155,7 @@ form span#cancel-updating {
     font-size: 0.85rem!important;
     font-weight: 100!important;
 }
+form button[name=submit]:hover,
 form input[type=submit]:hover,
 form span#cancel-updating:hover {
     cursor: pointer;
