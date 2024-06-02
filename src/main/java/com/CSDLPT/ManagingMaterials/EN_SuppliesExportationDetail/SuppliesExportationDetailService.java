@@ -1,4 +1,4 @@
-package com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail;
+package com.CSDLPT.ManagingMaterials.EN_SuppliesExportationDetail;
 
 import com.CSDLPT.ManagingMaterials.EN_OrderDetail.dtos.ReqDtoDataForDetail;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
@@ -16,43 +16,42 @@ import org.springframework.web.servlet.ModelAndView;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
-public class SuppliesImportationDetailService {
-
+public class SuppliesExportationDetailService {
     @Service
     @RequiredArgsConstructor
     public static class BranchServices {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
-        private final SuppliesImportationDetailRepository suppliesImportationDetailRepository;
+        private final SuppliesExportationDetailRepository suppliesExportationDetailRepository;
 
-        public ModelAndView getManageSuppliesImportationDetailPage(HttpServletRequest request, Model model) {
+        public ModelAndView getManageSuppliesExportationDetailPage(HttpServletRequest request, Model model) {
             //--Prepare a modelAndView object to symbolize the whole page.
-            final String suppliesImportationId = request.getParameter("suppliesImportationId");
+            final String suppliesExportationId = request.getParameter("suppliesExportationId");
             ModelAndView modelAndView = staticUtilMethods
-                .customResponsiveModelView(request, model, "manage-supplies-importation-detail");
+                .customResponsiveModelView(request, model, "manage-supplies-exportation-detail");
 
-            //--Check if there's a response SuppliesImportation to map into adding-form when an error occurred.
-            SuppliesImportationDetail detail =
-                (SuppliesImportationDetail) model.asMap().get("submittedSuppliesImportationDetail");
-            if (detail != null) modelAndView.addObject("importationDetail", detail);
+            //--Check if there's a response SuppliesExportation to map into adding-form when an error occurred.
+            SuppliesExportationDetail detail =
+                (SuppliesExportationDetail) model.asMap().get("submittedSuppliesExportationDetail");
+            if (detail != null) modelAndView.addObject("exportationDetail", detail);
             else
-                //--Give the default value to suppliesImportationDetail.
-                modelAndView.addObject("importationDetail", SuppliesImportationDetail.builder()
-                    .suppliesImportationId(suppliesImportationId)
+                //--Give the default value to suppliesExportationDetail.
+                modelAndView.addObject("exportationDetail", SuppliesExportationDetail.builder()
+                    .suppliesExportationId(suppliesExportationId)
                     .build());
 
             return modelAndView;
         }
 
-        public ResDtoRetrievingData<SuppliesImportationDetail> findingSuppliesImportationsDetail(
+        public ResDtoRetrievingData<SuppliesExportationDetail> findingSuppliesExportationDetail(
             HttpServletRequest request,
-            ReqDtoRetrievingData<SuppliesImportationDetail> searchingObject
+            ReqDtoRetrievingData<SuppliesExportationDetail> searchingObject
         ) throws SQLException, NoSuchFieldException {
             //--Preparing data to fetch.
-            searchingObject.setObjectType(SuppliesImportationDetail.class);
-            searchingObject.setSearchingTable("CTPN");
-            searchingObject.setSearchingTableIdName("MAPN");
-            searchingObject.setSortingCondition("ORDER BY MAPN ASC");
+            searchingObject.setObjectType(SuppliesExportationDetail.class);
+            searchingObject.setSearchingTable("CTPX");
+            searchingObject.setSearchingTableIdName("MAPX");
+            searchingObject.setSortingCondition("ORDER BY MAPX ASC");
 
             StringBuilder condition = new StringBuilder();
             for (ReqDtoDataForDetail dataObject : searchingObject.getConditionObjectsList()) {
@@ -67,46 +66,46 @@ public class SuppliesImportationDetailService {
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }
 
-        public void addSuppliesImportationDetail(
-            SuppliesImportationDetail importationDetail,
+        public void addSuppliesExportationDetail(
+            SuppliesExportationDetail exportationDetail,
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-            importationDetail.trimAllFieldValues();
+            exportationDetail.trimAllFieldValues();
 
-            if (suppliesImportationDetailRepository.findById(connectHolder,
-                importationDetail.getSuppliesImportationId(), importationDetail.getSupplyId()
+            if (suppliesExportationDetailRepository.findById(connectHolder,
+                exportationDetail.getSuppliesExportationId(), exportationDetail.getSupplyId()
             ).isPresent())
-                throw new DuplicateKeyException("This Supply Id is already existing in Sup-Import-List in DB");
+                throw new DuplicateKeyException("This Supply Id is already existing in Sup-Export-List in DB");
 
-            suppliesImportationDetailRepository.save(connectHolder, importationDetail);
+            suppliesExportationDetailRepository.save(connectHolder, exportationDetail);
             //--Close connection
             connectHolder.removeConnection();
         }
 
-        public void updateSuppliesImportationDetail(
-            SuppliesImportationDetail importationDetail,
+        public void updateSuppliesExportationDetail(
+            SuppliesExportationDetail exportationDetail,
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-            importationDetail.trimAllFieldValues();
+            exportationDetail.trimAllFieldValues();
 
-            suppliesImportationDetailRepository.update(connectHolder, importationDetail);
+            suppliesExportationDetailRepository.update(connectHolder, exportationDetail);
             //--Close connection
             connectHolder.removeConnection();
         }
 
-        public void deleteSuppliesImportationDetail(
-            String importationDetailId,
+        public void deleteSuppliesExportationDetail(
+            String exportationDetailId,
             String supplyId,
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
-            if (suppliesImportationDetailRepository.findById(connectHolder, importationDetailId, supplyId).isEmpty())
-                throw new NoSuchElementException("Supplies-Importation-Detail not found");
+            if (suppliesExportationDetailRepository.findById(connectHolder, exportationDetailId, supplyId).isEmpty())
+                throw new NoSuchElementException("Supplies-Exportation-Detail not found");
 
-            suppliesImportationDetailRepository.delete(connectHolder, importationDetailId, supplyId);
+            suppliesExportationDetailRepository.delete(connectHolder, exportationDetailId, supplyId);
             //--Close connection
             connectHolder.removeConnection();
         }

@@ -18,8 +18,8 @@ function AddSuppliesImportationComponent() {
             },
             errorMessage: "Mã đơn đặt hàng không hợp lệ."
         },
-        warehouseId: {
-            tag: $('input[name=warehouseId]'),
+        warehouseIdAsFk: {
+            tag: $('input[name=warehouseIdAsFk]'),
             validate: function (value) {
                 //--Using function to make "this" works correctly.
                 this.tag.value = value.trim().toUpperCase();
@@ -59,7 +59,7 @@ function GeneralMethods() {
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {}
     };
-    //--Searching data for order by orderId
+    //--Searching data for suppliesImportation by suppliesImportationId
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
         data: {
@@ -76,8 +76,12 @@ function GeneralMethods() {
             <tr id="${row.orderId}">
                 <td plain-value="${row.suppliesImportationId}" class="suppliesImportationId">${row.suppliesImportationId}</td>
                 <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
-                <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
-                <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
+                <td plain-value="${row.employeeIdAsFk}" class="employeeIdAsFk">
+                    ${row.employeeIdAsFk} - ${row.lastName + " " + row.firstName}
+                </td>
+                <td plain-value="${row.warehouseIdAsFk}" class="warehouseIdAsFk">
+                    ${row.warehouseIdAsFk} - ${row.warehouseName}
+                </td>
                 <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
                 <td class="table-row-btn detail">
                     <a href="/branch/supplies-importation-detail/manage-supplies-importation-detail?suppliesImportationId=${row.suppliesImportationId}">
@@ -96,74 +100,28 @@ function GeneralMethods() {
                 </td>
             </tr>`
     };
-    const searchingSupportingDataSourceForOrderDialog = {
-        //--Initialize field-values for firstly fetch action.
-        data: {
-            currentPage: 1,
-            objectsQuantity: 0,
-            searchingField: "orderId",
-            searchingValue: "",
-        },
-
-        //--Main fields for searching-action.
-        tableBody: $('div#select-dialog_order table tbody'),
-        fetchDataAction: "/service/v1/branch/find-order-for-supplies-importation-by-values",
-        rowFormattingEngine: (row) => `
-            <tr id="${row.orderId}">
-                <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
-                <td plain-value="${row.employeeIdAsFk}" class="employeeId">
-                    ${row.employeeIdAsFk} - ${row.lastName + " " + row.firstName}
-                </td>
-                <td plain-value="${row.supplier}" class="supplier">${row.supplier}</td>
-                <td plain-value="${row.warehouseIdAsFk}" class="warehouseId">
-                    ${row.warehouseIdAsFk} - ${row.warehouseName}
-                </td>
-                <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
-            </tr>`
-    };
-    const searchingSupportingDataSourceForWarehouseDialog = {
-        //--Initialize field-values for firstly fetch action.
-        data: {
-            currentPage: 1,
-            objectsQuantity: 0,
-            searchingField: "warehouseId",
-            searchingValue: "",
-        },
-
-        //--Main fields for searching-action.
-        tableBody: $('div#select-dialog_warehouse table tbody'),
-        fetchDataAction: "/service/v1/branch/find-warehouse-by-values",
-        rowFormattingEngine: (row) => `
-            <tr id="${row.warehouseId}">
-                <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
-                <td plain-value="${row.warehouseName}" class="warehouseName">${row.warehouseName}</td>
-                <td plain-value="${row.address}" class="address">${row.address}</td>
-            </tr>`
-    };
-
     GeneralMethods();
     AddSuppliesImportationComponent();
-
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "phiếu",
             callModulesOfExtraFeatures: () => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent(
-                    'div.center-page_list',
-                    updatingSupportingDataSource
-                );
-
+                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
             }
         }
     );
     await CustomizeBuildingFormSpectator(
         async () => {
-            await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForOrderDialog,
-                'div#select-dialog_order');
-            await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForWarehouseDialog,
-                'div#select-dialog_warehouse');
+            await new OrderDialog(
+                'div#select-dialog_order table tbody',
+                'branch'
+            ).customizeToggleOpeningFormDialogDataSupporter('div#select-dialog_order');
+            await new WarehouseDialog(
+                'div#select-dialog_warehouse table tbody',
+                'branch'
+            ).customizeToggleOpeningFormDialogDataSupporter('div#select-dialog_warehouse');
         },
         'div.center-page_adding-form'
     );

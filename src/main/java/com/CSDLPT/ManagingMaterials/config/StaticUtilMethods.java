@@ -97,6 +97,7 @@ public class StaticUtilMethods {
             case "suppliesExportationId", "MAPX" -> List.of("MAPX", "suppliesExportationId", STR_TYPE);
             case "suppliesExportationIdAsFk", "PhieuXuat" ->
                 List.of("MAPX", "SuppliesExportationFromFk.MAPX", "SuppliesExportationFromFk", STR_TYPE);
+            case "customerFullName", "HOTENKH" -> List.of("HOTENKH", "customerFullName", STR_TYPE);
             //--More....
 
             default -> throw new NoSuchFieldException("Field not found");

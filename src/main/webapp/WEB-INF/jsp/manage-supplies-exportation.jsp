@@ -7,15 +7,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Supplies Importation Detail</title>
+    <title>Manage Order</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-supplies-importation-detail.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-supplies-exportation.css">
 </head>
 <body>
-    <%--    <%@ include file="/WEB-INF/jsp/category.jsp" %>--%>
     <%@ include file="/WEB-INF/jsp/header.jsp" %>
     <div id="message-block">
         <c:if test="${errorMessage != null}">
@@ -33,81 +32,82 @@
     </div>
     <div class="center-page">
         <div class="center-page_adding-form">
-            <form action="/service/v1/branch/add-supplies-importation-detail" method="post" modelAttribute="importationDetail">
-                <div class="form-input" id="suppliesImportationId">
+            <form action="/service/v1/branch/add-supplies-exportation" method="POST" modelAttribute="suppliesExportation">
+                <div class="form-input" id="suppliesExportationId">
                     <fieldset>
-                        <legend>Mã phiếu nhập</legend>
-                        <input name="suppliesImportationId" type="text" value="${importationDetail.suppliesImportationId}"
-                               readonly/>
+                        <legend>Mã phiếu xuất</legend>
+                        <input name="suppliesExportationId" type="text" value="${suppliesExportation.suppliesExportationId}"
+                               maxlength="8" required/>
                     </fieldset>
+                    <div class="form_text-input_err-message"></div>
                 </div>
-                <div class="form-input" id="supplyId">
+                <div class="form-input" id="customerFullName">
                     <fieldset>
-                        <legend>Mã vật tư</legend>
-                        <input name="supplyId" type="text" value="${importationDetail.supplyId}" maxlength="4" required/>
+                        <legend>Tên khách hàng</legend>
+                        <input name="customerFullName" type="text" value="${suppliesExportation.customerFullName}"
+                               maxlength="100" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="warehouseIdAsFk">
+                    <fieldset>
+                        <legend>Mã kho</legend>
+                        <input name="warehouseIdAsFk" type="text" value="${suppliesExportation.warehouseIdAsFk}"
+                               maxlength="4" required/>
                         <i class="fa-regular fa-pen-to-square"></i>
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
                 </div>
-                <div class="form-input" id="suppliesQuantity">
-                    <fieldset>
-                        <legend>Số lượng</legend>
-                        <input name="suppliesQuantity" type="number" value="${importationDetail.suppliesQuantity}" min="0" required/>
-                    </fieldset>
-                    <div class="form_text-input_err-message"></div>
-                </div>
-                <div class="form-input" id="price">
-                    <fieldset>
-                        <legend>Đơn giá</legend>
-                        <input name="price" type="number" value="${String.format('%.0f', importationDetail.price)}" min="0"
-                               required/>
-                    </fieldset>
-                    <div class="form_text-input_err-message"></div>
-                </div>
                 <div id="rest-components-for-updating"></div>
-                <input type="submit" value="Thêm chi tiết phiếu">
+                <input type="submit" value="Tạo phiếu xuất">
             </form>
         </div>
         <div class="center-page_list">
             <div class="table-tools">
                 <div class="table-description">
-                    <b><a style="color:blue" href="/branch/supplies-importation/manage-supplies-importation">Toàn bộ phiếu nhập</a> > Chi tiết phiếu </b>
+                    <b>Danh sách phiếu xuất </b>
                     <span class="quantity"></span>
                 </div>
                 <div class="table-search-box">
                     <select class="search">
                         <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                        <option value="supplyId">Mã vật tư</option>
-                        <option value="suppliesQuantity">Số lượng</option>
-                        <option value="price">Đơn giá</option>
+                        <option value="suppliesExportationId">Mã phiếu xuất</option>
+                        <option value="employeeIdAsFk">Mã nhân viên</option>
+                        <option value="customerFullName">Tên khách hàng</option>
+                        <option value="warehouseIdAsFk">Mã kho</option>
                     </select>
                     <input type="text" class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </div>
-            <form action="/service/v1/branch/delete-supplies-importation-detail" method="POST">
+            <form action="/service/v1/branch/delete-supplies-exportation" method="POST">
                 <table>
                     <thead>
-                        <tr>
-                            <th id="suppliesImportationId">
-                                Mã phiếu nhập
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                            </th>
-                            <th id="supplyId">
-                                Mã vật tư
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                            </th>
-                            <th id="suppliesQuantity">
-                                Số lượng
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                            </th>
-                            <th id="price">
-                                Đơn giá
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                            </th>
-                            <th id="update">Cập nhật</th>
-                            <th id="delete">Xoá</th>
-                        </tr>
+                    <tr>
+                        <th id="suppliesExportationId">
+                            Mã
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="employeeIdAsFk">
+                            Mã nhân viên
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="customerFullName">
+                            Tên khách hàng
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="warehouseIdAsFk">
+                            Mã kho
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="createdDate">
+                            Ngày tạo
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="detail">Chi tiết</th>
+                        <th id="update">Cập nhật</th>
+                        <th id="delete">Xoá</th>
+                    </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
@@ -119,24 +119,20 @@
     </div>
     <div class="select-dialog closed">
         <div class="select-dialog-container">
-            <span class="form-title">Vật tư</span>
+            <span class="form-title">Kho</span>
             <table>
                 <thead>
                 <tr>
-                    <th id="supplyId">
+                    <th id="warehouseId">
                         Mã
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="supplyName">
-                        Tên vật tư
+                    <th id="warehouseName">
+                        Tên kho
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="unit">
-                        Đơn vị tính
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="quantityInStock">
-                        Số lượng tồn
+                    <th id="address">
+                        Địa chỉ
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
                 </tr>
@@ -151,6 +147,6 @@
     </div>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/Dialogs.js"></script>
-    <script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-supplies-importation-detail.js"></script>
+    <script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-supplies-exportation.js"></script>
 </body>
 </html>

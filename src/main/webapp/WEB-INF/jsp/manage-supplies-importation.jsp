@@ -43,15 +43,15 @@
                 <div class="form-input" id="orderId">
                     <fieldset>
                         <legend>Mã đơn đặt hàng</legend>
-                        <input name="orderId" type="text" value="${suppliesImportation.orderId}" maxlength="100" required/>
+                        <input name="orderId" type="text" value="${suppliesImportation.orderId}" maxlength="8" required/>
                         <i class="fa-regular fa-pen-to-square"></i>
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
                 </div>
-                <div class="form-input" id="warehouseId">
+                <div class="form-input" id="warehouseIdAsFk">
                     <fieldset>
                         <legend>Mã kho</legend>
-                        <input name="warehouseId" type="text" value="${suppliesImportation.warehouseId}" maxlength="4" required/>
+                        <input name="warehouseIdAsFk" type="text" value="${suppliesImportation.warehouseIdAsFk}" maxlength="4" required/>
                         <i class="fa-regular fa-pen-to-square"></i>
                     </fieldset>
                 </div>
@@ -70,8 +70,8 @@
                         <option value="" selected disabled hidden>Chọn trường cần tìm</option>
                         <option value="suppliesImportationId">Mã phiếu nhập</option>
                         <option value="orderId">Mã đơn đặt hàng</option>
-                        <option value="employeeId">Mã nhân viên</option>
-                        <option value="warehouseId">Mã kho</option>
+                        <option value="employeeIdAsFk">Mã nhân viên</option>
+                        <option value="warehouseIdAsFk">Mã kho</option>
                     </select>
                     <input type="text" class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -89,11 +89,11 @@
                                 Đơn đặt hàng
                                 <i class="fa-solid fa-arrow-down-a-z"></i>
                             </th>
-                            <th id="employeeId">
+                            <th id="employeeIdAsFk">
                                 Mã nhân viên
                                 <i class="fa-solid fa-arrow-down-a-z"></i>
                             </th>
-                            <th id="warehouseId">
+                            <th id="warehouseIdAsFk">
                                 Mã kho
                                 <i class="fa-solid fa-arrow-down-a-z"></i>
                             </th>
@@ -124,7 +124,7 @@
                         Mã
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="employeeId">
+                    <th id="employeeIdAsFk">
                         Nhân viên đặt
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
@@ -132,7 +132,7 @@
                         Nhà cung cấp
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="warehouseId">
+                    <th id="warehouseIdAsFk">
                         Kho
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
@@ -179,6 +179,7 @@
         </div>
     </div>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
+    <script type="application/javascript" src="${pageContext.request.contextPath}/js/Dialogs.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-supplies-importation.js"></script>
 </body>
 </html>

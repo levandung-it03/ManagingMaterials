@@ -3,8 +3,10 @@ package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation;
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Order.OrderRepository;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ResDtoImportationWithImportationInfo;
 import com.CSDLPT.ManagingMaterials.EN_Warehouse.WarehouseRepository;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
+import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.InnerJoinObject;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class SuppliesImportationService {
@@ -42,15 +45,19 @@ public class SuppliesImportationService {
             return modelAndView;
         }
 
-        public ResDtoRetrievingData<SuppliesImportation> findSuppliesImportation(
+        public ResDtoRetrievingData<ResDtoImportationWithImportationInfo> findSuppliesImportation(
             HttpServletRequest request,
-            ReqDtoRetrievingData<SuppliesImportation> searchingObject
+            ReqDtoRetrievingData<ResDtoImportationWithImportationInfo> searchingObject
         ) throws SQLException, NoSuchFieldException {
             //--Preparing data to fetch.
-            searchingObject.setObjectType(SuppliesImportation.class);
+            searchingObject.setObjectType(ResDtoImportationWithImportationInfo.class);
             searchingObject.setSearchingTable("PhieuNhap");
             searchingObject.setSearchingTableIdName("MAPN");
             searchingObject.setSortingCondition("ORDER BY MAPN ASC");
+            searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
+                InnerJoinObject.builder().left("PhieuNhap").right("NHANVIEN").fields("MANV, HO, TEN").bridge("MANV").build(),
+                InnerJoinObject.builder().left("PhieuNhap").right("KHO").fields("MAKHO, TENKHO").bridge("MAKHO").build()
+            )));
 
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }
@@ -63,7 +70,7 @@ public class SuppliesImportationService {
                 .isExistingSuppliesImportationBySuppliesImportationId(connectHolder, importation.getSuppliesImportationId()))
                 throw new DuplicateKeyException("error_suppliesImportation_01");
 
-            if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseId()))
+            if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseIdAsFk()))
                 throw new NoSuchElementException("error_warehouse_02");
 
             if (orderRepository.findById(connectHolder, importation.getOrderId()).isEmpty())
@@ -76,7 +83,7 @@ public class SuppliesImportationService {
             //--May throw SQLException if id is already existing.
             suppliesImportationRepository.save(connectHolder, SuppliesImportation.builder()
                 .suppliesImportationId(importation.getSuppliesImportationId())
-                .warehouseId(importation.getWarehouseId())
+                .warehouseId(importation.getWarehouseIdAsFk())
                 .orderId(importation.getOrderId())
                 .employeeId(currentUserInfo.getEmployeeId())
                 .createdDate(new Date())
@@ -91,7 +98,7 @@ public class SuppliesImportationService {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
             importation.trimAllFieldValues();
 
-            if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseId()))
+            if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseIdAsFk()))
                 throw new NoSuchElementException("error_warehouse_02");
 
             if (orderRepository.findById(connectHolder, importation.getOrderId()).isEmpty())
@@ -106,7 +113,7 @@ public class SuppliesImportationService {
                 .findById(connectHolder, importation.getSuppliesImportationId())
                 .orElseThrow(() -> new NoSuchElementException("error_suppliesImportation_02"));
 
-            updatedImportation.setWarehouseId(importation.getWarehouseId());
+            updatedImportation.setWarehouseId(importation.getWarehouseIdAsFk());
             updatedImportation.setOrderId(importation.getOrderId());
             suppliesImportationRepository.updateById(connectHolder, updatedImportation);
 

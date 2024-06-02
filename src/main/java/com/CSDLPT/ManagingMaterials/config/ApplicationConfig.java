@@ -58,6 +58,9 @@ public class ApplicationConfig {
         messagePairs.put("error_suppliesImportation_02", "Không tìm thấy Mã Phiếu Nhập");
         messagePairs.put("error_suppliesImportation_03", "Không thể xoá Phiếu Nhập do đã tồn tại Phiếu Xuất tương ứng");
 
+        messagePairs.put("error_suppliesExportation_01", "Mã Phiếu Xuất đã tồn tại!");
+        messagePairs.put("error_suppliesExportation_02", "Không tìm thấy Mã Phiếu Xuất");
+
         messagePairs.put("ngu", "ngu vai cac!");
 
         return messagePairs;

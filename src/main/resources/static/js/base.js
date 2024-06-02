@@ -30,8 +30,8 @@ const colorMap = {
     Y: "#FFFF00",
     Z: "#0014A8"
 };
-let tempCounter = 0;
 
+let tempCounter = 0;
 function tst() {
     tempCounter++;
     console.log(tempCounter);
@@ -84,7 +84,10 @@ function customizeValidateEventInputTags(validatingBlocks) {
             else $('span#' + elem[0]).style.display = "inline";
         };
         elem[1].tag.addEventListener("keyup", e => toggleShowMessage(elem));
-        elem[1].tag.addEventListener("change", e => toggleShowMessage(elem));
+        elem[1].tag.addEventListener("change", e => {
+            elem[1].tag.value = elem[1].tag.value.trim();
+            toggleShowMessage(elem);
+        });
     });
 }
 
@@ -440,44 +443,6 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
                 updatingSupportingDataSource.plainAddingForm.outerHTML;
             updatingSupportingDataSource.addingFormCustomizer();
         });
-}
-
-async function CustomizeToggleOpeningFormDialogDateSupporter(
-    searchingSupportingDataSource,
-    addingFormDialogSupporterSelector='div.select-dialog'
-) {
-    const selectDialog = $(addingFormDialogSupporterSelector);
-    //--Open dialog when clicking on icon in the add form
-    const openDialogBtn = $(`div.center-page_adding-form #${searchingSupportingDataSource.data.searchingField} i`);
-    if (openDialogBtn != null)
-        openDialogBtn.addEventListener("click", async e => {
-            await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource)
-            //--Open select-dialog.
-            selectDialog.classList.remove("closed");
-        });
-
-    //--Auto fill input value when clicking on any row in select dialog
-    $(addingFormDialogSupporterSelector + ` tbody`).addEventListener("click", e =>{
-        $(`div.center-page_adding-form #${searchingSupportingDataSource.data.searchingField} input`)
-            .value = e.target.closest("tr").id.trim();
-        selectDialog.classList.add("closed");
-    });
-
-    //--Customize closing dialog action.
-    //--Stop propagation when clicking on dialog container so when select from list, it won't close the dialog
-    selectDialog.querySelector('div.select-dialog-container').addEventListener("click", e => e.stopPropagation())
-    //--Close dialog when clicking on dialog
-    selectDialog.addEventListener("click", () => selectDialog.classList.add("closed"));
-    //--Close dialog when clicking on close button
-    selectDialog.querySelector('div.closing-dialog-btn').addEventListener("click", ()=> selectDialog.classList.add("closed"))
-
-    await CustomizeFetchingActionSpectator(
-        searchingSupportingDataSource,
-        {
-            callModulesOfExtraFeatures: () => {}
-        },
-        addingFormDialogSupporterSelector
-    );
 }
 
 async function CustomizeFetchingActionSpectator(

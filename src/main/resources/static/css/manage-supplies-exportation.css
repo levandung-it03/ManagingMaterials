@@ -1,3 +1,4 @@
+
 html {
     background-repeat: no-repeat;
     background-size: cover;
@@ -30,14 +31,13 @@ div.center-page_adding-form .form-select label {
 }
 
 /*--Customize each input tag--*/
-div.center-page_adding-form form div#suppliesImportationId {
+div.center-page_adding-form form div#suppliesExportationId {
     width: 100%;
 }
-div.center-page_adding-form form div#orderId input,
+div.center-page_adding-form form div#customerFullName input,
 div.center-page_adding-form form div#warehouseIdAsFk input {
     width: 90%;
 }
-div.center-page_adding-form form div#orderId i,
 div.center-page_adding-form form div#warehouseIdAsFk i {
     cursor: pointer;
 }
@@ -89,37 +89,35 @@ div.center-page_adding-form form input[type=submit] {
     cursor: pointer;
 }
 
-/*--Customize Supplies Importation List--*/
+/*--Customize Supplies Exportation List--*/
 table tr td {
     height: 60px;
 }
-table tr th#suppliesImportationId,
-table tr td.suppliesImportationId {
+table tr th#suppliesExportationId,
+table tr td.suppliesExportationId {
     text-align: start;
     width: 10%;
     padding-left: 20px
 }
-table tr th#orderId,
-table tr td.orderId {
+table tr th#customerFullName,
+table tr td.customerFullName {
     text-align: start;
-    width: 12%;
+    width: 20%;
 }
 table tr th#employeeIdAsFk,
 table tr td.employeeIdAsFk {
-    width: 20%;
+    text-align: start;
+    width: 24%;
 }
 table tr th#warehouseIdAsFk,
 table tr td.warehouseIdAsFk {
-    width: 20%;
+    text-align: start;
+    width: 14%;
 }
 table tr th#createdDate,
-table tr td.createdDate {
-    width: 12%;
-}
+table tr td.createdDate,
 table tr th#detail,
-table tr td.detail{
-    width: 10%;
-}
+table tr td.detail,
 table tr th#update,
 table tr td.update,
 table tr th#delete,
@@ -188,10 +186,10 @@ div.select-dialog table tr:hover {
 }
 
 /*--Customize Warehouse List--*/
-#select-dialog_warehouse div.select-dialog-container {
+.select-dialog div.select-dialog-container {
     width: 40%;
 }
-#select-dialog_warehouse table tr td {
+.select-dialog table tr td {
     height: 45px;
     white-space: nowrap;
     overflow: hidden;
@@ -199,64 +197,21 @@ div.select-dialog table tr:hover {
     cursor: pointer;
 }
 
-#select-dialog_warehouse table tr th#warehouseId,
-#select-dialog_warehouse table tr td.warehouseId {
+.select-dialog table tr th#warehouseId,
+.select-dialog table tr td.warehouseId {
     text-align: start;
     width: 20%;
     padding-left: 20px;
 }
 
-#select-dialog_warehouse table tr th#warehouseName,
-#select-dialog_warehouse table tr td.warehouseName {
+.select-dialog table tr th#warehouseName,
+.select-dialog table tr td.warehouseName {
     text-align: start;
     width: 35%;
 }
 
-#select-dialog_warehouse table tr th#address,
-#select-dialog_warehouse table tr td.address {
+.select-dialog table tr th#address,
+.select-dialog table tr td.address {
     text-align: start;
     width: 45%;
-}
-
-/*--Customize Order List--*/
-#select-dialog_order div.select-dialog-container {
-    width: 60%;
-}
-#select-dialog_order table tr td {
-    height: 45px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-}
-
-#select-dialog_order table tr th#orderId,
-#select-dialog_order table tr td.orderId {
-    text-align: start;
-    width: 11%;
-    padding-left: 20px;
-}
-
-#select-dialog_order table tr th#employeeIdAsFk,
-#select-dialog_order table tr td.employeeIdAsFk {
-    text-align: start;
-    width: 35%;
-}
-
-#select-dialog_order table tr th#supplier,
-#select-dialog_order table tr td.supplier {
-    text-align: start;
-    width: 19%;
-}
-
-#select-dialog_order table tr th#warehouseIdAsFk,
-#select-dialog_order table tr td.warehouseIdAsFk {
-    text-align: start;
-    width: 23%;
-}
-
-#select-dialog_order table tr th#createdDate,
-#select-dialog_order table tr td.createdDate {
-    text-align: start;
-    width: 12%;
 }

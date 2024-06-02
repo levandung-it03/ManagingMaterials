@@ -7,12 +7,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Order Detail</title>
+    <title>Manage Supplies Exportation Detail</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-order-detail.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-supplies-exportation-detail.css">
 </head>
 <body>
 <%--    <%@ include file="/WEB-INF/jsp/category.jsp" %>--%>
@@ -33,17 +33,18 @@
 </div>
 <div class="center-page">
     <div class="center-page_adding-form">
-        <form action="/service/v1/branch/add-order-detail" method="post" modelAttribute="orderDetail">
-            <div class="form-input" id="orderId">
+        <form action="/service/v1/branch/add-supplies-exportation-detail" method="post" modelAttribute="exportationDetail">
+            <div class="form-input" id="suppliesExportationId">
                 <fieldset>
-                    <legend>Mã đơn đặt hàng</legend>
-                    <input name="orderId" type="text" value="${orderDetail.orderId}" readonly/>
+                    <legend>Mã phiếu xuất</legend>
+                    <input name="suppliesExportationId" type="text" value="${exportationDetail.suppliesExportationId}"
+                           readonly/>
                 </fieldset>
             </div>
             <div class="form-input" id="supplyId">
                 <fieldset>
                     <legend>Mã vật tư</legend>
-                    <input name="supplyId" type="text" value="${orderDetail.supplyId}" maxlength="4" required/>
+                    <input name="supplyId" type="text" value="${exportationDetail.supplyId}" maxlength="4" required/>
                     <i class="fa-regular fa-pen-to-square"></i>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
@@ -51,26 +52,26 @@
             <div class="form-input" id="suppliesQuantity">
                 <fieldset>
                     <legend>Số lượng</legend>
-                    <input name="suppliesQuantity" type="number" value="${orderDetail.suppliesQuantity}" min="0" required/>
+                    <input name="suppliesQuantity" type="number" value="${exportationDetail.suppliesQuantity}" min="0" required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div class="form-input" id="price">
                 <fieldset>
                     <legend>Đơn giá</legend>
-                    <input name="price" type="number" value="${String.format('%.0f', orderDetail.price)}" min="0"
+                    <input name="price" type="number" value="${String.format('%.0f', exportationDetail.price)}" min="0"
                            required/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
             <div id="rest-components-for-updating"></div>
-            <input type="submit" value="Thêm chi tiết DDH">
+            <input type="submit" value="Thêm chi tiết phiếu">
         </form>
     </div>
     <div class="center-page_list">
         <div class="table-tools">
             <div class="table-description">
-                <b><a style="color:blue" href="/branch/order/manage-order">Danh sách đơn</a> > Chi tiết đơn </b>
+                <b><a style="color:blue" href="/branch/supplies-exportation/manage-supplies-exportation">Toàn bộ phiếu xuất</a> > Chi tiết phiếu </b>
                 <span class="quantity"></span>
             </div>
             <div class="table-search-box">
@@ -84,12 +85,12 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
         </div>
-        <form action="/service/v1/branch/delete-order-detail" method="POST">
+        <form action="/service/v1/branch/delete-supplies-exportation-detail" method="POST">
             <table>
                 <thead>
                 <tr>
-                    <th id="orderId">
-                        Mã DDH
+                    <th id="suppliesExportationId">
+                        Mã phiếu xuất
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
                     <th id="supplyId">
@@ -150,6 +151,6 @@
 </div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/Dialogs.js"></script>
-<script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-order-detail.js"></script>
+<script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-supplies-exportation-detail.js"></script>
 </body>
 </html>

@@ -99,26 +99,6 @@ function GeneralMethods() {
                 </td>
             </tr>`
     };
-    const searchingSupportingDataSourceForDialog = {
-        //--Initialize field-values for firstly fetch action.
-        data: {
-            currentPage: 1,
-            objectsQuantity: 0,
-            searchingField: "supplyId",
-            searchingValue: "",
-        },
-
-        //--Main fields for searching-action.
-        tableBody: $('div.select-dialog table tbody'),
-        fetchDataAction: "/service/v1/branch/find-supply-by-values",
-        rowFormattingEngine: (row) => `
-            <tr id="${row.supplyId}">
-                <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
-                <td plain-value="${row.supplyName}" class="supplyName">${row.supplyName}</td>
-                <td plain-value="${row.unit}" class="unit">${row.unit}</td>
-                <td plain-value="${row.quantityInStock}" class="quantityInStock">${row.quantityInStock}</td>
-            </tr>`
-    };
 
     GeneralMethods();
     AddSuppliesImportationDetailComponent();
@@ -128,17 +108,18 @@ function GeneralMethods() {
             tableLabel: "phiếu",
             callModulesOfExtraFeatures: () => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent(
-                    'div.center-page_list',
-                    updatingSupportingDataSource
-                );
+                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
             }
         }
     );
     await CustomizeBuildingFormSpectator(
         async () => {
-            await CustomizeToggleOpeningFormDialogDateSupporter(searchingSupportingDataSourceForDialog)
-        }
+            await new SupplyDialog(
+                'div.select-dialog table tbody',
+                "branch"
+            ).customizeToggleOpeningFormDialogDataSupporter();
+        },
+        'div.center-page_adding-form'
     );
     await ListComponentForSuppliesImportationDetail(searchingSupportingDataSource);
 })();

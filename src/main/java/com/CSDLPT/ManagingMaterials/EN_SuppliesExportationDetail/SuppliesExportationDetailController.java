@@ -1,7 +1,5 @@
-package com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail;
+package com.CSDLPT.ManagingMaterials.EN_SuppliesExportationDetail;
 
-import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportation;
-import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,101 +21,101 @@ import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
-public class SuppliesImportationDetailController {
-    private final SuppliesImportationDetailService.BranchServices branchServices;
+public class SuppliesExportationDetailController {
+    private final SuppliesExportationDetailService.BranchServices branchServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/supplies-importation-detail/manage-supplies-importation-detail")
-    public ModelAndView getManageSuppliesImportationDetailPage(HttpServletRequest request, Model model) {
-        return branchServices.getManageSuppliesImportationDetailPage(request, model);
+    @GetMapping("/branch/supplies-exportation-detail/manage-supplies-exportation-detail")
+    public ModelAndView getManageSuppliesExportationDetailPage(HttpServletRequest request, Model model) {
+        return branchServices.getManageSuppliesExportationDetailPage(request, model);
     }
 
-    /*_____________RequestMethod.POST: Supplies-Importation-Detail-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-supplies-importation-detail-by-values")
-    public ResponseEntity<ResDtoRetrievingData<SuppliesImportationDetail>> findingSuppliesImportationsDetailByValues(
-        @RequestBody ReqDtoRetrievingData<SuppliesImportationDetail> searchingObject,
+    /*_____________RequestMethod.POST: Supplies-Exportation-Detail-entity-interaction_____________*/
+    @PostMapping("${url.post.branch.prefix.v1}/find-supplies-exportation-detail-by-values")
+    public ResponseEntity<ResDtoRetrievingData<SuppliesExportationDetail>> findingSuppliesExportationDetailByValues(
+        @RequestBody ReqDtoRetrievingData<SuppliesExportationDetail> searchingObject,
         HttpServletRequest request
     ) {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findingSuppliesImportationsDetail(request, searchingObject));
+                .body(branchServices.findingSuppliesExportationDetail(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-supplies-importation-detail")
-    public String addSuppliesImportationsDetail(
-        @ModelAttribute("importationDetail") SuppliesImportationDetail importationDetail,
+    @PostMapping("${url.post.branch.prefix.v1}/add-supplies-exportation-detail")
+    public String addSuppliesExportationDetail(
+        @ModelAttribute("exportationDetail") SuppliesExportationDetail exportationDetail,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         final String standingUrl = request.getHeader("Referer");
-        Set<ConstraintViolation<SuppliesImportationDetail>> violations = hibernateValidator.validate(importationDetail);
+        Set<ConstraintViolation<SuppliesExportationDetail>> violations = hibernateValidator.validate(exportationDetail);
         if (!violations.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportationDetail", importationDetail);
+            redirectAttributes.addFlashAttribute("submittedSuppliesExportationDetail", exportationDetail);
             return "redirect:" + standingUrl;
         }
 
         try {
-            branchServices.addSuppliesImportationDetail(importationDetail, request);
+            branchServices.addSuppliesExportationDetail(exportationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportationDetail", importationDetail);
+            redirectAttributes.addFlashAttribute("submittedSuppliesExportationDetail", exportationDetail);
         } catch (Exception e) {
-            logger.info("Error from AddSuppliesImportationDetailController: " + e);
+            logger.info("Error from AddSuppliesExportationDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportationDetail", importationDetail);
+            redirectAttributes.addFlashAttribute("submittedSuppliesExportationDetail", exportationDetail);
         }
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-supplies-importation-detail")
-    public String updateSuppliesImportationsDetail(
-        @ModelAttribute("importationDetail") SuppliesImportationDetail importationDetail,
+    @PostMapping("${url.post.branch.prefix.v1}/update-supplies-exportation-detail")
+    public String updateSuppliesExportationDetail(
+        @ModelAttribute("exportationDetail") SuppliesExportationDetail exportationDetail,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         final String standingUrl = request.getHeader("Referer");
-        Set<ConstraintViolation<SuppliesImportationDetail>> violations = hibernateValidator.validate(importationDetail);
+        Set<ConstraintViolation<SuppliesExportationDetail>> violations = hibernateValidator.validate(exportationDetail);
         if (!violations.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorCode", violations.iterator().next().getMessage());
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportationDetail", importationDetail);
+            redirectAttributes.addFlashAttribute("submittedSuppliesExportationDetail", exportationDetail);
             return "redirect:" + standingUrl;
         }
 
         try {
-            branchServices.updateSuppliesImportationDetail(importationDetail, request);
+            branchServices.updateSuppliesExportationDetail(exportationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (Exception e) {
-            logger.info("Error from UpdateSuppliesImportationsDetailController: " + e);
+            logger.info("Error from UpdateSuppliesExportationDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportationDetail", importationDetail);
+            redirectAttributes.addFlashAttribute("submittedSuppliesExportationDetail", exportationDetail);
         }
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-supplies-importation-detail")
-    public String deleteSuppliesImportationsDetail(
-        @RequestParam("deleteBtn") String importationDetailId,
+    @PostMapping("${url.post.branch.prefix.v1}/delete-supplies-exportation-detail")
+    public String deleteSuppliesExportationDetail(
+        @RequestParam("deleteBtn") String exportationDetailId,
         @RequestParam("supplyId") String supplyId,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         try {
-            branchServices.deleteSuppliesImportationDetail(importationDetailId, supplyId, request);
+            branchServices.deleteSuppliesExportationDetail(exportationDetailId, supplyId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
         } catch (Exception e) {
-            logger.info("Error from deleteSuppliesImportationsDetail: " + e);
+            logger.info("Error from deleteSuppliesExportationDetail: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
         }
         return "redirect:" + request.getHeader("Referer");

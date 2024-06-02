@@ -100,10 +100,7 @@ function GeneralMethods() {
             tableLabel: "vật tư",
             callModulesOfExtraFeatures: () => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent(
-                    'div.center-page_list',
-                    updatingSupportingDataSource
-                );
+                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
             }
         }
     );

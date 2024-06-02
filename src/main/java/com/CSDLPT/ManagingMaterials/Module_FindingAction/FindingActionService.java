@@ -149,11 +149,15 @@ public class FindingActionService {
     /**Spring JdbcTemplate: This method help us find the corresponding SQL data by Java Data type**/
     public String getCastedSqlDataTypeOfSearchedField(String fieldName) throws NoSuchFieldException {
         List<String> fieldInfo = staticUtilMethods.columnNameStaticDictionary(fieldName);
+        String sqlFieldName = fieldName.toUpperCase().contains("FK")
+            ? staticUtilMethods.columnNameStaticDictionary(fieldName).get(1)
+            : staticUtilMethods.columnNameStaticDictionary(fieldName).getFirst();
+
         //--Type-casting syntax of this query corresponding with data-type.
         return switch (fieldInfo.getLast()) {
-            case NUM_TYPE -> String.format("CAST(CAST(%s AS BIGINT) AS NVARCHAR(50))", fieldInfo.getFirst());
-            case DATE_TYPE -> String.format("CAST(CONVERT(DATE, %s) AS NVARCHAR(10))", fieldInfo.getFirst());
-            default -> fieldInfo.getFirst();
+            case NUM_TYPE -> String.format("CAST(CAST(%s AS BIGINT) AS NVARCHAR(50))", sqlFieldName);
+            case DATE_TYPE -> String.format("CAST(CONVERT(DATE, %s) AS NVARCHAR(10))", sqlFieldName);
+            default -> sqlFieldName;
         };
     }
 

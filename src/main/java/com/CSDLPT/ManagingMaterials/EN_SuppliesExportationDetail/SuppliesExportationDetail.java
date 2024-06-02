@@ -1,6 +1,8 @@
-package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos;
+package com.CSDLPT.ManagingMaterials.EN_SuppliesExportationDetail;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,25 +14,27 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReqDtoSuppliesImportation {
+public class SuppliesExportationDetail {
     @NotBlank(message = "error_entity_03")
     @Pattern(regexp = "^[A-Z]{1,7}\\d{1,7}$", message = "error_entity_03")
     @Length(max = 8, message = "error_entity_03")
-    private String suppliesImportationId;
+    private String suppliesExportationId;
 
     @NotBlank(message = "error_entity_03")
     @Pattern(regexp = "^[A-Z]{1,7}\\d{1,7}$", message = "error_entity_03")
     @Length(max = 8, message = "error_entity_03")
-    private String orderId;
+    private String supplyId;
 
-    @NotBlank(message = "error_entity_03")
-    @Pattern(regexp = "^[A-Z]{1,4}\\d{0,3}", message = "error_entity_03")
-    @Length(max = 4, message = "error_entity_03")
-    private String warehouseIdAsFk;
+    @NotNull(message = "error_entity_03")
+    @Min(value = 1, message = "error_entity_03")
+    private Integer suppliesQuantity;
+
+    @NotNull(message = "error_entity_03")
+    @Min(value = 0, message = "error_entity_03")
+    private Double price;
 
     public void trimAllFieldValues() {
-        this.suppliesImportationId = this.getSuppliesImportationId().trim();
-        this.orderId = this.getOrderId().trim();
-        this.warehouseIdAsFk = this.getWarehouseIdAsFk().trim();
+        this.suppliesExportationId = this.getSuppliesExportationId().trim();
+        this.supplyId = this.getSupplyId().trim();
     }
 }

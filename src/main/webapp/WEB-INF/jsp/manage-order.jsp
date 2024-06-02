@@ -144,6 +144,7 @@
         </div>
     </div>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
+    <script type="application/javascript" src="${pageContext.request.contextPath}/js/Dialogs.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-order.js"></script>
 </body>
 </html>

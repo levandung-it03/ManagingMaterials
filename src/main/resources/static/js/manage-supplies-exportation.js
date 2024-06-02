@@ -1,21 +1,21 @@
-function AddOrderComponent() {
+function AddSuppliesExportationComponent() {
     const validatingBlocks = {
-        orderId: {
-            tag: $('input[name=orderId]'),
+        suppliesExportationId: {
+            tag: $('input[name=suppliesExportationId]'),
             validate: function (value) {
                 //--Using function to make "this" works correctly.
                 this.tag.value = value.trim().toUpperCase();
                 return (/^[A-Z]{1,7}\d{1,7}$/).test(this.tag.value) && value.length <= 8;
             },
-            errorMessage: "Mã đơn đặt hàng không hợp lệ."
+            errorMessage: "Mã phiếu xuất không hợp lệ."
         },
-        supplier: {
-            tag: $('input[name=supplier]'),
-            validate: (value) => value.length !== 0,
-            errorMessage: "Tên nhà cung cấp không được trống."
+        customerFullName: {
+            tag: $('input[name=customerFullName]'),
+            validate: (value) => (/^[A-Za-zÀ-ỹ]{1,50}( [A-Za-zÀ-ỹ]{1,50})*$/).test(value),
+            errorMessage: "Tên khách hàng không hợp lệ."
         },
-        warehouseId: {
-            tag: $('input[name=warehouseId]'),
+        warehouseIdAsFk: {
+            tag: $('input[name=warehouseIdAsFk]'),
             validate: function (value) {
                 //--Using function to make "this" works correctly.
                 this.tag.value = value.trim().toUpperCase();
@@ -32,7 +32,7 @@ function AddOrderComponent() {
     customizeAutoFormatStrongInputTextEvent();
 }
 
-async function ListComponentForOrder(searchingSupportingDataSource) {
+async function ListComponentForSuppliesExportation(searchingSupportingDataSource) {
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
@@ -49,44 +49,47 @@ function GeneralMethods() {
 
 (async function main() {
     const updatingSupportingDataSource = {
-        addingFormCustomizer: AddOrderComponent,
+        addingFormCustomizer: AddSuppliesExportationComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-order",
+        updatingAction: "/service/v1/branch/update-supplies-exportation",
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {}
     };
-    //--Searching data for order by orderId
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
         data: {
             currentPage: 1,
             objectsQuantity: 1,
-            searchingField: "orderId",
+            searchingField: "suppliesExportationId",
             searchingValue: "",
         },
 
         //--Main fields for searching-action.
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-order-by-values",
+        fetchDataAction: "/service/v1/branch/find-supplies-exportation-by-values",
         rowFormattingEngine: (row) => `
-            <tr id="${row.orderId}">
-                <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
-                <td plain-value="${row.supplier}" class="supplier">${row.supplier}</td>
+            <tr id="${row.suppliesExportationId.trim()}">
+                <td plain-value="${row.suppliesExportationId}" class="suppliesExportationId">${row.suppliesExportationId}</td>
+                <td plain-value="${row.employeeIdAsFk}" class="employeeIdAsFk">
+                    ${row.employeeIdAsFk} - ${row.lastName + " " + row.firstName}
+                </td>
+                <td plain-value="${row.customerFullName}" class="customerFullName">${row.customerFullName}</td>
+                <td plain-value="${row.warehouseIdAsFk}" class="warehouseIdAsFk">
+                    ${row.warehouseIdAsFk} - ${row.warehouseName}
+                </td>
                 <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
-                <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
-                <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
                 <td class="table-row-btn detail">
-                    <a href="/branch/order-detail/manage-order-detail?orderId=${row.orderId}">
+                    <a href="/branch/supplies-exportation-detail/manage-supplies-exportation-detail?suppliesExportationId=${row.suppliesExportationId}">
                         <i class="fa-solid fa-eye"></i>
                     </a>
                 </td>
                 <td class="table-row-btn update">
-                    <a id="${row.orderId}">
+                    <a id="${row.suppliesExportationId}">
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a>
                 </td>
                 <td class="table-row-btn delete">
-                    <button name="deleteBtn" value="${row.orderId}">
+                    <button name="deleteBtn" value="${row.suppliesExportationId}">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
                 </td>
@@ -94,11 +97,12 @@ function GeneralMethods() {
     };
 
     GeneralMethods();
-    AddOrderComponent();
+    AddSuppliesExportationComponent();
+
     await CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
-            tableLabel: "đơn hàng",
+            tableLabel: "phiếu",
             callModulesOfExtraFeatures: () => {
                 //--Re-customize the listener of all updating-buttons.
                 customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
@@ -109,10 +113,10 @@ function GeneralMethods() {
         async () => {
             await new WarehouseDialog(
                 'div.select-dialog table tbody',
-                'branch'
+                "branch"
             ).customizeToggleOpeningFormDialogDataSupporter();
         },
         'div.center-page_adding-form'
     );
-    await ListComponentForOrder(searchingSupportingDataSource);
+    await ListComponentForSuppliesExportation(searchingSupportingDataSource);
 })();
