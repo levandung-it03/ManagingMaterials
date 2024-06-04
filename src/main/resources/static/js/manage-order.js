@@ -14,8 +14,8 @@ function AddOrderComponent() {
             validate: (value) => value.length !== 0,
             errorMessage: "Tên nhà cung cấp không được trống."
         },
-        warehouseId: {
-            tag: $('input[name=warehouseId]'),
+        warehouseIdAsFk: {
+            tag: $('input[name=warehouseIdAsFk]'),
             validate: function (value) {
                 //--Using function to make "this" works correctly.
                 this.tag.value = value.trim().toUpperCase();
@@ -69,12 +69,16 @@ function GeneralMethods() {
         tableBody: $('div.center-page_list table tbody'),
         fetchDataAction: "/service/v1/branch/find-order-by-values",
         rowFormattingEngine: (row) => `
-            <tr id="${row.orderId}">
+            <tr id="${row.orderId.trim()}">
                 <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
+                <td plain-value="${row.employeeIdAsFk}" class="employeeIdAsFk">
+                    ${row.employeeIdAsFk} - ${row.lastName + " " + row.firstName}
+                </td>
                 <td plain-value="${row.supplier}" class="supplier">${row.supplier}</td>
+                <td plain-value="${row.warehouseIdAsFk}" class="warehouseIdAsFk">
+                    ${row.warehouseIdAsFk} - ${row.warehouseName}
+                </td>
                 <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
-                <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
-                <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
                 <td class="table-row-btn detail">
                     <a href="/branch/order-detail/manage-order-detail?orderId=${row.orderId}">
                         <i class="fa-solid fa-eye"></i>

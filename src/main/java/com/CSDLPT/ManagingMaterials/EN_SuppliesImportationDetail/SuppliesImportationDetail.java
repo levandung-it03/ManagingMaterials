@@ -21,8 +21,8 @@ public class SuppliesImportationDetail {
     private String suppliesImportationId;
 
     @NotBlank(message = "error_entity_03")
-    @Pattern(regexp = "^[A-Z]{1,7}\\d{1,7}$", message = "error_entity_03")
-    @Length(max = 8, message = "error_entity_03")
+    @Pattern(regexp = "^[A-Z]{1,4}\\d{0,3}", message = "error_entity_03")
+    @Length(max = 4, message = "error_entity_03")
     private String supplyId;
 
     @NotNull(message = "error_entity_03")
