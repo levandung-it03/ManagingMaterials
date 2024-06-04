@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -32,7 +33,7 @@ public class SuppliesImportationController {
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
     @GetMapping("/branch/supplies-importation/manage-supplies-importation")
-    public ModelAndView getManageSuppliesImportationPage(HttpServletRequest request, Model model) {
+    public ModelAndView getManageSuppliesImportationPage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getManageSuppliesImportationPage(request, model);
     }
 

@@ -1,6 +1,5 @@
 package com.CSDLPT.ManagingMaterials.auth.authConfig;
 
-import com.CSDLPT.ManagingMaterials.EN_Account.RoleEnum;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Account.Account;
@@ -35,10 +34,10 @@ public class SecurityInterceptor implements HandlerInterceptor {
         try {
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
-            if (!request.getRequestURI().contains(switch (userInfo.getBranch()) {
-                case "CHINHANH" -> "branch";
-                case "CONGTY" -> "company";
-                case "USER" -> "user";
+            if (!request.getRequestURI().contains("home") && !request.getRequestURI().contains(switch (userInfo.getRole()) {
+                case CHINHANH -> "branch";
+                case CONGTY -> "company";
+                case USER -> "user";
                 default -> "null";
             })) {
                 response.sendRedirect("/home");

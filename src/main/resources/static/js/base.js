@@ -477,3 +477,12 @@ async function CustomizeBuildingFormSpectator(dialogBuilders, observedForm = 'di
     await new MutationObserver(async () => await dialogBuilders())
         .observe($(observedForm), {childList: true, subtree: true});
 }
+
+function customizeRenderTableDataBySwitchingBranch(
+    searchingSupportingDataSource,
+    selectTagSelector='div.table-tools .right-grid select[name=searchingBranch]'
+) {
+    $(selectTagSelector).addEventListener("click", async e => {
+        await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
+    });
+}

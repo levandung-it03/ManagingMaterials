@@ -33,6 +33,7 @@ function AddSuppliesImportationComponent() {
     customizeValidateEventInputTags(validatingBlocks);
     customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
     recoveryAllSelectTagData();
+    customizeRenderTableDataBySwitchingBranch();
     customizeAutoFormatStrongInputTextEvent();
 }
 
@@ -41,6 +42,7 @@ async function ListComponentForSuppliesImportation(searchingSupportingDataSource
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
+    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
@@ -67,6 +69,7 @@ function GeneralMethods() {
             objectsQuantity: 1,
             searchingField: "suppliesImportationId",
             searchingValue: "",
+            branch: $('.table-tools .select-branch-to-search select').value,
         },
 
         //--Main fields for searching-action.

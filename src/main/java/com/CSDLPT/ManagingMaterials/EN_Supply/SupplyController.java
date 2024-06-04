@@ -30,7 +30,7 @@ public class SupplyController {
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
     @GetMapping("/branch/supply/manage-supply")
-    public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) {
+    public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) throws SQLException {
         return supplyService.getManageSupplyPage(request, model);
     }
 

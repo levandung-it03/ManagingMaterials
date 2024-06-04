@@ -37,6 +37,7 @@ async function ListComponentForSuppliesExportation(searchingSupportingDataSource
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
+    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
@@ -62,6 +63,7 @@ function GeneralMethods() {
             objectsQuantity: 1,
             searchingField: "suppliesExportationId",
             searchingValue: "",
+            branch: $('.table-tools .select-branch-to-search select').value,
         },
 
         //--Main fields for searching-action.

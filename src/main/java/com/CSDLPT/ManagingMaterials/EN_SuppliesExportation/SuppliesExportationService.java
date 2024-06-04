@@ -33,7 +33,7 @@ public class SuppliesExportationService {
         private final WarehouseRepository warehouseRepository;
         private final BranchRepository branchRepository;
 
-        public ModelAndView getManageSuppliesExportationPage(HttpServletRequest request, Model model) {
+        public ModelAndView getManageSuppliesExportationPage(HttpServletRequest request, Model model) throws SQLException {
             //--Prepare a modelAndView object to symbolize the whole page.
             ModelAndView modelAndView = staticUtilMethods
                 .customResponsiveModelView(request, model, "manage-supplies-exportation");
@@ -43,7 +43,9 @@ public class SuppliesExportationService {
             if (exportation != null) modelAndView.addObject("suppliesExportation", exportation);
 
             //--Prepare branches-list for several pages
-            branchRepository.findAllBranchIds((DBConnectionHolder) request.getAttribute("connectHolder"));
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
+            connectionHolder.removeConnection();
 
             return modelAndView;
         }

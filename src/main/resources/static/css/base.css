@@ -189,6 +189,41 @@ form span#cancel-updating:hover {
     font-weight: 600;
 }
 
+.table-tools .table-search-box select {
+    position: absolute;
+    width: 200px;
+    top: 17px;
+    height: 36px;
+    right: 278px;
+    border: 2px transparent solid;
+    border-radius: 5px 0 0 5px;
+    padding: 8px;
+}
+.table-tools .table-search-box input {
+    width: 450px;
+    height: 40px;
+    border: 2px var(--grey-border) solid;
+    background-color: var(--smoking-grey);
+    border-radius: 7px;
+    padding: 0 55px 0 220px;
+    outline-color: var(--grey-border);
+}
+.table-tools .table-search-box input:focus {
+    background-color: rgb(200, 198, 198);
+}
+.table-tools .table-search-box i {
+    font-size: 1.1rem;
+    position: absolute;
+    top: 21.5px;
+    right: 35px;
+    border-radius: 7px;
+    padding: 6px 18px;
+    transition: background-color ease 0.3s;
+}
+.table-tools .table-search-box i:hover {
+    cursor: pointer;
+    background-color: var(--grey-border);
+}
 .center-page_list .table-tools .right-grid {
     display: flex;
     flex-wrap: wrap;
@@ -218,7 +253,7 @@ form span#cancel-updating:hover {
     display: block;
     border: none;
 }
-.table-tools .right-grid .table-search-box select {
+.table-tools .table-search-box select {
     position: absolute;
     width: 200px;
     top: 17px;
@@ -228,7 +263,7 @@ form span#cancel-updating:hover {
     border-radius: 5px 0 0 5px;
     padding: 8px;
 }
-.table-tools .right-grid .table-search-box input {
+.table-tools .table-search-box input {
     width: 450px;
     height: 40px;
     border: 2px var(--grey-border) solid;
@@ -237,10 +272,10 @@ form span#cancel-updating:hover {
     padding: 0 55px 0 220px;
     outline-color: var(--grey-border);
 }
-.table-tools .right-grid .table-search-box input:focus {
+.table-tools .table-search-box input:focus {
     background-color: rgb(200, 198, 198);
 }
-.table-tools .right-grid .table-search-box i {
+.table-tools .table-search-box i {
     font-size: 1.1rem;
     position: absolute;
     top: 21.5px;
@@ -249,7 +284,7 @@ form span#cancel-updating:hover {
     padding: 6px 18px;
     transition: background-color ease 0.3s;
 }
-.table-tools .right-grid .table-search-box i:hover {
+.table-tools .table-search-box i:hover {
     cursor: pointer;
     background-color: var(--grey-border);
 }

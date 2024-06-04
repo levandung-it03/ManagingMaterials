@@ -34,7 +34,6 @@ public class EmployeeService {
             //--Prepare common-components of ModelAndView if we need.
             ModelAndView modelAndView = staticUtilMethods
                 .customResponsiveModelView(request, model, "manage-employee");
-            List<String> branchesList = branchRepository.findAllBranchIds(connectionHolder);
 
             //--If there's an error when handle data with DB, take the submitted-employee-info and give it back to this page
             Employee employee = (Employee) model.asMap().get("submittedEmployee");
@@ -53,7 +52,7 @@ public class EmployeeService {
             }
 
             //--Data for AddingEmployeeForm component.
-            modelAndView.addObject("branchesList", branchesList);
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
 
             //--Close Connection.
             connectionHolder.removeConnection();

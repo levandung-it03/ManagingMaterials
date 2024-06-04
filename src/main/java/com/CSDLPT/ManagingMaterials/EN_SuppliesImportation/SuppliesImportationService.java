@@ -35,7 +35,7 @@ public class SuppliesImportationService {
         private final OrderRepository orderRepository;
         private final BranchRepository branchRepository;
 
-        public ModelAndView getManageSuppliesImportationPage(HttpServletRequest request, Model model) {
+        public ModelAndView getManageSuppliesImportationPage(HttpServletRequest request, Model model) throws SQLException {
             //--Prepare a modelAndView object to symbolize the whole page.
             ModelAndView modelAndView = staticUtilMethods
                 .customResponsiveModelView(request, model, "manage-supplies-importation");
@@ -45,7 +45,9 @@ public class SuppliesImportationService {
             if (importation != null) modelAndView.addObject("suppliesImportation", importation);
 
             //--Prepare branches-list for several pages
-            branchRepository.findAllBranchIds((DBConnectionHolder) request.getAttribute("connectHolder"));
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));;
+            connectionHolder.removeConnection();
 
             return modelAndView;
         }

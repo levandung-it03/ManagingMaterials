@@ -26,7 +26,7 @@ public class WarehouseService {
         private final FindingActionService findingActionService;
         private final BranchRepository branchRepository;
 
-        public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) {
+        public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) throws SQLException {
             //--Prepare a modelAndView object to symbolize the whole page.
             ModelAndView modelAndView = staticUtilMethods
                 .customResponsiveModelView(request, model, "manage-warehouse");
@@ -36,7 +36,9 @@ public class WarehouseService {
             if (warehouse != null)   modelAndView.addObject("warehouse", warehouse);
 
             //--Prepare branches-list for several pages
-            branchRepository.findAllBranchIds((DBConnectionHolder) request.getAttribute("connectHolder"));
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));;
+            connectionHolder.removeConnection();
 
             return modelAndView;
         }

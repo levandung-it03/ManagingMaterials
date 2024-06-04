@@ -72,16 +72,28 @@
                 <b>Số lượng </b>
                 <span class="quantity"></span>
             </div>
-            <div class="table-search-box">
-                <select class="search">
-                    <option value="" selected disabled hidden>Chọn trường cần tìm</option>
-                    <option value="supplyId">Mã vật tư</option>
-                    <option value="supplyName">Tên vật tư</option>
-                    <option value="unit">Đơn vị tính</option>
-                    <option value="quantityInStock">Số lượng tồn</option>
-                </select>
-                <input type="text" class="search">
-                <i class="fa-solid fa-magnifying-glass"></i>
+            <div class="right-grid">
+                <div class="select-branch-to-search">
+                    <fieldset>
+                        <legend>Chi nhánh</legend>
+                        <select name="searchingBranch" disabled="${userInfo.role == 'CONGTY' ? 'fasle' : 'true'}" data="${userInfo.branch}">
+                            <c:forEach items="${branchesList}" var="branch">
+                                <option value="${branch.trim()}">${branch.trim()}</option>
+                            </c:forEach>
+                        </select>
+                    </fieldset>
+                </div>
+                <div class="table-search-box">
+                    <select class="search">
+                        <option value="" selected disabled hidden>Chọn trường cần tìm</option>
+                        <option value="supplyId">Mã vật tư</option>
+                        <option value="supplyName">Tên vật tư</option>
+                        <option value="unit">Đơn vị tính</option>
+                        <option value="quantityInStock">Số lượng tồn</option>
+                    </select>
+                    <input type="text" class="search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
             </div>
         </div>
         <form action="/service/v1/branch/delete-supply" method="POST">

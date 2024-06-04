@@ -28,6 +28,7 @@ function AddWarehouseComponent() {
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
     customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
+    recoveryAllSelectTagData();
     customizeAutoFormatStrongInputTextEvent();
 }
 
@@ -36,6 +37,7 @@ async function ListComponent(searchingSupportingDataSource) {
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
+    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
@@ -61,6 +63,7 @@ function GeneralMethods() {
             objectsQuantity: 0,
             searchingField: "warehouseId",
             searchingValue: "",
+            branch: $('.table-tools .select-branch-to-search select').value,
         },
 
         //--Main fields for searching-action.

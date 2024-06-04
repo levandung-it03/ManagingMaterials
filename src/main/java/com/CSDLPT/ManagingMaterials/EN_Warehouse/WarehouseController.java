@@ -31,7 +31,7 @@ public class WarehouseController {
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
     @GetMapping("/branch/warehouse/manage-warehouse")
-    public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) {
+    public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getManageWarehousePage(request, model);
     }
 
