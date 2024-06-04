@@ -132,7 +132,7 @@ public class EmployeeRepository {
         statement.setString(3, employee.getLastName());
         statement.setString(4, employee.getFirstName());
         statement.setString(5, employee.getAddress());
-        statement.setDate(6, staticUtilMethods.dateUtilToSqlDate(employee.getBirthday()));
+        statement.setTimestamp(6, new Timestamp(employee.getBirthday().getTime()));
         statement.setDouble(7, employee.getSalary());
         statement.setString(8, employee.getBranch());
         statement.setInt(9, 0);

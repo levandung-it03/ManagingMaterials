@@ -49,7 +49,15 @@ function GeneralMethods() {
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
         updatingAction: "/service/v1/branch/update-order-detail",
         componentsForUpdating: [],
-        moreActions: (updatedObjectRow) => {}
+        moreActions: (updatedObjectRow) => {
+            (function customizeSupplyIdInputTagToServeUpdatingAction() {
+                const supplyIdInpTagContainer = $('div.center-page_adding-form div#supplyId');
+                supplyIdInpTagContainer.querySelector('i.fa-regular').outerHTML = null;
+                supplyIdInpTagContainer.querySelector('input[name=supplyId]').readOnly = true;
+                supplyIdInpTagContainer.querySelector('input[name=supplyId]').value =
+                    updatedObjectRow.querySelector('.supplyId').textContent.trim();
+            })();
+        }
     };
     //--Searching data for order detail by orderId
     const searchingSupportingDataSource = {
@@ -82,7 +90,8 @@ function GeneralMethods() {
                     </a>
                 </td>
                 <td class="table-row-btn delete">
-                    <button name="deleteBtn" value="${row.orderId} ${row.supplyId}">
+                    <button name="deleteBtn" value="${row.orderId.trim()}">
+                        <input name="supplyId" type="text" value="${row.supplyId.trim()}" hidden/>
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
                 </td>
@@ -103,9 +112,9 @@ function GeneralMethods() {
     );
     await CustomizeBuildingFormSpectator(
         async () => {
-            await new WarehouseDialog(
+            await new SupplyDialog(
                 'div.select-dialog table tbody',
-                'branch'
+                "branch"
             ).customizeToggleOpeningFormDialogDataSupporter();
         },
         'div.center-page_adding-form'

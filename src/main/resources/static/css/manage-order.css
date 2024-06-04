@@ -31,16 +31,14 @@ div.center-page_adding-form .form-select label {
 
 /*--Customize each input tag--*/
 div.center-page_adding-form form div#orderId,
-div.center-page_adding-form form div#createdDate,
 div.center-page_adding-form form div#supplier,
-div.center-page_adding-form form div#employeeId
-div.center-page_adding-form form div#warehouseId {
+div.center-page_adding-form form div#warehouseIdAsFk {
     width: 100%;
 }
-div.center-page_adding-form form div#warehouseId input{
+div.center-page_adding-form form div#warehouseIdAsFk input{
     width: 90%;
 }
-div.center-page_adding-form form div#warehouseId i{
+div.center-page_adding-form form div#warehouseIdAsFk i{
     cursor: pointer;
 }
 /*------------*/
@@ -98,7 +96,7 @@ table tr td {
 table tr th#orderId,
 table tr td.orderId {
     text-align: start;
-    width: 14%;
+    width: 10%;
     padding-left: 20px
 }
 table tr th#createdDate,
@@ -110,19 +108,19 @@ table tr td.supplier {
     text-align: start;
     width: 20%;
 }
-table tr th#employeeId,
-table tr td.employeeId {
-    width: 15%;
+table tr th#employeeIdAsFk,
+table tr td.employeeIdAsFk {
+    text-align: start;
+    width: 20%;
 }
-table tr th#warehouseId,
-table tr td.warehouseId {
-    width: 10%;
+table tr th#warehouseIdAsFk,
+table tr td.warehouseIdAsFk {
+    width: 18%;
 }
+table tr th#createdDate,
+table tr td.createdDate,
 table tr th#detail,
-table tr td.detail{
-    width: 10%;
-}
-
+table tr td.detail,
 table tr th#update,
 table tr td.update,
 table tr th#delete,

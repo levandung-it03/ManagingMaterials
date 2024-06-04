@@ -47,10 +47,10 @@
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
                 </div>
-                <div class="form-input" id="warehouseId">
+                <div class="form-input" id="warehouseIdAsFk">
                     <fieldset>
                         <legend>Mã kho</legend>
-                        <input name="warehouseId" type="text" value="${order.warehouseId}" maxlength="4"
+                        <input name="warehouseIdAsFk" type="text" value="${order.warehouseIdAsFk}" maxlength="4"
                                required/>
                         <i class="fa-regular fa-pen-to-square"></i>
                     </fieldset>
@@ -71,8 +71,8 @@
                         <option value="orderId">Mã đơn đặt hàng</option>
                         <option value="supplier">Nhà cung cấp</option>
                         <option value="createdDate">Ngày tạo</option>
-                        <option value="employeeId">Mã nhân viên</option>
-                        <option value="warehouseId">Mã kho</option>
+                        <option value="employeeIdAsFk">Mã nhân viên</option>
+                        <option value="warehouseIdAsFk">Mã kho</option>
                     </select>
                     <input type="text" class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -86,20 +86,20 @@
                             Mã
                             <i class="fa-solid fa-arrow-down-a-z"></i>
                         </th>
+                        <th id="employeeIdAsFk">
+                            Mã nhân viên
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
                         <th id="supplier">
                             Nhà cung cấp
                             <i class="fa-solid fa-arrow-down-a-z"></i>
                         </th>
+                        <th id="warehouseIdAsFk">
+                            Mã kho
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
                         <th id="createdDate">
                             Ngày tạo
-                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                        </th>
-                        <th id="employeeId">
-                            Mã nhân viên
-                            <i class="fa-solid fa-arrow-down-a-z"></i>
-                        </th>
-                        <th id="warehouseId">
-                            Mã kho
                             <i class="fa-solid fa-arrow-down-a-z"></i>
                         </th>
                         <th id="detail">Chi tiết</th>
