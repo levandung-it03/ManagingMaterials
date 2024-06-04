@@ -27,7 +27,7 @@ public class BranchRepository {
             statement.close();
             resultSet.close();
         } catch (SQLException e) {
-            logger.info("Error In 'countAllBranch' of BranchRepository: " + e);
+            logger.info("Error In 'findAllBranchIds' of BranchRepository: " + e);
         }
         return result;
     }

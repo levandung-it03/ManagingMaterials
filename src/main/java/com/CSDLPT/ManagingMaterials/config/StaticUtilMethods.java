@@ -2,6 +2,7 @@ package com.CSDLPT.ManagingMaterials.config;
 
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 
+import com.CSDLPT.ManagingMaterials.EN_Branch.Branch;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
@@ -54,9 +55,9 @@ public class StaticUtilMethods {
     public List<String> columnNameStaticDictionary(String fieldName) throws NoSuchFieldException{
         return switch (fieldName) {
             //--Employee(NhanVien) Entity
-            case "Employee" -> List.of("NHANVIEN", "MANV", NUM_TYPE);
+            case "Employee" -> List.of("NhanVien", "MANV", NUM_TYPE);
             case "employeeId", "MANV" -> List.of("MANV", "employeeId", NUM_TYPE);
-            case "employeeIdAsFk", "NHANVIEN" -> List.of("MANV", "EmployeeFromFk.MANV", "EmployeeFromFk", NUM_TYPE);
+            case "employeeIdAsFk", "NhanVien" -> List.of("MANV", "EmployeeFromFk.MANV", "EmployeeFromFk", NUM_TYPE);
             case "identifier", "CMND" -> List.of("CMND", "identifier", STR_TYPE);
             case "lastName", "HO" -> List.of("HO", "lastName", STR_TYPE);
             case "firstName", "TEN" -> List.of("TEN", "firstName", STR_TYPE);
@@ -68,12 +69,12 @@ public class StaticUtilMethods {
             case "deletedStatus", "TrangThaiXoa" -> List.of("TrangThaiXoa", "deletedStatus", NUM_TYPE);
 
             //--Warehouse(Kho) Entity
-            case "Warehouse" -> List.of("KHO", "MAKHO", STR_TYPE);
+            case "Warehouse" -> List.of("Kho", "MAKHO", STR_TYPE);
             case "warehouseId", "MAKHO" -> List.of("MAKHO", "warehouseId", STR_TYPE);
-            case "warehouseIdAsFk", "KHO" -> List.of("MAKHO", "WarehouseFromFk.MAKHO", "WarehouseFromFk", STR_TYPE);
+            case "warehouseIdAsFk", "Kho" -> List.of("MAKHO", "WarehouseFromFk.MAKHO", "WarehouseFromFk", STR_TYPE);
             case "warehouseName", "TENKHO" -> List.of("TENKHO", "warehouseName", STR_TYPE);
 
-            //--Supply(VatTu) Entity
+            //--Supply(Vattu) Entity
             case "supplyId", "MAVT" -> List.of("MAVT", "supplyId", STR_TYPE);
             case "supplyName", "TENVT" -> List.of("TENVT", "supplyName", STR_TYPE);
             case "unit", "DVT" -> List.of("DVT", "unit", STR_TYPE);

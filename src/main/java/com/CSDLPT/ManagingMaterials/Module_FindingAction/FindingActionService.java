@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.Module_FindingAction;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
@@ -7,6 +8,7 @@ import com.CSDLPT.ManagingMaterials.database.PageObject;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -23,6 +25,8 @@ import static com.CSDLPT.ManagingMaterials.config.StaticUtilMethods.*;
 public class FindingActionService {
     private final Logger logger;
     private final StaticUtilMethods staticUtilMethods;
+    @Value("${mssql.database.name}")
+    private String databaseName;
 
     /**Spring JdbcTemplate: Combination between .findingDataWithPagination(), .countAllByCondition() and JOIN Query **/
     public <T> ResDtoRetrievingData<T> findingDataAndServePaginationBarFormat(
@@ -31,6 +35,12 @@ public class FindingActionService {
     ) throws SQLException, NoSuchFieldException {
         //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+        searchingObject.trimAllDataField();
+
+        //--Find searching branch
+        ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
+        if (!userInfo.getBranch().equals(searchingObject.getBranch()))
+            searchingObject.setSearchingTable("LINK1." + databaseName + ".DBO." + searchingObject.getSearchingTable());
 
         //--Generate the condition syntax of query.
         String conditionOfQuery = String.format(

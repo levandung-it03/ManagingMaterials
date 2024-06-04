@@ -20,7 +20,8 @@ public class ReqDtoRetrievingData<T> {
     private Integer currentPage = 1;
     @NotBlank
     private String searchingField;
-    private String searchingValue;
+    private String searchingValue = "";
+    private String branch = "";
     private List<ReqDtoDataForDetail> conditionObjectsList;
     //--Data for customizing in Services.
     private Class<T> objectType = null;
@@ -30,4 +31,15 @@ public class ReqDtoRetrievingData<T> {
     private String sortingCondition = "";
     //--Data for joining query.
     private String joiningCondition = "";
+
+    public void trimAllDataField() {
+        this.searchingField = searchingTable.trim();
+        this.searchingValue = searchingValue.trim();
+        this.branch = branch.trim();
+        this.searchingTable = searchingTable.trim();
+        this.searchingTableIdName = searchingTableIdName.trim();
+        this.moreCondition = moreCondition.trim();
+        this.sortingCondition = sortingCondition.trim();
+        this.joiningCondition = joiningCondition.trim();
+    }
 }

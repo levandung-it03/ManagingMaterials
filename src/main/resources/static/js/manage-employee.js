@@ -61,7 +61,7 @@ function AddEmployeeComponent() {
     customizeValidateEventInputTags(validatingBlocks);
     customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
     customizeSubmitFormAction('div#form-dialog_adding-account form', validatingBlocks);
-    // recoveryAllSelectTagDataInForm();
+    recoveryAllSelectTagData();
     customizeAutoFormatStrongInputTextEvent();
 }
 
@@ -169,6 +169,7 @@ function GeneralMethods() {
             objectsQuantity: 0,
             searchingField: "employeeId",
             searchingValue: "",
+            branch: $('.table-tools .select-branch-to-search select').value,
         },
 
         //--Main fields for searching-action.

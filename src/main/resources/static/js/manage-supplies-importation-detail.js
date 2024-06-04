@@ -26,7 +26,7 @@ function AddSuppliesImportationDetailComponent() {
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
     customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
-    // recoveryAllSelectTagDataInForm();
+    // recoveryAllSelectTagData();
     customizeAutoFormatStrongInputTextEvent();
 }
 

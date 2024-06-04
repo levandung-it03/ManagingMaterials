@@ -68,8 +68,8 @@ public class OrderService {
             searchingObject.setSearchingTableIdName("MasoDDH");
             searchingObject.setSortingCondition("ORDER BY NGAY ASC");
             searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
-                InnerJoinObject.builder().left("DatHang").right("NHANVIEN").fields("MANV, HO, TEN").bridge("MANV").build(),
-                InnerJoinObject.builder().left("DatHang").right("KHO").fields("MAKHO, TENKHO").bridge("MAKHO").build()
+                InnerJoinObject.builder().left("DatHang").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV").build(),
+                InnerJoinObject.builder().left("DatHang").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO").build()
             )));
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }

@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Warehouse;
 
+import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
@@ -23,6 +24,7 @@ public class WarehouseService {
         private final StaticUtilMethods staticUtilMethods;
         private final WarehouseRepository warehouseRepository;
         private final FindingActionService findingActionService;
+        private final BranchRepository branchRepository;
 
         public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) {
             //--Prepare a modelAndView object to symbolize the whole page.
@@ -33,6 +35,9 @@ public class WarehouseService {
             Warehouse warehouse = (Warehouse) model.asMap().get("submittedWarehouse");
             if (warehouse != null)   modelAndView.addObject("warehouse", warehouse);
 
+            //--Prepare branches-list for several pages
+            branchRepository.findAllBranchIds((DBConnectionHolder) request.getAttribute("connectHolder"));
+
             return modelAndView;
         }
 
@@ -42,7 +47,7 @@ public class WarehouseService {
         ) throws SQLException, NoSuchFieldException {
             //--Preparing data to fetch.
             searchingObject.setObjectType(Warehouse.class);
-            searchingObject.setSearchingTable("KHO");
+            searchingObject.setSearchingTable("Kho");
             searchingObject.setSearchingTableIdName("MAKHO");
             searchingObject.setSortingCondition("ORDER BY MAKHO ASC");
 

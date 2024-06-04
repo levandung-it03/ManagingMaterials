@@ -62,7 +62,7 @@ public class SupplyRepository {
         try {
             //--Prepare data to execute Query Statement.
             PreparedStatement statement = connectHolder.getConnection().prepareStatement("""
-                INSERT INTO VATTU (MAVT ,TENVT ,DVT ,SOLUONGTON)
+                INSERT INTO Vattu (MAVT ,TENVT ,DVT ,SOLUONGTON)
                 VALUES (?, ?, ?, ?)
             """);
             this.mapDataIntoStatement(statement, supply);

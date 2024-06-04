@@ -134,8 +134,8 @@ function cuttingStringValueOfInputTag(tag, len) {
         tag.value = tag.value.slice(0, len);
 }
 
-function recoveryAllSelectTagDataInForm() {
-    [...$$('form select')].forEach(selectTag => {
+function recoveryAllSelectTagData() {
+    [...$$('select')].forEach(selectTag => {
         const data = selectTag.getAttribute('data');
         if (data != null) {
             [...selectTag.querySelectorAll('option')].forEach(optionTag => {
@@ -249,8 +249,9 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
                  * data: {
                  * currentPage: 1,
                  * objectsQuantity: 1,
-                 * searchingField: "orderId",
+                 * searchingField: "",
                  * searchingValue: "",
+                 * branch: "",
                  * ...more_custom_fields...
                  *}
                  * */

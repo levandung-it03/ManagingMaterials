@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportation;
 
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
+import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
 import com.CSDLPT.ManagingMaterials.EN_Order.OrderRepository;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ResDtoImportationWithImportationInfo;
@@ -32,6 +33,7 @@ public class SuppliesImportationService {
         private final SuppliesImportationRepository suppliesImportationRepository;
         private final WarehouseRepository warehouseRepository;
         private final OrderRepository orderRepository;
+        private final BranchRepository branchRepository;
 
         public ModelAndView getManageSuppliesImportationPage(HttpServletRequest request, Model model) {
             //--Prepare a modelAndView object to symbolize the whole page.
@@ -41,6 +43,9 @@ public class SuppliesImportationService {
             //--Check if there's a response SuppliesImportation to map into adding-form when an error occurred.
             ReqDtoSuppliesImportation importation = (ReqDtoSuppliesImportation) model.asMap().get("submittedSuppliesImportation");
             if (importation != null) modelAndView.addObject("suppliesImportation", importation);
+
+            //--Prepare branches-list for several pages
+            branchRepository.findAllBranchIds((DBConnectionHolder) request.getAttribute("connectHolder"));
 
             return modelAndView;
         }
@@ -55,8 +60,8 @@ public class SuppliesImportationService {
             searchingObject.setSearchingTableIdName("MAPN");
             searchingObject.setSortingCondition("ORDER BY MAPN ASC");
             searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
-                InnerJoinObject.builder().left("PhieuNhap").right("NHANVIEN").fields("MANV, HO, TEN").bridge("MANV").build(),
-                InnerJoinObject.builder().left("PhieuNhap").right("KHO").fields("MAKHO, TENKHO").bridge("MAKHO").build()
+                InnerJoinObject.builder().left("PhieuNhap").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV").build(),
+                InnerJoinObject.builder().left("PhieuNhap").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO").build()
             )));
 
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);

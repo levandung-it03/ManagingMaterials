@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
+import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
@@ -23,6 +24,7 @@ public class SupplyService {
         private final StaticUtilMethods staticUtilMethods;
         private final SupplyRepository supplyRepository;
         private final FindingActionService findingActionService;
+        private final BranchRepository branchRepository;
 
         public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) {
             //--Prepare common-components of ModelAndView if we need.
@@ -33,6 +35,9 @@ public class SupplyService {
             Supply supply = (Supply) model.asMap().get("submittedSupply");
             if (supply != null) modelAndView.addObject("supply", supply);
 
+            //--Prepare branches-list for several pages
+            branchRepository.findAllBranchIds((DBConnectionHolder) request.getAttribute("connectHolder"));
+
             return modelAndView;
         }
 
@@ -42,7 +47,7 @@ public class SupplyService {
         ) throws SQLException, NoSuchFieldException {
             //--Preparing data to fetch.
             searchingObject.setObjectType(Supply.class);
-            searchingObject.setSearchingTable("VatTu");
+            searchingObject.setSearchingTable("Vattu");
             searchingObject.setSearchingTableIdName("MAVT");
             searchingObject.setSortingCondition("ORDER BY TENVT ASC");
 

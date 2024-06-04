@@ -188,7 +188,37 @@ form span#cancel-updating:hover {
     font-size: 1.2rem;
     font-weight: 600;
 }
-.table-tools .table-search-box select {
+
+.center-page_list .table-tools .right-grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-items: end;
+    width: 618px;
+}
+.table-tools .right-grid .select-branch-to-search {
+    padding-right: 23.5px;
+}
+.table-tools .right-grid .select-branch-to-search fieldset {
+    width: 140px;
+    height: 51px;
+    border: 2px var(--grey-border) solid;
+    border-radius: 10px;
+    padding: 0 10px;
+    margin-top: -10px;
+}
+.table-tools .right-grid .select-branch-to-search fieldset {
+    color: var(--black-text);
+    font-weight: 100;
+    font-size: 0.9rem;
+}
+.table-tools .right-grid .select-branch-to-search fieldset select {
+    width: 100%;
+    height: 90%;
+    display: block;
+    border: none;
+}
+.table-tools .right-grid .table-search-box select {
     position: absolute;
     width: 200px;
     top: 17px;
@@ -198,7 +228,7 @@ form span#cancel-updating:hover {
     border-radius: 5px 0 0 5px;
     padding: 8px;
 }
-.table-tools .table-search-box input {
+.table-tools .right-grid .table-search-box input {
     width: 450px;
     height: 40px;
     border: 2px var(--grey-border) solid;
@@ -207,10 +237,10 @@ form span#cancel-updating:hover {
     padding: 0 55px 0 220px;
     outline-color: var(--grey-border);
 }
-.table-tools .table-search-box input:focus {
+.table-tools .right-grid .table-search-box input:focus {
     background-color: rgb(200, 198, 198);
 }
-.table-tools .table-search-box i {
+.table-tools .right-grid .table-search-box i {
     font-size: 1.1rem;
     position: absolute;
     top: 21.5px;
@@ -219,7 +249,7 @@ form span#cancel-updating:hover {
     padding: 6px 18px;
     transition: background-color ease 0.3s;
 }
-.table-tools .table-search-box i:hover {
+.table-tools .right-grid .table-search-box i:hover {
     cursor: pointer;
     background-color: var(--grey-border);
 }
