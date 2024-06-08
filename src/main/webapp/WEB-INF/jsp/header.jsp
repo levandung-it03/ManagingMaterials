@@ -26,7 +26,7 @@
                 </a>
                 <div>
                     <ul class="subnav">
-                        <li><a href="#">DANH SÁCH NHÂN VIÊN</a></li>
+                        <li><a href="/branch/employee/report-for-employee">DANH SÁCH NHÂN VIÊN</a></li>
                         <li><a href="#">DANH SÁCH VẬT TƯ</a></li>
                         <li><a href="#">CHI TIẾT NHẬP XUẤT</a></li>
                         <li><a href="#">ĐƠN HÀNG KHÔNG CÓ PHIẾU NHẬP</a></li>

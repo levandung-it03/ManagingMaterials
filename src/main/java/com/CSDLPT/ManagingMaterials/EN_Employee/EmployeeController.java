@@ -32,6 +32,10 @@ public class EmployeeController {
     public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getManageEmployeePage(request, model);
     }
+    @GetMapping("/branch/employee/report-for-employee")
+    public ModelAndView getReportForEmployeePage(HttpServletRequest request, Model model) throws SQLException {
+        return branchServices.getReportForEmployeePage(request, model);
+    }
 
     /*_____________RequestMethod.POST: Employee-entity-interaction_____________*/
     @PostMapping("${url.post.branch.prefix.v1}/find-employee-by-values")

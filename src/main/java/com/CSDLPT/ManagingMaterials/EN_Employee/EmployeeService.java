@@ -60,6 +60,23 @@ public class EmployeeService {
             return modelAndView;
         }
 
+        public ModelAndView getReportForEmployeePage(HttpServletRequest request, Model model) throws SQLException {
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            //--Prepare common-components of ModelAndView if we need.
+            ModelAndView modelAndView = staticUtilMethods
+                .customResponsiveModelView(request, model, "report-for-employee");
+
+            //--Data for AddingEmployeeForm component.
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
+
+            //--Close Connection.
+            connectionHolder.removeConnection();
+
+            return modelAndView;
+        }
+
         public void addEmployee(HttpServletRequest request, Employee employee) throws DuplicateKeyException, SQLException {
             //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
             DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");

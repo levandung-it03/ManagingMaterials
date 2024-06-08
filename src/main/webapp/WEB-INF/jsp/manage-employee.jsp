@@ -94,7 +94,7 @@
     <div class="center-page_list">
         <div class="table-tools">
             <div class="table-description">
-                <b>Số lượng </b>
+                <b>Toàn bộ nhân viên </b>
                 <span class="quantity"></span>
             </div>
             <div class="right-grid">

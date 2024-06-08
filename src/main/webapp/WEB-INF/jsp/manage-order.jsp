@@ -62,7 +62,7 @@
         <div class="center-page_list">
             <div class="table-tools">
                 <div class="table-description">
-                    <b>Danh sách đơn đặt hàng </b>
+                    <b>Toàn bộ đơn đặt hàng </b>
                     <span class="quantity"></span>
                 </div>
                 <div class="right-grid">

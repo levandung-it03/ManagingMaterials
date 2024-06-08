@@ -39,7 +39,7 @@ public class FindingActionService {
 
         //--Find searching branch
         ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
-        if (!userInfo.getBranch().equals(searchingObject.getBranch()))
+        if (!searchingObject.getBranch().isEmpty() && !userInfo.getBranch().equals(searchingObject.getBranch()))
             searchingObject.setSearchingTable("LINK1." + databaseName + ".DBO." + searchingObject.getSearchingTable());
 
         //--Generate the condition syntax of query.

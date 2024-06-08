@@ -1,0 +1,197 @@
+html body {
+    background-color: #f9fafc;
+    position: relative;
+}
+
+html body .center-page {
+    box-shadow: none;
+    min-height: 86vh;
+}
+
+html body .center-page .center-page_list {
+    width: 100%;
+    margin: 20px;
+    margin-bottom: 0;
+    height: 82vh;
+}
+
+html body .table-footer .table-footer_main {
+    border-radius: 0 0 10px 10px;
+    height: 37px;
+}
+
+/*--Customize Employee List--*/
+html body table tbody {
+    height: 62vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
+    scrollbar-width: thin; /* Options are auto, thin, and none */
+}
+table tr th#lastName,
+table tr td.lastName {
+    text-align: start;
+    width: 17%;
+}
+table tr th#branch,
+table tr td.branch,
+table tr th#employeeId,
+table tr td.employeeId,
+table tr th#birthday,
+table tr td.birthday,
+table tr th#salary,
+table tr td.salary {
+    text-align: center;
+    width: 8%;
+}
+table tr th#identifier,
+table tr td.identifier {
+    text-align: start;
+    width: 10%;
+}
+table tr th#firstName,
+table tr td.firstName {
+    text-align: start;
+    width: 6%;
+}
+
+table tr th#address,
+table tr td.address {
+    text-align: start;
+    width: 25%;
+}
+
+table tr th#deletedStatus,
+table tr td.deletedStatus {
+    text-align: center;
+    width: 10%;
+}
+/*------------------*/
+div.preview-table-container {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 30px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+div.preview-table-container div.report-supportting-buttons {
+    width: 100%;
+    padding: 10px;
+}
+table.exporting-table-css,
+table.exporting-table-css tr th,
+table.exporting-table-css tr td {
+    position: relative; /*Make pdf exporting module work correctly*/
+}
+table.exporting-table-css {
+    background-color: white;
+    padding: 20px;
+    width: 21cm;
+    margin: 1% auto 1% auto;
+}
+table.exporting-table-css thead {
+    display: block;
+}
+table.exporting-table-css tbody {
+    background-color: white;
+    height: auto;
+    overflow-x: auto;
+    overflow-y: auto;
+    display: block;
+    margin: 0;
+}
+table.exporting-table-css tr {
+    align-items: start;
+    min-height: 26px;
+}
+table.exporting-table-css tr th,
+table.exporting-table-css tr td {
+    display: block;
+    padding-top: 2px;
+    font-size: 0.8rem;
+}
+table.exporting-table-css tr th#employeeId,
+table.exporting-table-css tr td.employeeId {
+    padding-left: 0;
+}
+table.exporting-table-css tr th#employeeId,
+table.exporting-table-css tr td.employeeId {
+    text-align: center;
+    width: 8%;
+}
+table.exporting-table-css tr th#identifier,
+table.exporting-table-css tr td.identifier {
+    text-align: center;
+    width: 14%;
+}
+table.exporting-table-css tr th#lastName,
+table.exporting-table-css tr td.lastName {
+    text-align: start;
+    width: 18%;
+}
+table.exporting-table-css tr th#firstName,
+table.exporting-table-css tr td.firstName {
+    text-align: start;
+    width: 8%;
+}
+
+table.exporting-table-css tr th#address,
+table.exporting-table-css tr td.address {
+    text-align: start;
+    width: 15%;
+}
+table.exporting-table-css tr th#birthday,
+table.exporting-table-css tr td.birthday,
+table.exporting-table-css tr th#salary,
+table.exporting-table-css tr td.salary,
+table.exporting-table-css tr th#branch,
+table.exporting-table-css tr td.branch {
+    text-align: center;
+    width: 11%;
+}
+table.exporting-table-css tr th#deletedStatus,
+table.exporting-table-css tr td.deletedStatus {
+    text-align: center;
+    width: 4%;
+}
+/*---------------*/
+.report-supportting-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.report-supportting-buttons a {
+    display: block;
+    width: 20%;
+    border-radius: 10px;
+    text-align: center;
+    transition: background-color ease 0.2s, border-radius ease 0.3s;
+    padding: 8px 0;
+    margin: 0 20px 10px 20px;
+}
+.report-supportting-buttons a:hover {
+    cursor: pointer;
+    border-radius: 22px;
+}
+.report-supportting-buttons a.report-supportting-buttons_preview {
+    background-color: #66b3ff;
+    color: black;
+}
+.report-supportting-buttons a.report-supportting-buttons_preview:hover {
+    background-color: #0073e6;
+    color: white;
+}
+.report-supportting-buttons a.report-supportting-buttons_exporting-report {
+    background-color: var(--black-text);
+    color: white;
+}
+.report-supportting-buttons a.report-supportting-buttons_exporting-report:hover {
+    background-color: #9fa7ae;
+    color: black;
+}
+
+

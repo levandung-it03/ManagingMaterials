@@ -486,3 +486,18 @@ function customizeRenderTableDataBySwitchingBranch(
         await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
     });
 }
+
+function fontChecker(selector, text="") {
+    if (text == "") {
+        const element = document.querySelector(selector);
+        const styles = getComputedStyle(element);
+        const fontFamily = styles.fontFamily;
+        console.log(fontFamily);
+    } else {
+        const element = document.createElement("div");
+        element.textContent = text;
+        const styles = getComputedStyle(element);
+        const fontFamily = styles.fontFamily;
+        console.log(fontFamily);
+    }
+}
