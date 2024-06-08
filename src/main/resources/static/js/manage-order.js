@@ -61,7 +61,7 @@ function GeneralMethods() {
         //--Initialize field-values for firstly fetch action.
         data: {
             currentPage: 1,
-            objectsQuantity: 1,
+            objectsQuantity: 0,
             searchingField: "orderId",
             searchingValue: "",
             branch: $('.table-tools .select-branch-to-search select').value,

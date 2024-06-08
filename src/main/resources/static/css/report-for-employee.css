@@ -71,13 +71,14 @@ div.preview-table-container {
     position: absolute;
     z-index: 2;
     width: 100%;
+    min-height: 100vh;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     padding-top: 30px;
     background-color: rgba(0, 0, 0, 0.5);
 }
-div.preview-table-container div.report-supportting-buttons {
+div.preview-table-container div.report-supporting-buttons {
     width: 100%;
     padding: 10px;
 }
@@ -90,7 +91,6 @@ table.exporting-table-css {
     background-color: white;
     padding: 20px;
     width: 21cm;
-    margin: 1% auto 1% auto;
 }
 table.exporting-table-css thead {
     display: block;
@@ -158,38 +158,39 @@ table.exporting-table-css tr td.deletedStatus {
     width: 4%;
 }
 /*---------------*/
-.report-supportting-buttons {
+.report-supporting-buttons {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.report-supportting-buttons a {
+.report-supporting-buttons a {
     display: block;
     width: 20%;
+    height: 42px;
     border-radius: 10px;
     text-align: center;
     transition: background-color ease 0.2s, border-radius ease 0.3s;
     padding: 8px 0;
     margin: 0 20px 10px 20px;
 }
-.report-supportting-buttons a:hover {
+.report-supporting-buttons a:hover {
     cursor: pointer;
     border-radius: 22px;
 }
-.report-supportting-buttons a.report-supportting-buttons_preview {
+.report-supporting-buttons a.report-supporting-buttons_preview {
     background-color: #66b3ff;
     color: black;
 }
-.report-supportting-buttons a.report-supportting-buttons_preview:hover {
+.report-supporting-buttons a.report-supporting-buttons_preview:hover {
     background-color: #0073e6;
     color: white;
 }
-.report-supportting-buttons a.report-supportting-buttons_exporting-report {
+.report-supporting-buttons a.report-supporting-buttons_exporting-report {
     background-color: var(--black-text);
     color: white;
 }
-.report-supportting-buttons a.report-supportting-buttons_exporting-report:hover {
+.report-supporting-buttons a.report-supporting-buttons_exporting-report:hover {
     background-color: #9fa7ae;
     color: black;
 }

@@ -12,7 +12,7 @@
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/report-of-employee.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/report-for-employee.css">
 </head>
 <body>
     <%@ include file="/WEB-INF/jsp/header.jsp" %>
@@ -34,7 +34,7 @@
         <div class="center-page_list">
             <div class="table-tools">
                 <div class="table-description">
-                    <b>Danh sách nhân viên </b>
+                    <b>Báo cáo toàn bộ nhân viên </b>
                     <span class="quantity"></span>
                 </div>
                 <div class="right-grid">
@@ -89,14 +89,14 @@
             </div>
         </div>
     </div>
-    <div class="report-supportting-buttons">
-        <a class="report-supportting-buttons_preview">
+    <div class="report-supporting-buttons">
+        <a class="report-supporting-buttons_preview">
             Xem trước&emsp;<i class="fa-solid fa-file-pdf"></i>
         </a>
     </div>
     <div class="preview-table-container closed"></div>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/PdfFilesExportation.js"></script>
-    <script type="application/javascript" src="${pageContext.request.contextPath}/js/report-of-employee.js"></script>
+    <script type="application/javascript" src="${pageContext.request.contextPath}/js/report-for-employee.js"></script>
 </body>
 </html>

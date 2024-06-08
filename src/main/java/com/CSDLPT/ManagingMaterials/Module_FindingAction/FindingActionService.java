@@ -76,18 +76,21 @@ public class FindingActionService {
         try {
             PageObject pageObject = new PageObject(searchingObject.getCurrentPage());
             String query = String.format(
-                "SELECT %s FROM %s %s %s OFFSET ? ROWS FETCH NEXT ? ROWS ONLY",
+                "SELECT %s FROM %s %s %s %s",
                 orderedFields,
                 searchingObject.getSearchingTable(),
                 conditionOfQuery,
-                searchingObject.getSortingCondition()
+                searchingObject.getSortingCondition(),
+                pageObject.getPage() == 0 ? "" : " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
             );
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(query);
 
             //--Prepare data of employee-list.
             statement.setString(1, String.valueOf(searchingObject.getSearchingValue()));
-            statement.setInt(2, (pageObject.getPage() - 1) * pageObject.getSize());
-            statement.setInt(3, pageObject.getSize());
+            if (pageObject.getPage() != 0) {
+                statement.setInt(2, (pageObject.getPage() - 1) * pageObject.getSize());
+                statement.setInt(3, pageObject.getSize());
+            }
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next())

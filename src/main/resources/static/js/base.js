@@ -41,12 +41,12 @@ function log(v) {
     console.log(v);
 }
 
-function salaryFormattingEngine(salary) {
+function salaryFormattingEngine(salary, hasCurrency=true) {
     const salaryAsString = salary + "";
     let result = "";
     for (let index = salaryAsString.length; index > 0; index -= 3)
         result = "," + salaryAsString.substring(index - 3, index) + result;
-    return result.slice(1) + "VNĐ";
+    return result.slice(1) + (hasCurrency ? "VNĐ" : "");
 }
 
 function customizeClosingNoticeMessageEvent() {
@@ -248,7 +248,7 @@ async function fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSourc
                  * Data Base Structure:
                  * data: {
                  * currentPage: 1,
-                 * objectsQuantity: 1,
+                 * objectsQuantity: 0,
                  * searchingField: "",
                  * searchingValue: "",
                  * branch: "",
@@ -446,13 +446,13 @@ function handlingCreateFormUpdate(updatingBtn, updatingSupportingDataSource) {
         });
 }
 
-async function CustomizeFetchingActionSpectator(
+function CustomizeFetchingActionSpectator(
     searchingSupportingDataSource,
     moreFeatures,
     observedTableContainer = 'div.center-page_list'
 ) {
     //--Create a mutation observer instance when each fetch-action is made.
-    await new MutationObserver(async () => {
+    new MutationObserver(async () => {
         //--Re-calculate the quantities.
         if (moreFeatures.tableLabel) {
             $(observedTableContainer + ' .quantity').textContent =
@@ -471,11 +471,12 @@ async function CustomizeFetchingActionSpectator(
 
 async function CustomizeBuildingFormSpectator(dialogBuilders, observedForm = 'div.center-page_adding-form') {
     //--Firstly calling when HTML is renders.
-    await dialogBuilders();
-
-    //--Create a mutation observer instance to track if update-form is generated.
-    await new MutationObserver(async () => await dialogBuilders())
-        .observe($(observedForm), {childList: true, subtree: true});
+    await dialogBuilders()
+        .then(() => {
+            //--Create a mutation observer instance to track if update-form is generated.
+            new MutationObserver(async () => await dialogBuilders())
+                .observe($(observedForm), {childList: true, subtree: true});
+        });
 }
 
 function customizeRenderTableDataBySwitchingBranch(
@@ -485,19 +486,4 @@ function customizeRenderTableDataBySwitchingBranch(
     $(selectTagSelector).addEventListener("click", async e => {
         await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
     });
-}
-
-function fontChecker(selector, text="") {
-    if (text == "") {
-        const element = document.querySelector(selector);
-        const styles = getComputedStyle(element);
-        const fontFamily = styles.fontFamily;
-        console.log(fontFamily);
-    } else {
-        const element = document.createElement("div");
-        element.textContent = text;
-        const styles = getComputedStyle(element);
-        const fontFamily = styles.fontFamily;
-        console.log(fontFamily);
-    }
 }
