@@ -33,22 +33,12 @@ class PdfFilesExportation {
                 else throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
             })
             .then(responseObject => {
-                $(fetchingConfigObject.tablePreviewContainerSelector + ' table').innerHTML = `
-                    <thead>
-                        <tr>
-                            ${fetchingConfigObject.fieldObjects
-                        .map(fieldObj => `<th id="${fieldObj.cssName}">${fieldObj.utf8Name}</th>`)
-                        .join("")}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${responseObject.resultDataSet
-                            .map(dataOfRow => {
-                                for (let field in dataOfRow) if (dataOfRow[field] === null) dataOfRow[field] = "";
-                                return fetchingConfigObject.rowFormattingEngine(dataOfRow);
-                            })
-                            .join("")}
-                    </tbody>`;
+                return responseObject.resultDataSet
+                    .map(dataOfRow => {
+                        for (let field in dataOfRow) if (dataOfRow[field] === null) dataOfRow[field] = "";
+                        return fetchingConfigObject.rowFormattingEngine(dataOfRow);
+                    })
+                    .join("");
             })
             .catch(error => {
                 console.error("Đã có lỗi xảy ra:", error)
@@ -66,7 +56,6 @@ class PdfFilesExportation {
         //--Start generating preview-table.
         const tableData = document.createElement("table");
         tableData.classList.add('exporting-table-css');
-        this.fetchDataForReporter(fetchingConfigObject);
 
         //--Add exporting-btn.
         tablePreviewContainer.innerHTML = `
@@ -75,8 +64,22 @@ class PdfFilesExportation {
                     Xuất báo cáo&emsp;<i class="fa-solid fa-file-pdf"></i>
                 </a>
             </div>`;
+
         //--Append the table to the tableOutPut variable (or any other container if needed).
-        tablePreviewContainer.innerHTML = tableData.outerHTML + tablePreviewContainer.innerHTML;
+        this.fetchDataForReporter(fetchingConfigObject)
+            .then(rowsData => {
+                tableData.innerHTML = `
+                    <thead><tr>${
+                        fetchingConfigObject.fieldObjects.map(fieldObj => 
+                            `<th id="${fieldObj.cssName}">${fieldObj.utf8Name}</th>`
+                        ).join("")
+                    }</tr></thead>
+                    <tbody>${rowsData}</tbody>`;
+                tablePreviewContainer.innerHTML = tableData.outerHTML + tablePreviewContainer.innerHTML;
+            })
+            .catch(err => {
+                console.log("Error at FetchAction and buildPreviewPages: " + err);
+            })
     }
 
     exportToPdfFile(tableDataSourceSelector) {
