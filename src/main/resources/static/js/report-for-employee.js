@@ -52,9 +52,9 @@ async function CustomizeExportationFileModules() {
     };
 
     await pdfFilesExporter.loadAllNecessaryLibs()
-        .then(() => {
+        .then(async () => {
             //--Build preview table data.
-            pdfFilesExporter.buildPreviewPages(fetchingConfigObject)
+            await pdfFilesExporter.buildPreviewPages(fetchingConfigObject)
 
             //--Customize clicking-preview-btn event.
             $('.report-supporting-buttons_preview').addEventListener("click", e =>

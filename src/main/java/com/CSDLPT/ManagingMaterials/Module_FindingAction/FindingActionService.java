@@ -100,7 +100,7 @@ public class FindingActionService {
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
-            logger.info("Error In 'findByField' of FindingActionService: " + e);
+            logger.info("Error In 'findingDataWithPagination' of FindingActionService: " + e);
         }
         return result;
     }

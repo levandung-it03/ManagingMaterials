@@ -22,7 +22,7 @@ class PdfFilesExportation {
     }
 
     async fetchDataForReporter(fetchingConfigObject) {
-        log(window.location.origin + fetchingConfigObject.fetchDataAction)
+        let result = "";
         await fetch(window.location.origin + fetchingConfigObject.fetchDataAction, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -33,20 +33,19 @@ class PdfFilesExportation {
                 else throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
             })
             .then(responseObject => {
-                return responseObject.resultDataSet
+                result = responseObject.resultDataSet
                     .map(dataOfRow => {
                         for (let field in dataOfRow) if (dataOfRow[field] === null) dataOfRow[field] = "";
                         return fetchingConfigObject.rowFormattingEngine(dataOfRow);
                     })
                     .join("");
             })
-            .catch(error => {
-                console.error("Đã có lỗi xảy ra:", error)
-                return "";
-            });
+            .catch(error => console.error("Đã có lỗi xảy ra:", error));
+
+        return result;
     }
 
-    buildPreviewPages(fetchingConfigObject) {
+    async buildPreviewPages(fetchingConfigObject) {
         let tablePreviewContainer = $(fetchingConfigObject.tablePreviewContainerSelector);
 
         //--Create table-container for preview if it doesn't exist.
@@ -66,7 +65,7 @@ class PdfFilesExportation {
             </div>`;
 
         //--Append the table to the tableOutPut variable (or any other container if needed).
-        this.fetchDataForReporter(fetchingConfigObject)
+        await this.fetchDataForReporter(fetchingConfigObject)
             .then(rowsData => {
                 tableData.innerHTML = `
                     <thead><tr>${
@@ -77,9 +76,7 @@ class PdfFilesExportation {
                     <tbody>${rowsData}</tbody>`;
                 tablePreviewContainer.innerHTML = tableData.outerHTML + tablePreviewContainer.innerHTML;
             })
-            .catch(err => {
-                console.log("Error at FetchAction and buildPreviewPages: " + err);
-            })
+            .catch(err => console.log("Error at FetchAction and buildPreviewPages: " + err))
     }
 
     exportToPdfFile(tableDataSourceSelector) {
