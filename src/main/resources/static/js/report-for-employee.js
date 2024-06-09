@@ -18,6 +18,14 @@ async function CustomizeExportationFileModules() {
     const tablePreviewContainerSelector = 'div.preview-table-container';
     const fetchingConfigObject = {
         tablePreviewContainerSelector: tablePreviewContainerSelector,
+        tablePreviewTitle: 'Danh sách nhân viên',
+        descriptionComponents:
+            `<div style="width:var(--a4-landscape-width); display:flex; flex-wrap:wrap; justify-content:center;
+                align-items:center; background-color: white; height: 50px;">
+                <span style="font-size: 1.2rem; color: black">
+                    Chi nhánh: <span class="previewing-branch">${$('.table-tools .select-branch-to-search select').value}</span>
+                </span>
+            </div>`,
         fetchDataAction: "/service/v1/branch/find-employee-by-values",
         dataObject: {
             //--If page-number is "0", it's means that we will search all the list without pagination.
@@ -63,12 +71,6 @@ async function CustomizeExportationFileModules() {
             //--Customize clicking-pdf-exporting-btn event.
             $('.report-supporting-buttons_exporting-report').addEventListener("click", e =>
                 pdfFilesExporter.exportToPdfFile(tablePreviewContainerSelector + ' table'));
-
-            $('.preview-table-container').addEventListener("click", e => {
-                if (e.target.classList.contains('preview-table-container')) {
-                    e.target.classList.add('closed');
-                }
-            });
         })
         .catch(err => {
             alert("Có lỗi xảy ra khi xây dựng 'Bảng thông tin xem trước', vui lòng đợi thêm vài giây để tài nguyên kịp thời tải.");

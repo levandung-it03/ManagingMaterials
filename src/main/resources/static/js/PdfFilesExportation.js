@@ -10,11 +10,14 @@ class PdfFilesExportation {
             .then(async jspdfModule => {
                 import("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js")
                     .then(async tableDesignModule => {
-                        // await fetch('../resources/static/js/sources/base64-encoded-arial-font.txt')
-                        await fetch(window.location.origin + '/js/sources/base64-encoded-arial-font.txt')
-                            .then(response => response.text())
-                            .then(base64 => { this.fontAsBase64 = base64 })
-                            .catch(err => console.log("There's an error when loading base64font: " + err));
+                        import("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js")
+                            .then(async html2canvasModule => {
+                                await fetch(window.location.origin + '/js/sources/base64-encoded-arial-font.txt')
+                                    .then(response => response.text())
+                                    .then(base64 => { this.fontAsBase64 = base64 })
+                                    .catch(err => console.log("There's an error when loading base64font: " + err));
+                            })
+                            .catch(err => console.log("There's an error happened in your html2canvasModule: " + err));
                     })
                     .catch(err => console.log("There's an error happened in your tableDesignModule: " + err));
             })
@@ -48,52 +51,76 @@ class PdfFilesExportation {
     async buildPreviewPages(fetchingConfigObject) {
         let tablePreviewContainer = $(fetchingConfigObject.tablePreviewContainerSelector);
 
-        //--Create table-container for preview if it doesn't exist.
+        //--Close component on the screen if it doesn't.
         if (!tablePreviewContainer.classList.contains('closed'))
             tablePreviewContainer.classList.add('closed');
 
-        //--Start generating preview-table.
-        const tableData = document.createElement("table");
-        tableData.classList.add('exporting-table-css');
-
-        //--Add exporting-btn.
-        tablePreviewContainer.innerHTML = `
+        //--Start generating preview-page-components.
+        const tableHeadCells = fetchingConfigObject.fieldObjects
+            .map((field) => (`<th id="${field.cssName}">${field.utf8Name}</th>`))
+            .join("");
+        tablePreviewContainer.innerHTML = 
+            `<div class="close-preview-page-btn">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <div class="preview-page-title">
+                <span>${fetchingConfigObject.tablePreviewTitle}</span>
+            </div>
+            <div class="preview-page-description">
+                ${fetchingConfigObject.descriptionComponents}
+            </div>
+            <table class="exporting-table-css">
+                <thead><tr>${tableHeadCells}</tr></thead>
+                <tbody></tbody>
+            </table>
             <div class="report-supporting-buttons">
                 <a class="report-supporting-buttons_exporting-report">
                     Xuất báo cáo&emsp;<i class="fa-solid fa-file-pdf"></i>
                 </a>
             </div>`;
 
-        //--Append the table to the tableOutPut variable (or any other container if needed).
+        //--Fetch data and put into preview table.
         await this.fetchDataForReporter(fetchingConfigObject)
             .then(rowsData => {
-                tableData.innerHTML = `
-                    <thead><tr>${
-                        fetchingConfigObject.fieldObjects.map(fieldObj => 
-                            `<th id="${fieldObj.cssName}">${fieldObj.utf8Name}</th>`
-                        ).join("")
-                    }</tr></thead>
-                    <tbody>${rowsData}</tbody>`;
-                tablePreviewContainer.innerHTML = tableData.outerHTML + tablePreviewContainer.innerHTML;
+                tablePreviewContainer.querySelector('tbody').innerHTML = rowsData;
+                tablePreviewContainer.querySelector('.close-preview-page-btn').addEventListener("click", e => {
+                    tablePreviewContainer.classList.add("closed")
+                });
             })
-            .catch(err => console.log("Error at FetchAction and buildPreviewPages: " + err))
+            .catch(err => console.log("Error at FetchAction and buildPreviewPages: " + err));
     }
 
     exportToPdfFile(tableDataSourceSelector) {
-        const margins = { top: 10, bottom: 10, left: 5, right: 5 };
         const headData = [...$$(tableDataSourceSelector + ' thead tr th')].map(cell => cell.textContent.trim());
         const bodyData = [...$$(tableDataSourceSelector + ' tbody tr')]
             .map(rowAsDOM => [...rowAsDOM.querySelectorAll('td')].map(cellAsDOM => cellAsDOM.textContent.trim()));
 
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('p', 'mm', 'a4');
+        const ratioLibs = { unitRatioPxAndMm: 0.22 }
+        const margins = { top: 10, bottom: 10, left: 10, right: 10 };
+        const widthsOfPage = { portrait: 210, landscape: 500 };
 
         //--Set utf-8 font type for pdf-document.
         doc.addFileToVFS("Arial.ttf", this.fontAsBase64);
         doc.addFont('Arial.ttf', 'Arial', 'normal');
         doc.setFont('Arial', 'normal');
 
+        //--Add title
+        doc.setFontSize(20);
+        const title = $('div.preview-page-title span');
+        margins.top = 10;
+        doc.text(title.textContent.trim(), widthsOfPage.portrait/2, margins.top, {align:"center"});
+
+        //--Add description
+        doc.setFontSize(12);
+        const description = $('div.preview-page-description span');
+        margins.top += (description.offsetHeight * ratioLibs.unitRatioPxAndMm);
+        doc.text(description.textContent.trim(), widthsOfPage.portrait/2, margins.top, {align:"center"});
+
         //--Drawing table
+        // margins.top += 10;
+        doc.setFontSize(8);
         doc.autoTable({
             body: bodyData,
             head: [headData],
@@ -145,6 +172,7 @@ class PdfFilesExportation {
                 }
             },
         });
+
         //--Export pdf-document.
         doc.save('example.pdf');
     }

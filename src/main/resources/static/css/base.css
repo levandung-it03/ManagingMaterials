@@ -26,6 +26,7 @@
     --category-index-height: 38px;
     --form-border-radius: 12px;
     --form-margin: 12px;
+    --a4-landscape-width: 21cm;
 }
 /* Reset CSS */
 html {
@@ -471,13 +472,44 @@ div.preview-table-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding-top: 30px;
+    align-items: start;
+    padding-top: 90px;
     background-color: rgba(0, 0, 0, 0.5);
+}
+div.preview-table-container div.close-preview-page-btn {
+    display: block;
+    width: var(--a4-landscape-width);
+    height: 50px;
+    position: absolute;
+    text-align: end;
+}
+div.preview-table-container div.close-preview-page-btn i {
+    margin: 10px;
+    font-size: 2.5rem;
+    cursor: pointer;
+    color: rgb(0, 0, 0);
+    transition: scale ease 0.2s;
+}
+div.preview-table-container div.close-preview-page-btn i:hover {
+    color: rgba(0, 0, 0, 0.7);
+    scale: 1.1;
+}
+div.preview-table-container div.preview-page-title {
+    background-color: white;
+    width: var(--a4-landscape-width);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: end;
+    height: 100px;
+    font-size: 2rem;
+    font-weight: 600;
 }
 div.preview-table-container div.report-supporting-buttons {
     width: 100%;
     padding: 10px;
 }
+
 table.exporting-table-css,
 table.exporting-table-css tr th,
 table.exporting-table-css tr td {
@@ -486,7 +518,8 @@ table.exporting-table-css tr td {
 table.exporting-table-css {
     background-color: white;
     padding: 20px;
-    width: 21cm;
+    width: var(--a4-landscape-width);
+    min-height: calc(100vh - 150px - 90px - 52px);
 }
 table.exporting-table-css thead {
     display: block;
@@ -498,60 +531,6 @@ table.exporting-table-css tbody {
     overflow-y: auto;
     display: block;
     margin: 0;
-}
-table.exporting-table-css tr {
-    align-items: start;
-    min-height: 26px;
-}
-table.exporting-table-css tr th,
-table.exporting-table-css tr td {
-    display: block;
-    padding-top: 2px;
-    font-size: 0.8rem;
-}
-table.exporting-table-css tr th#employeeId,
-table.exporting-table-css tr td.employeeId {
-    padding-left: 0;
-}
-table.exporting-table-css tr th#employeeId,
-table.exporting-table-css tr td.employeeId {
-    text-align: center;
-    width: 8%;
-}
-table.exporting-table-css tr th#identifier,
-table.exporting-table-css tr td.identifier {
-    text-align: center;
-    width: 14%;
-}
-table.exporting-table-css tr th#lastName,
-table.exporting-table-css tr td.lastName {
-    text-align: start;
-    width: 18%;
-}
-table.exporting-table-css tr th#firstName,
-table.exporting-table-css tr td.firstName {
-    text-align: start;
-    width: 8%;
-}
-
-table.exporting-table-css tr th#address,
-table.exporting-table-css tr td.address {
-    text-align: start;
-    width: 15%;
-}
-table.exporting-table-css tr th#birthday,
-table.exporting-table-css tr td.birthday,
-table.exporting-table-css tr th#salary,
-table.exporting-table-css tr td.salary,
-table.exporting-table-css tr th#branch,
-table.exporting-table-css tr td.branch {
-    text-align: center;
-    width: 11%;
-}
-table.exporting-table-css tr th#deletedStatus,
-table.exporting-table-css tr td.deletedStatus {
-    text-align: center;
-    width: 4%;
 }
 /*---------------*/
 .report-supporting-buttons {
