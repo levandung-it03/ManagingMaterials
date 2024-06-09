@@ -32,7 +32,7 @@ class Dialog {
         //--Close dialog when clicking on close button
         selectDialog.querySelector('div.closing-dialog-btn').addEventListener("click", ()=> selectDialog.classList.add("closed"))
 
-        await CustomizeFetchingActionSpectator(
+        CustomizeFetchingActionSpectator(
             searchingSupportingDataSourceForDialog,
             {callModulesOfExtraFeatures: () => {}},
             addingFormDialogSupporterSelector

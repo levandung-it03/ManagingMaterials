@@ -102,7 +102,7 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddSuppliesExportationDetailComponent();
-    await CustomizeFetchingActionSpectator(
+    CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "phiếu",

@@ -30,7 +30,7 @@
             </div>
         </c:if>
     </div>
-    <div class="center-page">
+    <div class="center-page report-pages">
         <div class="center-page_list">
             <div class="table-tools">
                 <div class="table-description">

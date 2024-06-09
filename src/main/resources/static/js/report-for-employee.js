@@ -5,7 +5,7 @@ async function ListComponent(searchingSupportingDataSource) {
 
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
-    customizeSortingListEvent();
+    customizeSortingListEvent('div.center-page_list table');
 }
 
 function GeneralMethods() {
@@ -103,7 +103,7 @@ async function CustomizeExportationFileModules() {
     };
 
     GeneralMethods();
-    await CustomizeFetchingActionSpectator(
+    CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "người",

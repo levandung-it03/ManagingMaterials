@@ -88,7 +88,7 @@ function GeneralMethods() {
     };
     GeneralMethods();
     AddWarehouseComponent();
-    await CustomizeFetchingActionSpectator(
+    CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "kho",

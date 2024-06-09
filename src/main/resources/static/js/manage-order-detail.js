@@ -100,7 +100,7 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddOrderDetailComponent();
-    await CustomizeFetchingActionSpectator(
+    CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "chi tiết đơn",

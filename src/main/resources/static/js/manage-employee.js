@@ -213,7 +213,7 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddEmployeeComponent();
-    await CustomizeFetchingActionSpectator(
+    CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "người",

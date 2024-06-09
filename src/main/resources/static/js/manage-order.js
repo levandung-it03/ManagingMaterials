@@ -101,7 +101,7 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddOrderComponent();
-    await CustomizeFetchingActionSpectator(
+    CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "đơn hàng",

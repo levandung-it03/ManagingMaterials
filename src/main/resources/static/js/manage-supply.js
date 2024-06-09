@@ -96,7 +96,7 @@ function GeneralMethods() {
 
     GeneralMethods();
     AddSupplyComponent();
-    await CustomizeFetchingActionSpectator(
+    CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "vật tư",

@@ -183,11 +183,11 @@ function paintAllAvatarColor() {
     })
 }
 
-function customizeSortingListEvent() {
-    [...$$('table thead th i')].forEach(btn => {
+function customizeSortingListEvent(tableSelector='table') {
+    [...$$(tableSelector + ' thead th i')].forEach(btn => {
         btn.addEventListener("click", e => {
             const fieldId = e.target.parentElement.id;
-            const cellOfFields = [...$$('table tbody td.' + fieldId)];
+            const cellOfFields = [...$$(tableSelector + ' tbody td.' + fieldId)];
             const firstCellOfSearchingColumn = cellOfFields[0].getAttribute('plain-value');
             let searchingDataFieldType = null;
 
@@ -204,7 +204,7 @@ function customizeSortingListEvent() {
                 else return firstCell.localeCompare(secondCell);
             });
             alert("Sắp xếp thành công!");
-            $('table tbody').innerHTML = cellOfFields.reduce((accumulator, cell) => {
+            $(tableSelector + ' tbody').innerHTML = cellOfFields.reduce((accumulator, cell) => {
                 return accumulator + cell.parentElement.outerHTML;
             }, "");
         })
