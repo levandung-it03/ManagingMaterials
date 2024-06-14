@@ -67,12 +67,17 @@ async function CustomizeExportationFileModules() {
                 fetchingConfigObject.statisticComponents = [];
 
                 //--Build preview table data.
-                await pdfFilesExporter.buildPreviewPages(fetchingConfigObject);
-                $(previewInfoContainer).classList.remove("closed");
+                await pdfFilesExporter.buildPreviewPages(fetchingConfigObject)
+                    .then(() => {
+                        //--Open preview-page after building page successfully.
+                        $(previewInfoContainer).style.height = $('html body').offsetHeight + "px";
+                        $(previewInfoContainer).classList.remove("closed");
 
-                //--Customize clicking-pdf-exporting-btn event.
-                $('.report-supporting-buttons_exporting-report').addEventListener("click", e =>
-                    pdfFilesExporter.exportToPdfFile(previewInfoContainer + ' table'));
+                        //--Customize clicking-pdf-exporting-btn event.
+                        $('.report-supporting-buttons_exporting-report').addEventListener("click", e =>
+                            pdfFilesExporter.exportToPdfFile(previewInfoContainer + ' table'));
+                    })
+                    .catch(err => console.log("Error when building-preview-page: " + err));
             });
         })
         .catch(err => {

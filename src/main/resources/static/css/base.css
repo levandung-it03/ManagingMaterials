@@ -472,11 +472,13 @@ div.preview-table-container {
     position: absolute;
     z-index: 2;
     width: 100%;
-    min-height: 100vh;
+    /* min-height: 100vh; */
+    align-items: stretch;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: center;
-    align-items: start;
+    justify-content: start;
+    align-items: center;
     padding-top: 90px;
     background-color: rgba(0, 0, 0, 0.5);
 }
@@ -521,6 +523,7 @@ div.preview-table-container div.preview-table-container_descriptions {
     align-items: center;
     background-color: white;
     padding-left: 20px;
+    flex: 0 1 auto;
 }
 div.preview-table-container div.preview-table-container_descriptions span {
     display: inline-block;
@@ -537,7 +540,7 @@ table.exporting-table-css {
     background-color: white;
     padding: 20px;
     width: var(--a4-landscape-width);
-    min-height: calc(100vh - 150px - 90px - 52px);
+    flex: 1 1 auto;
 }
 table.exporting-table-css thead {
     display: block;
@@ -556,6 +559,7 @@ table.exporting-table-css tbody {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    flex: 0 1 auto;
 }
 
 .report-supporting-buttons a {
@@ -566,7 +570,6 @@ table.exporting-table-css tbody {
     text-align: center;
     transition: background-color ease 0.2s, border-radius ease 0.3s;
     padding: 8px 0;
-    margin: 0 20px 10px 20px;
 }
 .report-supporting-buttons a:hover {
     cursor: pointer;
@@ -575,6 +578,7 @@ table.exporting-table-css tbody {
 .report-supporting-buttons a.report-supporting-buttons_preview {
     background-color: #66b3ff;
     color: black;
+    margin: 0 20px 10px 20px;
 }
 .report-supporting-buttons a.report-supporting-buttons_preview:hover {
     background-color: #0073e6;
@@ -583,6 +587,7 @@ table.exporting-table-css tbody {
 .report-supporting-buttons a.report-supporting-buttons_exporting-report {
     background-color: var(--black-text);
     color: white;
+    margin-top: 10px;
 }
 .report-supporting-buttons a.report-supporting-buttons_exporting-report:hover {
     background-color: #9fa7ae;
