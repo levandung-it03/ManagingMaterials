@@ -515,6 +515,7 @@ div.preview-table-container div.report-supporting-buttons {
     width: 100%;
     padding: 10px;
 }
+div.preview-table-container div.preview-table-container_statistic,
 div.preview-table-container div.preview-table-container_descriptions {
     width: var(--a4-landscape-width);
     display: flex;
@@ -525,12 +526,14 @@ div.preview-table-container div.preview-table-container_descriptions {
     padding-left: 20px;
     flex: 0 1 auto;
 }
+div.preview-table-container div.preview-table-container_statistic span,
 div.preview-table-container div.preview-table-container_descriptions span {
     display: inline-block;
     font-size: 1rem;
     color: black;
     height: 30px;
 }
+
 table.exporting-table-css,
 table.exporting-table-css tr th,
 table.exporting-table-css tr td {
