@@ -487,3 +487,52 @@ function customizeRenderTableDataBySwitchingBranch(
         await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
     });
 }
+
+function customizeSelectingTableInstanceEventInReportPages(
+    tableSelector='div.center-page_list table',
+    reviewingTableSelector='.center-page_more-info_table-info-block'
+) {
+    const selectedInstance = { id: null, data: null };
+    const reviewingTable = $(reviewingTableSelector);
+    [...$$(tableSelector + ' tbody tr')].forEach(instance => {
+        instance.addEventListener("click", e => {
+            if (instance.classList.contains('selected-table-instance')) {
+                instance.classList.remove('selected-table-instance');
+                selectedInstance.id = null;
+                selectedInstance.data = null;
+                if (reviewingTable) reviewingTable.querySelector('tbody').innerHTML = "";
+                return;
+            }
+
+            //--Refresh data-saver.
+            selectedInstance.data = {};
+
+            //--Save instance-cursor (id) and instance-data.
+            selectedInstance.id = instance.id.trim();
+            instance.querySelectorAll('td').forEach(cell => {
+                selectedInstance.data[cell.className.trim()] = cell.getAttribute("plain-value").trim();
+            });
+
+            //--Make (new|current) selected-instance colored.
+            const selectingInstance = $(tableSelector + ' tbody tr.selected-table-instance');
+            if (selectingInstance)
+                selectingInstance.classList.remove('selected-table-instance');
+            $(tableSelector + ` tbody tr[id='${selectedInstance.id}']`).classList.add('selected-table-instance');
+
+            //--Parse saved-data into reviewing-all-info-block.
+            if (reviewingTable) {
+                const reviewingRow = document.createElement("tr");
+                reviewingRow.innerHTML = instance.innerHTML;
+                reviewingTable.querySelector('tbody').innerHTML = reviewingRow.outerHTML;
+            }
+        });
+    });
+
+    //--Make (new|current) selected-instance colored when table is changed.
+    new MutationObserver(() => {
+        const selectingInstance = $(tableSelector + ' tbody tr.selected-table-instance');
+        if (selectingInstance)
+            selectingInstance.classList.remove('selected-table-instance');
+        $(tableSelector + ` tbody tr[id='${selectedInstance.id}']`).classList.add('selected-table-instance');
+    }).observe($(tableSelector + ' tbody'), {childList: true, subtree: true});
+}

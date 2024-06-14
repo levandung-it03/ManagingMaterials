@@ -73,8 +73,12 @@ body {
     line-height: 1.58;
     letter-spacing: -.003em;
 }
-.hide {
+.hide,
+.closed {
     display: none!important;
+}
+.selected-table-instance {
+    background-color: rgb(58, 217, 219)!important;
 }
 
 /*--------Main content page--------*/
@@ -311,6 +315,7 @@ table thead tr {
 }
 table tbody tr {
     min-height: 45px;
+    align-items: start;
 }
 table tr th {
     padding-top: 7px;   /*fix-error-of-table*/
@@ -318,8 +323,10 @@ table tr th {
     min-height: 35px;
 }
 table tr td {
+    display: block;
     padding-top: 10px;   /*fix-error-of-table*/
     font-size: 0.95rem;
+    height: 100%;
 }
 
 table tr td > i {
@@ -444,9 +451,6 @@ table tr td.add i:hover {
 .table-footer_main span.selected-page.deactivated:hover {
     cursor:not-allowed!important;
 }
-.closed {
-    display: none!important;
-}
 
 /*CSS For Report Pages*/
 html body .report-pages {
@@ -509,7 +513,21 @@ div.preview-table-container div.report-supporting-buttons {
     width: 100%;
     padding: 10px;
 }
-
+div.preview-table-container div.preview-table-container_descriptions {
+    width: var(--a4-landscape-width);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: center;
+    background-color: white;
+    padding-left: 20px;
+}
+div.preview-table-container div.preview-table-container_descriptions span {
+    display: inline-block;
+    font-size: 1rem;
+    color: black;
+    height: 30px;
+}
 table.exporting-table-css,
 table.exporting-table-css tr th,
 table.exporting-table-css tr td {
@@ -532,6 +550,7 @@ table.exporting-table-css tbody {
     display: block;
     margin: 0;
 }
+
 /*---------------*/
 .report-supporting-buttons {
     display: flex;

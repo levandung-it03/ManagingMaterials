@@ -1,4 +1,3 @@
-
 async function ListComponent(searchingSupportingDataSource) {
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
@@ -15,17 +14,10 @@ function GeneralMethods() {
 
 async function CustomizeExportationFileModules() {
     const pdfFilesExporter = new PdfFilesExportation();
-    const tablePreviewContainerSelector = 'div.preview-table-container';
+    const previewInfoContainer = 'div.preview-table-container';
     const fetchingConfigObject = {
-        tablePreviewContainerSelector: tablePreviewContainerSelector,
+        previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Danh sách nhân viên',
-        descriptionComponents:
-            `<div style="width:var(--a4-landscape-width); display:flex; flex-wrap:wrap; justify-content:center;
-                align-items:center; background-color: white; height: 50px;">
-                <span style="font-size: 1.2rem; color: black">
-                    Chi nhánh: <span class="previewing-branch">${$('.table-tools .select-branch-to-search select').value}</span>
-                </span>
-            </div>`,
         fetchDataAction: "/service/v1/branch/find-employee-by-values",
         dataObject: {
             //--If page-number is "0", it's means that we will search all the list without pagination.
@@ -60,17 +52,28 @@ async function CustomizeExportationFileModules() {
     };
 
     await pdfFilesExporter.loadAllNecessaryLibs()
-        .then(async () => {
-            //--Build preview table data.
-            await pdfFilesExporter.buildPreviewPages(fetchingConfigObject)
-
+        .then(() => {
             //--Customize clicking-preview-btn event.
-            $('.report-supporting-buttons_preview').addEventListener("click", e =>
-                $(tablePreviewContainerSelector).classList.remove("closed"));
+            $('.report-supporting-buttons_preview').addEventListener("click", async e => {
+                //--Prepare data for preview-descriptions.
+                fetchingConfigObject.descriptionComponents = [
+                    `<div class="preview-table-container_descriptions">
+                        <span> Chi nhánh: <span class="previewing-branch">
+                                ${$('.table-tools .select-branch-to-search select').value}
+                        </span></span>
+                    </div>`,
+                ];
+                //--Prepare data for preview-statistic.
+                fetchingConfigObject.statisticComponents = [];
 
-            //--Customize clicking-pdf-exporting-btn event.
-            $('.report-supporting-buttons_exporting-report').addEventListener("click", e =>
-                pdfFilesExporter.exportToPdfFile(tablePreviewContainerSelector + ' table'));
+                //--Build preview table data.
+                await pdfFilesExporter.buildPreviewPages(fetchingConfigObject);
+                $(previewInfoContainer).classList.remove("closed");
+
+                //--Customize clicking-pdf-exporting-btn event.
+                $('.report-supporting-buttons_exporting-report').addEventListener("click", e =>
+                    pdfFilesExporter.exportToPdfFile(previewInfoContainer + ' table'));
+            });
         })
         .catch(err => {
             alert("Có lỗi xảy ra khi xây dựng 'Bảng thông tin xem trước', vui lòng đợi thêm vài giây để tài nguyên kịp thời tải.");

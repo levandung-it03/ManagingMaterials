@@ -49,7 +49,7 @@ class PdfFilesExportation {
     }
 
     async buildPreviewPages(fetchingConfigObject) {
-        let tablePreviewContainer = $(fetchingConfigObject.tablePreviewContainerSelector);
+        let tablePreviewContainer = $(fetchingConfigObject.previewInfoContainer);
 
         //--Close component on the screen if it doesn't.
         if (!tablePreviewContainer.classList.contains('closed'))
@@ -67,12 +67,15 @@ class PdfFilesExportation {
                 <span>${fetchingConfigObject.tablePreviewTitle}</span>
             </div>
             <div class="preview-page-description">
-                ${fetchingConfigObject.descriptionComponents}
+                ${fetchingConfigObject.descriptionComponents.join("")}
             </div>
             <table class="exporting-table-css">
                 <thead><tr>${tableHeadCells}</tr></thead>
                 <tbody></tbody>
             </table>
+            <div class="preview-page-statistic">
+                ${fetchingConfigObject.statisticComponents.join("")}
+            </div>
             <div class="report-supporting-buttons">
                 <a class="report-supporting-buttons_exporting-report">
                     Xuất báo cáo&emsp;<i class="fa-solid fa-file-pdf"></i>
@@ -98,7 +101,8 @@ class PdfFilesExportation {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF('p', 'mm', 'a4');
         const ratioLibs = { unitRatioPxAndMm: 0.22 }
-        const margins = { top: 10, bottom: 10, left: 10, right: 10 };
+        const margins = { top: 15, bottom: 10, left: 10, right: 10 };
+        const constMarginTop = margins.top;
         const widthsOfPage = { portrait: 210, landscape: 500 };
 
         //--Set utf-8 font type for pdf-document.
@@ -109,17 +113,17 @@ class PdfFilesExportation {
         //--Add title
         doc.setFontSize(20);
         const title = $('div.preview-page-title span');
-        margins.top = 10;
         doc.text(title.textContent.trim(), widthsOfPage.portrait/2, margins.top, {align:"center"});
 
         //--Add description
         doc.setFontSize(12);
-        const description = $('div.preview-page-description span');
-        margins.top += (description.offsetHeight * ratioLibs.unitRatioPxAndMm);
-        doc.text(description.textContent.trim(), widthsOfPage.portrait/2, margins.top, {align:"center"});
+        margins.top += 10;
+        [...$$('div.preview-page-description div')].forEach(description => {
+            doc.text(description.textContent.trim(), 10, margins.top, {align:"left"});
+            margins.top += (description.offsetHeight * ratioLibs.unitRatioPxAndMm) * 0.7;
+        });
 
         //--Drawing table
-        // margins.top += 10;
         doc.setFontSize(8);
         doc.autoTable({
             body: bodyData,
@@ -143,16 +147,17 @@ class PdfFilesExportation {
 
                     //--If remaining space on the page is less than row height
                     if (nextRowHeight > remainingPageSpace) {
+                        //--Reset margins.top after drawing preview-descriptions.
                         //--Add a new page to render that row on the top of this one.
                         doc.addPage();
                         doc.setPage(doc.internal.getNumberOfPages());
-                        data.cursor.y = margins.top; //--Set cursor to start position on new page
+                        data.cursor.y = constMarginTop; //--Set cursor to start position on new page
 
                         const headerHeight = data.table.head[0].height;
                         //--Build header for new-page.
                         doc.autoTable({
                             margin: margins,
-                            startY: margins.top,
+                            startY: constMarginTop,
                             //--Set-up data to draw header of new-page.
                             head: [headData.map((headLabel, index) => {
                                 return {
@@ -165,7 +170,7 @@ class PdfFilesExportation {
                             headStyles: { minCellHeight: headerHeight }
                         });
                         //--Customize cursor after step to next page, and build header.
-                        data.cursor.y = margins.top //--Set cursor to start position on new page
+                        data.cursor.y = constMarginTop //--Set cursor to start position on new page
                             + headerHeight //--Set cursor at the end-point of new header to continue to draw.
                             - data.row.height; //--Set cursor back to the beginning-point of current-standing-row.
                     }
