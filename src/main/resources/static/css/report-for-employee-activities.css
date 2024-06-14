@@ -1,0 +1,175 @@
+html body {
+    background-color: #f9fafc;
+    position: relative;
+}
+.center-page_list table tbody tr:hover {
+    background-color: var(--smoking-grey);
+    cursor: pointer;
+}
+/*--Customize Employee List--*/
+html body table tbody {
+    height: 62vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
+    scrollbar-width: thin; /* Options are auto, thin, and none */
+}
+table tr th.lastName,
+table tr td.lastName {
+    text-align: start;
+    width: 17%;
+}
+table tr th.branch,
+table tr td.branch,
+table tr th.employeeId,
+table tr td.employeeId,
+table tr th.birthday,
+table tr td.birthday,
+table tr th.salary,
+table tr td.salary {
+    text-align: center;
+    width: 8%;
+}
+table tr th.identifier,
+table tr td.identifier {
+    text-align: start;
+    width: 10%;
+}
+table tr th.firstName,
+table tr td.firstName {
+    text-align: start;
+    width: 6%;
+}
+
+table tr th.address,
+table tr td.address {
+    text-align: start;
+    width: 25%;
+}
+
+table tr th.deletedStatus,
+table tr td.deletedStatus {
+    text-align: center;
+    width: 10%;
+}
+
+table.exporting-table-css tr {
+    align-items: start;
+    min-height: 26px;
+}
+table.exporting-table-css tr th,
+table.exporting-table-css tr td {
+    display: block;
+    padding-top: 2px;
+    font-size: 0.8rem;
+}
+table.exporting-table-css tr th#employeeId,
+table.exporting-table-css tr td.employeeId {
+    padding-left: 0;
+}
+table.exporting-table-css tr th#employeeId,
+table.exporting-table-css tr td.employeeId {
+    text-align: center;
+    width: 8%;
+}
+table.exporting-table-css tr th#identifier,
+table.exporting-table-css tr td.identifier {
+    text-align: center;
+    width: 14%;
+}
+table.exporting-table-css tr th#lastName,
+table.exporting-table-css tr td.lastName {
+    text-align: start;
+    width: 18%;
+}
+table.exporting-table-css tr th#firstName,
+table.exporting-table-css tr td.firstName {
+    text-align: start;
+    width: 8%;
+}
+
+table.exporting-table-css tr th#address,
+table.exporting-table-css tr td.address {
+    text-align: start;
+    width: 15%;
+}
+table.exporting-table-css tr th#birthday,
+table.exporting-table-css tr td.birthday,
+table.exporting-table-css tr th#salary,
+table.exporting-table-css tr td.salary,
+table.exporting-table-css tr th#branch,
+table.exporting-table-css tr td.branch {
+    text-align: center;
+    width: 11%;
+}
+table.exporting-table-css tr th#deletedStatus,
+table.exporting-table-css tr td.deletedStatus {
+    text-align: center;
+    width: 4%;
+}
+
+.center-page_more-info {
+    margin: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: var(--smoking-grey);
+}
+.center-page_more-info .more-info-title {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 25px 30px;
+    border-bottom: 1px var(--grey-of-header-border) solid;
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+}
+.center-page_more-info .info-blocks {
+    width: 30%;
+}
+.center-page_more-info .info-blocks fieldset {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 25px 30px;
+    height: 55px;
+    position: relative;
+    background-color: white;
+}
+.center-page_more-info .info-blocks legend {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.center-page_more-info .info-blocks select,
+.center-page_more-info .info-blocks input {
+    width: 100%;
+    height: 95%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 13px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+.center-page_more-info .center-page_more-info_table-info-block {
+    width: 100%;
+
+}
+.center-page_more-info .center-page_more-info_table-info-block table,
+.center-page_more-info .center-page_more-info_table-info-block table thead,
+.center-page_more-info .center-page_more-info_table-info-block table tbody {
+    display: block;
+    height: auto!important;
+    min-width: auto;
+    width: 100%;
+    background-color: white;
+}
+.center-page_more-info .center-page_more-info_table-info-block table tbody tr {
+    width: 100%;
+}
