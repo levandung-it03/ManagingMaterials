@@ -30,7 +30,7 @@
                         <li><a href="#">DANH SÁCH VẬT TƯ</a></li>
                         <li><a href="#">CHI TIẾT NHẬP XUẤT</a></li>
                         <li><a href="#">ĐƠN HÀNG KHÔNG CÓ PHIẾU NHẬP</a></li>
-                        <li><a href="#">HOẠT ĐỘNG NHÂN VIÊN</a></li>
+                        <li><a href="/branch/employee/report-for-employee-activities">HOẠT ĐỘNG NHÂN VIÊN</a></li>
                         <li><a href="#">TỔNG HỢP NHẬP XUẤT</a></li>
                     </ul>
                 </div>

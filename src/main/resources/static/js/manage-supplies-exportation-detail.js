@@ -85,7 +85,7 @@ function GeneralMethods() {
                 <td plain-value="${row.suppliesExportationId}" class="suppliesExportationId">${row.suppliesExportationId}</td>
                 <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
                 <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
-                <td plain-value="${row.price}" class="price">${salaryFormattingEngine(row.price)}</td>
+                <td plain-value="${row.price}" class="price">${VNDCurrencyFormatEngine(row.price)}</td>
                 <td class="table-row-btn update">
                     <a id="${row.suppliesExportationId}">
                         <i class="fa-regular fa-pen-to-square"></i>

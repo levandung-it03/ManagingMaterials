@@ -32,7 +32,7 @@ public class ReqDtoRetrievingData<T> {
     //--Data for joining query.
     private String joiningCondition = "";
 
-    public void trimAllDataField() {
+    public void trimAllDataFields() {
         this.searchingField = searchingField.trim();
         this.searchingValue = searchingValue.trim();
         this.branch = branch.trim();

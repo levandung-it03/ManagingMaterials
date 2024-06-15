@@ -1,5 +1,3 @@
-const fakeData = [];
-
 async function ListComponent(searchingSupportingDataSource) {
     //--Firstly "fetch" data to put into empty-table-as-list.
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
@@ -7,8 +5,6 @@ async function ListComponent(searchingSupportingDataSource) {
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent('div.center-page_list table');
-
-    customizeSelectingTableInstanceEvent();
 }
 
 function GeneralMethods() {
@@ -21,40 +17,89 @@ async function CustomizeExportationFileModules() {
     const previewInfoContainer = 'div.preview-table-container';
     const fetchingConfigObject = {
         previewInfoContainer: previewInfoContainer,
-        tablePreviewTitle: 'Danh sách nhân viên',
-        fetchDataAction: "/service/v1/branch/find-employee-by-values",
-        dataObject: {
-            //--If page-number is "0", it's means that we will search all the list without pagination.
-            currentPage: 0,
-            searchingField: "employeeId",
-            searchingValue: "",
-            branch: $('.table-tools .select-branch-to-search select').value,
-        },
+        tablePreviewTitle: 'Danh sách hoạt động nhân viên',
+        fetchDataAction: "/service/v1/branch/find-all-employee-activities-for-report",
+        usefulVariablesStorage: {},
         fieldObjects: [
-            { cssName: "employeeId", utf8Name: "Mã" },
-            { cssName: "identifier", utf8Name: "CMND" },
-            { cssName: "lastName", utf8Name: "Họ" },
-            { cssName: "firstName", utf8Name: "Tên" },
-            { cssName: "birthday", utf8Name: "Ngày sinh" },
-            { cssName: "address", utf8Name: "Địa chỉ" },
-            { cssName: "salary", utf8Name: "Lương" },
-            { cssName: "branch", utf8Name: "Chi nhánh" },
-            { cssName: "deletedStatus", utf8Name: "Đã xoá" },
+            { cssName: "createdDate", utf8Name: "Ngày tạo" },
+            { cssName: "ticketId", utf8Name: "Mã phiếu" },
+            { cssName: "ticketType", utf8Name: "Loại phiếu" },
+            { cssName: "customerFullName", utf8Name: "Tên khách hàng" },
+            { cssName: "supplyName", utf8Name: "Tên vật tư" },
+            { cssName: "suppliesQuantity", utf8Name: "Số lượng" },
+            { cssName: "price", utf8Name: "Đơn giá" },
+            { cssName: "totalPrice", utf8Name: "Trị giá" },
         ],
-        rowFormattingEngine: (row) => `
-            <tr id="${row.employeeId}">
-                <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
-                <td plain-value="${row.identifier}" class="identifier">${row.identifier}</td>
-                <td plain-value="${row.lastName}" class="lastName">${row.lastName}</td>
-                <td plain-value="${row.firstName}" class="firstName">${row.firstName}</td>
-                <td plain-value="${row.birthday.substring(0, 10)}" class="birthday">${row.birthday.substring(0, 10)}</td>
-                <td plain-value="${row.address}" class="address">${row.address}</td>
-                <td plain-value="${row.salary}" class="salary">${salaryFormattingEngine(row.salary, false)}</td>
-                <td plain-value="${row.branch}" class="branch">${row.branch}</td>
-                <td plain-value="${row.deletedStatus}" class="deletedStatus">${row.deletedStatus}</td>
-            </tr>
-        `,
-        fakeData: fakeData,
+        rowFormattingEngine: (row) => {
+            const _this = fetchingConfigObject;
+            (function collectingDataToBuildHeadingAndStatisticLines() {
+                const createdDate = new Date(row.createdDate);
+                const createdMonth = (createdDate.getMonth() + 1) + "-" + createdDate.getFullYear();
+
+                //--First time initalization.
+                if (!Object.keys(_this.usefulVariablesStorage).includes("statisticInfoOfEachMonth"))
+                    _this.usefulVariablesStorage.statisticInfoOfEachMonth = {};
+                
+                //--Each first time that reaching new-month-block.
+                if (!Object.keys(_this.usefulVariablesStorage.statisticInfoOfEachMonth).includes(createdMonth)) {
+                    _this.usefulVariablesStorage.statisticInfoOfEachMonth
+                    _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth] = {
+                        totalSuppliesQuantity: 0,
+                        totalPrices: 0,
+                        firstLineIndex: row.index,
+                        lastLineIndex: null,
+                    };
+                }
+                log(_this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth])
+                _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth].totalSuppliesQuantity
+                    += Number.parseInt(row.suppliesQuantity);
+                _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth].totalPrices
+                    += Number.parseFloat(row.totalPrice);
+                _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth].lastLineIndex = row.index;
+            })();
+            
+            return (function runningRowFormattingEngineMainLogics() {
+                const customerFullName = row.customerFullName ? row.customerFullName : "Không";
+                const price = VNDCurrencyFormatEngine(row.price, false);
+                const totalPrice = VNDCurrencyFormatEngine(row.totalPrice, false);
+                return `<tr index=${row.index} id="${row.ticketId}">
+                        <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
+                        <td plain-value="${row.ticketId}" class="ticketId">${row.ticketId}</td>
+                        <td plain-value="${row.ticketType}" class="ticketType"><b>${row.ticketType}</b></td>
+                        <td plain-value="${customerFullName}" class="customerFullName">${customerFullName}</td>
+                        <td plain-value="${row.supplyName}" class="supplyName">${row.supplyName}</td>
+                        <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
+                        <td plain-value="${price}" class="price">${price}</td>
+                        <td plain-value="${totalPrice}" class="totalPrice">${totalPrice}</td>
+                    </tr>`;
+            })();
+        },
+        moreFeatures: () => {
+            const _this = fetchingConfigObject;
+            Object.entries(_this.usefulVariablesStorage.statisticInfoOfEachMonth).forEach(pair => {
+                //--Get first-line and last-line in current-month-block.
+                const firstLine = $(`${_this.previewInfoContainer} table tbody tr[index="${pair[1].firstLineIndex}"]`);
+                const lastLine = $(`${_this.previewInfoContainer} table tbody tr[index="${pair[1].lastLineIndex}"]`);
+
+                firstLine.outerHTML = `<tr>
+                    <td plain-value="${pair[0]}" class="createdMonth">Tháng: ${pair[0]}</td>
+                </tr>` + firstLine.outerHTML;
+
+                lastLine.outerHTML += `<tr>
+                    <td plain-value="${pair[0]}" class="calculatedMonth">Tổng tháng: ${pair[0]}</td>
+                    <td class="ticketType"></td>
+                    <td class="customerFullName"></td>
+                    <td></td><td></td>
+                    <td plain-value="${pair[1].totalSuppliesQuantity}" class="totalSuppliesQuantity">
+                        Tổng số lượng: ${pair[1].totalSuppliesQuantity}
+                    </td>
+                    <td></td>
+                    <td plain-value="${VNDCurrencyFormatEngine(pair[1].totalPrices, false)}" class="totalPrices">
+                        Tổng trị giá: ${VNDCurrencyFormatEngine(pair[1].totalPrices, false)}
+                    </td>
+                </tr>`;
+            });
+        }
     };
 
     await pdfFilesExporter.loadAllNecessaryLibs()
@@ -72,27 +117,31 @@ async function CustomizeExportationFileModules() {
                         deletedStatus: getValueInCellEngine('deletedStatus'),
                     };
                     const branchValue = $('.table-tools .select-branch-to-search select').value;
-                    const ticketsTypeValue = $('.info-blocks select[name=ticketsType]').value;
                     const startingDateValue = $('.info-blocks input[name=startingDate]').value;
                     const endingDateValue = $('.info-blocks input[name=endingDate]').value;
 
                     if (!(branchValue
-                        && ticketsTypeValue
                         && startingDateValue
                         && endingDateValue
                         && (startingDateValue <= endingDateValue)
                     )) throw new Error("Invalid values");
 
+                    //--Prepare data to fetch.
+                    fetchingConfigObject.dataObject = {
+                        employeeId: employeeBodyDataCells.employeeId,
+                        startingDate: startingDateValue,
+                        endingDate: endingDateValue,
+                    }
                     //--Prepare data for preview-descriptions.
                     fetchingConfigObject.descriptionComponents = [
                         `<div class="preview-table-container_descriptions">
-                            <span>Chi nhánh: ${branchValue}</span>
+                            <span><b>Chi nhánh</b>: ${branchValue}</span>
                         </div>`,
                         `<div class="preview-table-container_descriptions">
-                            <span>Loại phiếu: ${ticketsTypeValue == "XUAT" ? "Phiếu Xuất" : "Phiếu Nhập"}</span>
+                            <span><b>Ngày bắt đầu</b>: ${startingDateValue}</span>
                         </div>`,
                         `<div class="preview-table-container_descriptions">
-                            <span><b>Ngày bắt đầu</b>: ${new Date(startingDateValue)} - <b>Ngày kết thúc </b>: ${new Date(endingDateValue)}</span>
+                            <span><b>Ngày kết thúc </b>: ${endingDateValue}</span>
                         </div>`,
                         //--Empty line-space.
                         `<div class="preview-table-container_descriptions"><span></span></div>`,
@@ -100,7 +149,10 @@ async function CustomizeExportationFileModules() {
                             <span><b>Mã nhân viên</b>: ${employeeBodyDataCells.employeeId}</span>
                         </div>`,
                         `<div class="preview-table-container_descriptions">
-                            <span><b>Họ tên</b>: ${employeeBodyDataCells.fullName} _ <b>CMND</b>: ${employeeBodyDataCells.identifier}</span>
+                            <span><b>Họ tên</b>: ${employeeBodyDataCells.fullName}</span>
+                        </div>`,
+                        `<div class="preview-table-container_descriptions">
+                            <span><b>CMND</b>: ${employeeBodyDataCells.identifier}</span>
                         </div>`,
                         `<div class="preview-table-container_descriptions">
                             <span><b>Mã nhân viên</b>: ${employeeBodyDataCells.address}</span>
@@ -126,10 +178,10 @@ async function CustomizeExportationFileModules() {
                         })
                         .catch(err => console.log("Error when building-preview-page: " + err));
                 } catch (err) {
-                    //--Rejected or throwed exceptions.
+                    //--Rejected or throw exceptions.
                     alert("Thông tin chưa đủ hoặc không đúng, vui lòng kiểm tra lại!");
                     console.log(err);
-                };
+                }
             });
         })
         .catch(err => {
@@ -138,64 +190,43 @@ async function CustomizeExportationFileModules() {
         });
 }
 
-// (async function main() {
-//     const searchingSupportingDataSource = {
-//         //--Initialize field-values for firstly fetch action.
-//         data: {
-//             currentPage: 1,
-//             objectsQuantity: 0,
-//             searchingField: "employeeId",
-//             searchingValue: "",
-//             branch: $('.table-tools .select-branch-to-search select').value,
-//         },
-//         //--Main fields for searching-action.
-//         tableBody: $('div.center-page_list table tbody'),
-//         fetchDataAction: "/service/v1/branch/find-employee-by-values",
-//         rowFormattingEngine: (row) => `
-//             <tr id="${row.employeeId}">
-//                 <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
-//                 <td plain-value="${row.identifier}" class="identifier">${row.identifier}</td>
-//                 <td plain-value="${row.lastName}" class="lastName">${row.lastName}</td>
-//                 <td plain-value="${row.firstName}" class="firstName">${row.firstName}</td>
-//                 <td plain-value="${row.birthday.substring(0, 10)}" class="birthday">${row.birthday.substring(0, 10)}</td>
-//                 <td plain-value="${row.address}" class="address">${row.address}</td>
-//                 <td plain-value="${row.salary}" class="salary">${salaryFormattingEngine(row.salary)}</td>
-//                 <td plain-value="${row.branch}" class="branch">${row.branch}</td>
-//                 <td plain-value="${row.deletedStatus}" class="deletedStatus">${row.deletedStatus}</td>
-//             </tr>`
-//     };
-
-//     GeneralMethods();
-//     CustomizeFetchingActionSpectator(
-//         searchingSupportingDataSource,
-//         {
-//             tableLabel: "người",
-//             callModulesOfExtraFeatures: async () => {}
-//         }
-//     );
-//     await ListComponent(searchingSupportingDataSource);
-//     await CustomizeExportationFileModules();
-// })();
-
 (async function main() {
-    const dataRow = (id) => `
-        <tr id="${id}">
-            <td plain-value="${id}" class="employeeId">${id}</td>
-            <td plain-value="038203032576" class="identifier">038203032576</td>
-            <td plain-value="Phạm Đỗ Hùng Nguyễn Lý Thanh" class="lastName">Phạm Đỗ Hùng Nguyễn Lý Thanh</td>
-            <td plain-value="Khương" class="firstName">Khương</td>
-            <td plain-value="2003-11-12" class="birthday">2003-11-12</td>
-            <td plain-value="Thành phố Hồ chí Minh" class="address">Thành phố Hồ chí Minh</td>
-            <td plain-value="100000000" class="salary">100,000,000VND</td>
-            <td plain-value="ChiNhanh1" class="branch">ChiNhanh1</td>
-            <td plain-value="0" class="deletedStatus">0</td>
-        </tr>`;
-    const bodyTag = $('div.center-page_list table tbody')
-    const buildFakeTable = (tableBody, dataRow) => {
-        for (var i = 1; i <= 30; i++)   fakeData.push(dataRow(i));
-        tableBody.innerHTML = fakeData.join("");
-    }
-    buildFakeTable(bodyTag, dataRow);
-    customizeSelectingTableInstanceEventInReportPages();
-    CustomizeExportationFileModules();
+    const searchingSupportingDataSource = {
+        //--Initialize field-values for firstly fetch action.
+        data: {
+            currentPage: 1,
+            objectsQuantity: 0,
+            searchingField: "employeeId",
+            searchingValue: "",
+            branch: $('.table-tools .select-branch-to-search select').value,
+        },
+        //--Main fields for searching-action.
+        tableBody: $('div.center-page_list table tbody'),
+        fetchDataAction: "/service/v1/branch/find-employee-by-values",
+        rowFormattingEngine: (row) => `
+            <tr id="${row.employeeId}">
+                <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
+                <td plain-value="${row.identifier}" class="identifier">${row.identifier}</td>
+                <td plain-value="${row.lastName}" class="lastName">${row.lastName}</td>
+                <td plain-value="${row.firstName}" class="firstName">${row.firstName}</td>
+                <td plain-value="${row.birthday.substring(0, 10)}" class="birthday">${row.birthday.substring(0, 10)}</td>
+                <td plain-value="${row.address}" class="address">${row.address}</td>
+                <td plain-value="${row.salary}" class="salary">${VNDCurrencyFormatEngine(row.salary)}</td>
+                <td plain-value="${row.branch}" class="branch">${row.branch}</td>
+                <td plain-value="${row.deletedStatus}" class="deletedStatus">${row.deletedStatus}</td>
+            </tr>`
+    };
+
+    GeneralMethods();
+    CustomizeFetchingActionSpectator(
+        searchingSupportingDataSource,
+        {
+            tableLabel: "người",
+            callModulesOfExtraFeatures: async () => {
+                customizeSelectingTableInstanceEventInReportPages();
+            }
+        }
+    );
+    await ListComponent(searchingSupportingDataSource);
+    await CustomizeExportationFileModules();
 })();

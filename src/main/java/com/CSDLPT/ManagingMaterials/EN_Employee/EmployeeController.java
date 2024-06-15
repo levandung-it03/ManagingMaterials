@@ -1,5 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_Employee;
 
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ReqDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Validator;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -36,6 +39,10 @@ public class EmployeeController {
     public ModelAndView getReportForEmployeePage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getReportForEmployeePage(request, model);
     }
+    @GetMapping("/branch/employee/report-for-employee-activities")
+    public ModelAndView getReportForEmployeeActivitiesPage(HttpServletRequest request, Model model) throws SQLException {
+        return branchServices.getReportForEmployeeActivitiesPage(request, model);
+    }
 
     /*_____________RequestMethod.POST: Employee-entity-interaction_____________*/
     @PostMapping("${url.post.branch.prefix.v1}/find-employee-by-values")
@@ -50,6 +57,21 @@ public class EmployeeController {
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
+        }
+    }
+
+    @PostMapping("${url.post.branch.prefix.v1}/find-all-employee-activities-for-report")
+    public ResponseEntity<ResDtoRetrievingData<ResDtoReportForEmployeeActivities>> findAllEmployeeActivities(
+        @RequestBody ReqDtoReportForEmployeeActivities requiredInfoToSearchEmpActivities,
+        HttpServletRequest request
+    ) {
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(branchServices.findAllEmployeeActivities(request, requiredInfoToSearchEmpActivities));
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 

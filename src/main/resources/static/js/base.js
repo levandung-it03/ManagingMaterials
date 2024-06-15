@@ -41,7 +41,7 @@ function log(v) {
     console.log(v);
 }
 
-function salaryFormattingEngine(salary, hasCurrency=true) {
+function VNDCurrencyFormatEngine(salary, hasCurrency=true) {
     const salaryAsString = salary + "";
     let result = "";
     for (let index = salaryAsString.length; index > 0; index -= 3)

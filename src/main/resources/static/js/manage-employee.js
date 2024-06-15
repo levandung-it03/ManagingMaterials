@@ -191,7 +191,7 @@ function GeneralMethods() {
                 </td>
                 <td plain-value="${row.birthday.substring(0, 10)}" class="birthday">${row.birthday.substring(0, 10)}</td>
                 <td plain-value="${row.address}" class="address">${row.address}</td>
-                <td plain-value="${row.salary}" class="salary">${salaryFormattingEngine(row.salary)}</td>
+                <td plain-value="${row.salary}" class="salary">${VNDCurrencyFormatEngine(row.salary)}</td>
                 <td style="display:none" plain-value="${row.branch}" class="branch">${row.branch}</td>
                 <td class="table-row-btn update">
                     <a id="${row.employeeId}">

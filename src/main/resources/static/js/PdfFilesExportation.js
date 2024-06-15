@@ -36,8 +36,13 @@ class PdfFilesExportation {
                 else throw new Error("Có lỗi xảy ra khi gửi yêu cầu.");
             })
             .then(responseObject => {
-                result = responseObject.resultDataSet
-                    .map(dataOfRow => {
+                //--Start to build table.
+                result = responseObject["resultDataSet"]
+                    .map((dataOfRow, index) => {
+                        //--Add index into each row to make handing-logics more flexible.
+                        dataOfRow.index = index;
+                        dataOfRow.resultDataLength = responseObject["resultDataSet"].length;
+                        //--Remove all 'null' values to avoid exceptions.
                         for (let field in dataOfRow) if (dataOfRow[field] === null) dataOfRow[field] = "";
                         return fetchingConfigObject.rowFormattingEngine(dataOfRow);
                     })
@@ -89,6 +94,11 @@ class PdfFilesExportation {
                 tablePreviewContainer.querySelector('.close-preview-page-btn').addEventListener("click", e => {
                     tablePreviewContainer.classList.add("closed")
                 });
+                return;
+            })
+            .then(ignored => {
+                //--Run all more-features after bulding table-preview and collecting data into temp-variables.
+                fetchingConfigObject.moreFeatures();
             })
             .catch(err => console.log("Error at FetchAction and buildPreviewPages: " + err));
     }

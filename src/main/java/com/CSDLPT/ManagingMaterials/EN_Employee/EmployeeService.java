@@ -1,5 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_Employee;
 
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ReqDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
@@ -15,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 public class EmployeeService {
@@ -67,6 +70,23 @@ public class EmployeeService {
             //--Prepare common-components of ModelAndView if we need.
             ModelAndView modelAndView = staticUtilMethods
                 .customResponsiveModelView(request, model, "report-for-employee");
+
+            //--Data for AddingEmployeeForm component.
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
+
+            //--Close Connection.
+            connectionHolder.removeConnection();
+
+            return modelAndView;
+        }
+
+        public ModelAndView getReportForEmployeeActivitiesPage(HttpServletRequest request, Model model) throws SQLException {
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            //--Prepare common-components of ModelAndView if we need.
+            ModelAndView modelAndView = staticUtilMethods
+                .customResponsiveModelView(request, model, "report-for-employee-activities");
 
             //--Data for AddingEmployeeForm component.
             modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
@@ -142,6 +162,22 @@ public class EmployeeService {
 
             //--Close Connection.
             connectionHolder.removeConnection();
+        }
+
+        public ResDtoRetrievingData<ResDtoReportForEmployeeActivities> findAllEmployeeActivities(
+            HttpServletRequest request,
+            ReqDtoReportForEmployeeActivities requiredInfoToSearchEmpActivities
+        ) throws SQLException {
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            ResDtoRetrievingData<ResDtoReportForEmployeeActivities> result = new ResDtoRetrievingData<>();
+            result.setResultDataSet(employeeRepository.findAllEmployeeActivities(connectionHolder, requiredInfoToSearchEmpActivities));
+
+            //--Close Connection.
+            connectionHolder.removeConnection();
+
+            return result;
         }
     }
 

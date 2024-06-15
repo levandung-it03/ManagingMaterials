@@ -19,6 +19,7 @@ async function CustomizeExportationFileModules() {
         previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Danh sách nhân viên',
         fetchDataAction: "/service/v1/branch/find-employee-by-values",
+        usefulVariablesStorage: {},
         dataObject: {
             //--If page-number is "0", it's means that we will search all the list without pagination.
             currentPage: 0,
@@ -45,10 +46,11 @@ async function CustomizeExportationFileModules() {
                 <td plain-value="${row.firstName}" class="firstName">${row.firstName}</td>
                 <td plain-value="${row.birthday.substring(0, 10)}" class="birthday">${row.birthday.substring(0, 10)}</td>
                 <td plain-value="${row.address}" class="address">${row.address}</td>
-                <td plain-value="${row.salary}" class="salary">${salaryFormattingEngine(row.salary, false)}</td>
+                <td plain-value="${row.salary}" class="salary">${VNDCurrencyFormatEngine(row.salary, false)}</td>
                 <td plain-value="${row.branch}" class="branch">${row.branch}</td>
                 <td plain-value="${row.deletedStatus}" class="deletedStatus">${row.deletedStatus}</td>
-            </tr>`
+            </tr>`,
+        moreFeatuers: () => {},
     };
 
     await pdfFilesExporter.loadAllNecessaryLibs()
@@ -106,7 +108,7 @@ async function CustomizeExportationFileModules() {
                 <td plain-value="${row.firstName}" class="firstName">${row.firstName}</td>
                 <td plain-value="${row.birthday.substring(0, 10)}" class="birthday">${row.birthday.substring(0, 10)}</td>
                 <td plain-value="${row.address}" class="address">${row.address}</td>
-                <td plain-value="${row.salary}" class="salary">${salaryFormattingEngine(row.salary)}</td>
+                <td plain-value="${row.salary}" class="salary">${VNDCurrencyFormatEngine(row.salary)}</td>
                 <td plain-value="${row.branch}" class="branch">${row.branch}</td>
                 <td plain-value="${row.deletedStatus}" class="deletedStatus">${row.deletedStatus}</td>
             </tr>`
