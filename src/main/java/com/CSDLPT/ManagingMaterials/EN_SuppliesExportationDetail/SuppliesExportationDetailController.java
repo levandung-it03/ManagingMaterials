@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -69,6 +70,10 @@ public class SuppliesExportationDetailController {
         } catch (DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
             redirectAttributes.addFlashAttribute("submittedSuppliesExportationDetail", exportationDetail);
+        } catch (SQLException e) {
+            logger.info("Error from AddSuppliesExportationDetailController: " + e);
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
+            redirectAttributes.addFlashAttribute("submittedSuppliesExportationDetail", exportationDetail);
         } catch (Exception e) {
             logger.info("Error from AddSuppliesExportationDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
@@ -94,10 +99,12 @@ public class SuppliesExportationDetailController {
         try {
             branchServices.updateSuppliesExportationDetail(exportationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
+        } catch (SQLException e) {
+            logger.info("Error from UpdateSuppliesExportationDetailController: " + e);
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
         } catch (Exception e) {
             logger.info("Error from UpdateSuppliesExportationDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-            redirectAttributes.addFlashAttribute("submittedSuppliesExportationDetail", exportationDetail);
         }
         return "redirect:" + standingUrl;
     }
@@ -114,6 +121,9 @@ public class SuppliesExportationDetailController {
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
+        } catch (SQLException e) {
+            logger.info("Error from deleteSuppliesExportationDetail: " + e);
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
         } catch (Exception e) {
             logger.info("Error from deleteSuppliesExportationDetail: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");

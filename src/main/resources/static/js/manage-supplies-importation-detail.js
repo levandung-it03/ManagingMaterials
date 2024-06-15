@@ -11,8 +11,8 @@ function AddSuppliesImportationDetailComponent() {
         },
         suppliesQuantity: {
             tag: $('input[name=suppliesQuantity]'),
-            validate: (value) => value >= 0,
-            errorMessage: "Số lượng phải >= 0."
+            validate: (value) => value > 0,
+            errorMessage: "Số lượng phải > 0."
         },
         price: {
             tag: $('input[name=price]'),

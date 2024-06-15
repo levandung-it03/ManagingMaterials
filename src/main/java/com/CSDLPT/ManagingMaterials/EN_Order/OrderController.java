@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -130,6 +131,8 @@ public class OrderController {
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_order_01");
+        } catch (SQLException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_order_04");
         } catch (Exception e) {
             logger.info("Error from DeleteSuppliesExportationController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");

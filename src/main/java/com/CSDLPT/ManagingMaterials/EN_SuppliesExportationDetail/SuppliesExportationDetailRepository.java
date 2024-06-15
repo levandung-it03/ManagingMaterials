@@ -1,13 +1,14 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesExportationDetail;
 
-import com.CSDLPT.ManagingMaterials.EN_SuppliesExportationDetail.SuppliesExportationDetail;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Repository
@@ -94,5 +95,33 @@ public class SuppliesExportationDetailRepository {
             logger.info("Error In 'delete' of SuppliesExportationRepository: " + e);
         }
         return result;
+    }
+
+    public int updateSupplyQuantity(DBConnectionHolder conHolder, String supplyId, int quantity) {
+        try {
+            /** SP_UPDATE_SUPPLY_QUANTITY
+             *  @OPTION NVARCHAR(6),
+             *  @MAVT NCHAR(4),
+             *  @SOLUONG INT
+             */
+            //--Prepare data to execute Stored Procedure.
+            CallableStatement statement = conHolder.getConnection()
+                .prepareCall("{call SP_UPDATE_SUPPLY_QUANTITY('EXPORT',?,?)}");
+            statement.setString(1, supplyId);
+            statement.setInt(2, quantity);
+
+            //--Retrieve affected rows to know if our Query worked correctly.
+            int result = statement.executeUpdate();
+
+            //--Close all connection.
+            statement.close();
+            return result;
+        } catch (SQLException e) {
+            logger.info("Error In 'updateSupplyQuantity' of SuppliesExportationRepository (Constraint Violation): " + e);
+            return -1;
+        } catch (Exception e) {
+            logger.info("Error In 'updateSupplyQuantity' of SuppliesExportationRepository: " + e);
+            return 0;
+        }
     }
 }

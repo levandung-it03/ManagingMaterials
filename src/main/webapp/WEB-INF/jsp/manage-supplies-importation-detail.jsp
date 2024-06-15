@@ -52,7 +52,7 @@
                 <div class="form-input" id="suppliesQuantity">
                     <fieldset>
                         <legend>Số lượng</legend>
-                        <input name="suppliesQuantity" type="number" value="${importationDetail.suppliesQuantity}" min="0" required/>
+                        <input name="suppliesQuantity" type="number" value="${importationDetail.suppliesQuantity}" min="1" required/>
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
                 </div>

@@ -23,7 +23,7 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class SupplyController {
-    private final SupplyService.BranchServices supplyService;
+    private final SupplyService.BranchServices branchServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
@@ -31,7 +31,7 @@ public class SupplyController {
     /*_____________RequestMethod.GET: Header-pages_____________*/
     @GetMapping("/branch/supply/manage-supply")
     public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) throws SQLException {
-        return supplyService.getManageSupplyPage(request, model);
+        return branchServices.getManageSupplyPage(request, model);
     }
 
     /*_____________RequestMethod.POST: Supply-entity-interaction_____________*/
@@ -43,7 +43,7 @@ public class SupplyController {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(supplyService.findSupply(request, searchingObject));
+                    .body(branchServices.findSupply(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
@@ -65,7 +65,7 @@ public class SupplyController {
         }
 
         try {
-            supplyService.addSupply(request, supply);
+            branchServices.addSupply(request, supply);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException ignored) {
             redirectAttributes.addFlashAttribute("submittedSupply", supply);
@@ -88,7 +88,7 @@ public class SupplyController {
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
-            supplyService.updateSupply(supply, request);
+            branchServices.updateSupply(supply, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
@@ -111,7 +111,7 @@ public class SupplyController {
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
-            supplyService.deleteSupply(supplyId, request);
+            branchServices.deleteSupply(supplyId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");

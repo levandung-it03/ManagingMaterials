@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Repository
@@ -93,5 +95,33 @@ public class SuppliesImportationDetailRepository {
             logger.info("Error In 'delete' of SuppliesImportationRepository: " + e);
         }
         return result;
+    }
+
+    public int updateSupplyQuantity(DBConnectionHolder conHolder, String supplyId, int quantity) {
+        try {
+            /** SP_UPDATE_SUPPLY_QUANTITY
+             *  @OPTION NVARCHAR(6),
+             *  @MAVT NCHAR(4),
+             *  @SOLUONG INT
+             */
+            //--Prepare data to execute Stored Procedure.
+            CallableStatement statement = conHolder.getConnection()
+                .prepareCall("{call SP_UPDATE_SUPPLY_QUANTITY('IMPORT',?,?)}");
+            statement.setString(1, supplyId);
+            statement.setInt(2, quantity);
+
+            //--Retrieve affected rows to know if our Query worked correctly.
+            int result = statement.executeUpdate();
+
+            //--Close all connection.
+            statement.close();
+            return result;
+        } catch (SQLException e) {
+            logger.info("Error In 'updateSupplyQuantity' of SuppliesImportationRepository (Constraint Violation): " + e);
+            return -1;
+        } catch (Exception e) {
+            logger.info("Error In 'updateSupplyQuantity' of SuppliesImportationRepository: " + e);
+            return 0;
+        }
     }
 }

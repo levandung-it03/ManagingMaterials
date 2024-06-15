@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -96,10 +97,12 @@ public class SuppliesImportationDetailController {
         try {
             branchServices.updateSuppliesImportationDetail(importationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
+        } catch (SQLException e) {
+            logger.info("Error from UpdateSuppliesImportationsDetailController: " + e);
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
         } catch (Exception e) {
             logger.info("Error from UpdateSuppliesImportationsDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportationDetail", importationDetail);
         }
         return "redirect:" + standingUrl;
     }
@@ -116,6 +119,9 @@ public class SuppliesImportationDetailController {
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
+        } catch (SQLException e) {
+            logger.info("Error from deleteSuppliesImportationsDetail: " + e);
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
         } catch (Exception e) {
             logger.info("Error from deleteSuppliesImportationsDetail: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");

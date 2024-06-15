@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class SuppliesImportationDetailService {
 
@@ -79,6 +80,11 @@ public class SuppliesImportationDetailService {
             ).isPresent())
                 throw new DuplicateKeyException("This Supply Id is already existing in Sup-Import-List in DB");
 
+            //--Update supply quantity
+            if (suppliesImportationDetailRepository.updateSupplyQuantity(connectHolder,
+                importationDetail.getSupplyId(), importationDetail.getSuppliesQuantity()) == 0)
+                throw new SQLException("There's an error with SQL Server!");
+
             suppliesImportationDetailRepository.save(connectHolder, importationDetail);
             //--Close connection
             connectHolder.removeConnection();
@@ -87,9 +93,26 @@ public class SuppliesImportationDetailService {
         public void updateSuppliesImportationDetail(
             SuppliesImportationDetail importationDetail,
             HttpServletRequest request
-        ) throws SQLException {
+        ) throws Exception {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
             importationDetail.trimAllFieldValues();
+
+            //--Check if importation detail is existed
+            Optional<SuppliesImportationDetail> currentImportDetail = suppliesImportationDetailRepository
+                .findById(connectHolder, importationDetail.getSuppliesImportationId(), importationDetail.getSupplyId());
+            if (currentImportDetail.isEmpty())
+                throw new NoSuchElementException("Supplies-Importation-Detail not found");
+
+            //--Update supply quantity
+            SuppliesImportationDetail suppliesImportationDetail = currentImportDetail.get();
+            int quantityChange = importationDetail.getSuppliesQuantity() - suppliesImportationDetail.getSuppliesQuantity();
+            int updateResult = suppliesImportationDetailRepository.updateSupplyQuantity(connectHolder,
+                suppliesImportationDetail.getSupplyId(), quantityChange);
+
+            if (updateResult == -1)
+                throw new SQLException("There's an error with SQL Server (Constraint Violation)");
+            else if (updateResult == 0)
+                throw new Exception("There's an error with SQL Server!");
 
             suppliesImportationDetailRepository.update(connectHolder, importationDetail);
             //--Close connection
@@ -100,11 +123,22 @@ public class SuppliesImportationDetailService {
             String importationDetailId,
             String supplyId,
             HttpServletRequest request
-        ) throws SQLException {
+        ) throws Exception {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
-            if (suppliesImportationDetailRepository.findById(connectHolder, importationDetailId, supplyId).isEmpty())
+            Optional<SuppliesImportationDetail> currentImportDetail = suppliesImportationDetailRepository
+                .findById(connectHolder, importationDetailId, supplyId);
+            if (currentImportDetail.isEmpty())
                 throw new NoSuchElementException("Supplies-Importation-Detail not found");
+
+            //--Update supply quantity
+            SuppliesImportationDetail suppliesImportationDetail = currentImportDetail.get();
+            int updateResult = suppliesImportationDetailRepository.updateSupplyQuantity(connectHolder,
+                supplyId, -suppliesImportationDetail.getSuppliesQuantity());
+            if (updateResult == -1)
+                throw new SQLException("There's an error with SQL Server (Constraint Violation)");
+            else if (updateResult == 0)
+                throw new Exception("There's an error with SQL Server!");
 
             suppliesImportationDetailRepository.delete(connectHolder, importationDetailId, supplyId);
             //--Close connection
