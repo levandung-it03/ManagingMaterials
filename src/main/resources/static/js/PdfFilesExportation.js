@@ -60,47 +60,52 @@ class PdfFilesExportation {
         if (!tablePreviewContainer.classList.contains('closed'))
             tablePreviewContainer.classList.add('closed');
 
-        //--Start generating preview-page-components.
-        const tableHeadCells = fetchingConfigObject.fieldObjects
-            .map((field) => (`<th id="${field.cssName}">${field.utf8Name}</th>`))
-            .join("");
-        tablePreviewContainer.innerHTML = 
-            `<div class="close-preview-page-btn">
-                <i class="fa-solid fa-xmark"></i>
-            </div>
-            <div class="preview-page-title">
-                <span>${fetchingConfigObject.tablePreviewTitle}</span>
-            </div>
-            <div class="preview-page-description">
-                ${fetchingConfigObject.descriptionComponents.join("")}
-            </div>
-            <table class="exporting-table-css">
-                <thead><tr>${tableHeadCells}</tr></thead>
-                <tbody></tbody>
-            </table>
-            <div class="preview-page-statistic">
-                ${fetchingConfigObject.statisticComponents.join("")}
-            </div>
-            <div class="report-supporting-buttons">
-                <a class="report-supporting-buttons_exporting-report">
-                    Xuất báo cáo&emsp;<i class="fa-solid fa-file-pdf"></i>
-                </a>
-            </div>`;
-
         //--Fetch data and put into preview table.
         await this.fetchDataForReporter(fetchingConfigObject)
             .then(rowsData => {
-                tablePreviewContainer.querySelector('tbody').innerHTML = rowsData;
+                tablePreviewContainer.innerHTML =
+                    `<div class="close-preview-page-btn">
+                    <i class="fa-solid fa-xmark"></i>
+                    </div>
+                    <div class="preview-page-title">
+                        <span>${fetchingConfigObject.tablePreviewTitle}</span>
+                    </div>
+                    <div class="preview-page-description">
+                        ${fetchingConfigObject.descriptionComponents.join("")}
+                    </div>
+                    <table class="exporting-table-css">
+                        <thead>
+                            <tr>
+                                ${fetchingConfigObject.fieldObjects
+                                    .map((field) => (`<th id="${field.cssName}">${field.utf8Name}</th>`))
+                                    .join("")}
+                            </tr>
+                        </thead>
+                        <tbody>${rowsData}</tbody>
+                    </table>
+                    <div class="preview-page-statistic"></div>
+                    <div class="report-supporting-buttons">
+                        <a class="report-supporting-buttons_exporting-report">
+                            Xuất báo cáo&emsp;<i class="fa-solid fa-file-pdf"></i>
+                        </a>
+                    </div>`;
+
                 tablePreviewContainer.querySelector('.close-preview-page-btn').addEventListener("click", e => {
                     tablePreviewContainer.classList.add("closed")
                 });
                 return;
             })
             .then(ignored => {
-                //--Run all more-features after bulding table-preview and collecting data into temp-variables.
+                //--Run all more-features before bulding table-preview and collecting data into temp-variables.
                 fetchingConfigObject.moreFeatures();
             })
+            .then(ignored => {
+                //--Build statistic-info after bulding table-preview data.
+                tablePreviewContainer.querySelector('.preview-page-statistic').innerHTML = 
+                    fetchingConfigObject.statisticComponents.join("");
+            })
             .catch(err => console.log("Error at FetchAction and buildPreviewPages: " + err));
+
     }
 
     exportToPdfFile(tableDataSourceSelector) {
@@ -123,15 +128,13 @@ class PdfFilesExportation {
         //--Add title
         doc.setFontSize(20);
         const title = $('div.preview-page-title span');
-        doc.text(title.textContent.trim(), widthsOfPage.portrait/2, margins.top, {align:"center"});
+        doc.text(title.textContent.trim(), widthsOfPage.portrait / 2, margins.top, { align: "center" });
 
         //--Add description
         doc.setFontSize(12);
         margins.top += 10;
         [...$$('div.preview-page-description div')].forEach(description => {
-            const text = description.textContent.trim();
-            log(text);
-            doc.text(text, 10, margins.top, {align:"left"});
+            doc.text(description.textContent.trim(), 10, margins.top, { align: "left" });
             margins.top += (description.offsetHeight * ratioLibs.unitRatioPxAndMm) * 0.7;
         });
 
@@ -147,9 +150,9 @@ class PdfFilesExportation {
                 //--Colors the header-separator.
                 Object.entries(data.row.cells).forEach(pair => {
                     const text = [...pair[1].text].reduce((res, text) => res + text, "").trim();
-                    if (text === "")    pair[1].styles.fillColor = 200;
+                    if (text === "") pair[1].styles.fillColor = 200;
                     //--Hiding empty-separator
-                    if (text == "-")    pair[1].styles.textColor = 255;
+                    if (text == "-") pair[1].styles.textColor = 255;
                 });
                 //--When the iterator reach the last cell of each row.
                 if (data.column.index === headData.length - 1) {
@@ -195,6 +198,13 @@ class PdfFilesExportation {
                     }
                 }
             },
+        });
+
+        //--Add statistic
+        doc.setFontSize(12);
+        [...$$('div.preview-page-statistic div')].forEach(statistic => {
+            doc.text(statistic.textContent.trim(), 10, margins.top, { align: "left" });
+            margins.top += (statistic.offsetHeight * ratioLibs.unitRatioPxAndMm) * 0.7;
         });
 
         //--Export pdf-document.

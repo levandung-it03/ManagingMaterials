@@ -7,12 +7,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report For Employee</title>
+    <title>Report For Detail Supplies</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
           integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/report-for-detail-supply-info.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/report-for-detail-supplies-interact-info.css">
 </head>
 <body>
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
@@ -35,7 +35,7 @@
         <div class="more-info-title">
             <span>Báo cáo chi tiết số lượng - trị giá hàng nhập hoặc xuất</span>
         </div>
-        <div class="info-blocks">
+        <div class="info-blocks" style="width: 100%;">
             <fieldset>
                 <legend>Ngày bắt đầu</legend>
                 <select name="ticketsType">
@@ -70,6 +70,6 @@
 <div class="preview-table-container closed"></div>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/PdfFilesExportation.js"></script>
-<script type="application/javascript" src="${pageContext.request.contextPath}/js/report-for-detail-supply-info.js"></script>
+<script type="application/javascript" src="${pageContext.request.contextPath}/js/report-for-detail-supplies-interact-info.js"></script>
 </body>
 </html>

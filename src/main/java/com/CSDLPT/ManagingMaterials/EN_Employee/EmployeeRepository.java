@@ -180,28 +180,3 @@ public class EmployeeRepository {
         statement.setInt(9, 0);
     }
 }
-
-//        long mls = System.currentTimeMillis();
-//        for (int i = 1; i <= 20; i++) {
-//            String phieu = null, loaiPhieu = null;
-//            if (i%2 == 0) {
-//                phieu = "PX" + i;
-//                loaiPhieu = "XUAT";
-//            } else {
-//                phieu = "PN" + i;
-//                loaiPhieu = "NHAP";
-//            }
-//            resultList.add(ResDtoReportForEmployeeActivities.builder()
-//                .createdDate(new Date(mls))
-//                .ticketId(phieu)
-//                .ticketType(loaiPhieu)
-//                .customerFullName("Nguyễn Thanh Khương Lương Thực Trường")
-//                .supplyName("Một Đống Xà Phòng")
-//                .suppliesQuantity(20)
-//                .price(100000d)
-//                .totalPrice(20*100000d)
-//                .build()
-//            );
-//            mls += 24*60*60*1000*10;
-//        }
-//        return resultList;

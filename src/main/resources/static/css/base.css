@@ -505,9 +505,14 @@ div.preview-table-container div.preview-page-title {
     flex-wrap: wrap;
     justify-content: center;
     align-items: end;
-    height: 100px;
+    padding-top: 50px;
+    min-height: 50px;
     font-size: 2rem;
     font-weight: 600;
+    text-align: center;
+}
+div.preview-table-container div.preview-page-title span {
+    max-width: 80%;
 }
 div.preview-table-container div.report-supporting-buttons {
     width: 100%;
@@ -520,9 +525,15 @@ div.preview-table-container div.preview-table-container_descriptions {
     flex-wrap: wrap;
     justify-content: left;
     align-items: center;
-    background-color: white;
     padding-left: 20px;
     flex: 0 1 auto;
+}
+div.preview-table-container div.preview-page-description {
+    background-color: white;
+}
+div.preview-table-container div.preview-page-statistic {
+    padding-bottom: 20px;
+    background-color: white;
 }
 div.preview-table-container div.preview-table-container_statistic span,
 div.preview-table-container div.preview-table-container_descriptions span {

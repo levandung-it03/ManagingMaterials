@@ -1,5 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
+import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ReqDtoTicketsForDetailSuppliesReport;
+import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoTicketsForDetailSuppliesReport;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +29,9 @@ public class SupplyController {
     private final Validator hibernateValidator;
     private final Logger logger;
 
-    /** Spring MVC: Branch-role controllers **/
+    /**
+     * Spring MVC: Branch-role controllers
+     **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
     @GetMapping("/branch/supply/manage-supply")
     public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) throws SQLException {
@@ -39,27 +43,47 @@ public class SupplyController {
         return branchServices.getReportForSupplyPage(request, model);
     }
 
+    @GetMapping("/branch/supply/report-for-detail-supplies-interact-info")
+    public ModelAndView getReportForDetailSuppliesInteractInfoPage(HttpServletRequest request, Model model) throws SQLException {
+        return branchServices.getReportForDetailSuppliesInteractInfoPage(request, model);
+    }
+
     /*_____________RequestMethod.POST: Supply-entity-interaction_____________*/
     @PostMapping("${url.post.branch.prefix.v1}/find-supply-by-values")
     public ResponseEntity<ResDtoRetrievingData<Supply>> findingSuppliesByValues(
-            @RequestBody ReqDtoRetrievingData<Supply> searchingObject,
-            HttpServletRequest request
+        @RequestBody ReqDtoRetrievingData<Supply> searchingObject,
+        HttpServletRequest request
     ) {
         try {
             return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(branchServices.findSupply(request, searchingObject));
+                .status(HttpStatus.OK)
+                .body(branchServices.findSupply(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
+    @PostMapping("${url.post.branch.prefix.v1}/find-tickets-for-detail-supplies-report")
+    public ResponseEntity<ResDtoRetrievingData<ResDtoTicketsForDetailSuppliesReport>> findingTicketsForDetailSuppliesReport(
+        @RequestBody ReqDtoTicketsForDetailSuppliesReport searchingObject,
+        HttpServletRequest request
+    ) {
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(branchServices.findTicketsForDetailSuppliesReport(request, searchingObject));
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
     @PostMapping("${url.post.branch.prefix.v1}/add-supply")
     public String addSupply(
-            @ModelAttribute("supply") Supply supply,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttributes
+        @ModelAttribute("supply") Supply supply,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
     ) {
         final String standingUrl = request.getHeader("Referer");
         Set<ConstraintViolation<Supply>> violations = hibernateValidator.validate(supply);
@@ -87,9 +111,9 @@ public class SupplyController {
 
     @PostMapping("${url.post.branch.prefix.v1}/update-supply")
     public String updateSupply(
-            @ModelAttribute("supply") Supply supply,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttributes
+        @ModelAttribute("supply") Supply supply,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
@@ -110,9 +134,9 @@ public class SupplyController {
 
     @PostMapping("${url.post.branch.prefix.v1}/delete-supply")
     public String deleteSupply(
-            @RequestParam("deleteBtn") String supplyId,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttributes
+        @RequestParam("deleteBtn") String supplyId,
+        HttpServletRequest request,
+        RedirectAttributes redirectAttributes
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {

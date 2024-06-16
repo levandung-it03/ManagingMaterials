@@ -1,16 +1,26 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ReqDtoTicketsForDetailSuppliesReport;
+import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoTicketsForDetailSuppliesReport;
+import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
 public class SupplyRepository {
     private final Logger logger;
+    private final StaticUtilMethods staticUtilMethods;
 
     public boolean isExistingSupplyBySupplyId(DBConnectionHolder conHolder, String supplyId) {
         //--Using a 'result' var to make our logic easily to control.
@@ -62,9 +72,9 @@ public class SupplyRepository {
         try {
             //--Prepare data to execute Query Statement.
             PreparedStatement statement = connectHolder.getConnection().prepareStatement("""
-                INSERT INTO Vattu (MAVT ,TENVT ,DVT ,SOLUONGTON)
-                VALUES (?, ?, ?, ?)
-            """);
+                    INSERT INTO Vattu (MAVT ,TENVT ,DVT ,SOLUONGTON)
+                    VALUES (?, ?, ?, ?)
+                """);
             this.mapDataIntoStatement(statement, supply);
 
             //--Retrieve affected rows to know if our Query worked correctly.
@@ -82,8 +92,8 @@ public class SupplyRepository {
     public int update(DBConnectionHolder connectionHolder, Supply supply) {
         try {
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement("""
-                UPDATE Vattu SET TENVT = ?, DVT = ?, SOLUONGTON = ? WHERE MAVT = ?;
-            """);
+                    UPDATE Vattu SET TENVT = ?, DVT = ?, SOLUONGTON = ? WHERE MAVT = ?;
+                """);
             statement.setString(1, supply.getSupplyName());
             statement.setString(2, supply.getUnit());
             statement.setInt(3, supply.getQuantityInStock());
@@ -105,7 +115,7 @@ public class SupplyRepository {
         int result = 0;
         try {
             PreparedStatement statement = connectionHolder.getConnection()
-                    .prepareStatement("DELETE FROM Vattu WHERE MAVT = ?;");
+                .prepareStatement("DELETE FROM Vattu WHERE MAVT = ?;");
             statement.setString(1, supplyId);
 
             //--Retrieve affected rows to know if our Query worked correctly.
@@ -116,6 +126,51 @@ public class SupplyRepository {
             logger.info("Error In 'delete' of SupplyRepository: " + e);
         }
         return result;
+    }
+
+    public List<ResDtoTicketsForDetailSuppliesReport> findTicketsForDetailSuppliesReport(
+        DBConnectionHolder connectHolder,
+        ReqDtoTicketsForDetailSuppliesReport requiredInfoToSearchDetailSupplies
+    ) {
+        List<ResDtoTicketsForDetailSuppliesReport> resultList = new ArrayList<>();
+        long mls = System.currentTimeMillis();
+        for (int i = 1; i <= 30; i++) {
+            LocalDateTime time = staticUtilMethods.milisToLocalDateTime(mls);
+            resultList.add(ResDtoTicketsForDetailSuppliesReport.builder()
+                .month(time.getMonthValue() + "/" + time.getYear())
+                .supplyName("Một đống xà phòng" + i % 3)
+                .totalSuppliesQuantity(10)
+                .totalPrices(100000 * 10d)
+                .build());
+            mls += 24 * 60 * 60 * 1000 * 4;
+        }
+//        try {
+//            //--Prepare data to execute Query Statement.
+//            CallableStatement statement = connectHolder.getConnection()
+//                .prepareCall("{call SP_FIND_TICKETS_FOR_DETAIL_SUPPLIES_REPORT(?, ?, ?)}");
+//
+//            statement.setString(1, requiredInfoToSearchDetailSupplies.getTicketsType());
+//            statement.setDate(2, staticUtilMethods
+//                .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getStartingDate()));
+//            statement.setDate(3, staticUtilMethods
+//                .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getEndingDate()));
+//
+//            ResultSet resultSet = statement.executeQuery();
+//            while (resultSet.next()) {
+//                resultList.add(ResDtoTicketsForDetailSuppliesReport.builder()
+//                    .month(resultSet.getString("THANG"))
+//                    .supplyName(resultSet.getString("TENVT"))
+//                    .totalSuppliesQuantity(resultSet.getInt("TONGSOLUONG"))
+//                    .totalPrices(resultSet.getDouble("TONGTRIGIA"))
+//                    .build());
+//            }
+//
+//            //--Close all connection.
+//            statement.close();
+//        } catch (SQLException e) {
+//            logger.info("Error In 'findTicketsForDetailSuppliesReport' of SupplyRepository: " + e);
+//        }
+        return resultList;
     }
 
     /**

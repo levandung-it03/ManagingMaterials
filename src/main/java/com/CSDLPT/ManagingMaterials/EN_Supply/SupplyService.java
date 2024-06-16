@@ -1,6 +1,9 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
 import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ReqDtoTicketsForDetailSuppliesReport;
+import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoTicketsForDetailSuppliesReport;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
@@ -116,6 +119,44 @@ public class SupplyService {
 
             if (supplyRepository.delete(connectionHolder, supplyId) == 0)
                 throw new SQLException("Something wrong happened in your DBMS");
+        }
+
+        public ModelAndView getReportForDetailSuppliesInteractInfoPage(
+            HttpServletRequest request,
+            Model model
+        ) throws SQLException {
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            //--Prepare common-components of ModelAndView if we need.
+            ModelAndView modelAndView = staticUtilMethods
+                .customResponsiveModelView(request, model, "report-for-detail-supplies-interact-info");
+
+            //--Data for AddingEmployeeForm component.
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
+
+            //--Close Connection.
+            connectionHolder.removeConnection();
+
+            return modelAndView;
+        }
+
+        public ResDtoRetrievingData<ResDtoTicketsForDetailSuppliesReport> findTicketsForDetailSuppliesReport(
+            HttpServletRequest request,
+            ReqDtoTicketsForDetailSuppliesReport requiredInfoToSearchDetailSupplies
+        ) throws SQLException {
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            ResDtoRetrievingData<ResDtoTicketsForDetailSuppliesReport> result = new ResDtoRetrievingData<>();
+            result.setResultDataSet(
+                supplyRepository.findTicketsForDetailSuppliesReport(connectionHolder, requiredInfoToSearchDetailSupplies)
+            );
+
+            //--Close Connection.
+            connectionHolder.removeConnection();
+
+            return result;
         }
     }
 

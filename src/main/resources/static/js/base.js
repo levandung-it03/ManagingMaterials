@@ -484,8 +484,8 @@ function customizeRenderTableDataBySwitchingBranch(
     selectTagSelector='div.table-tools .right-grid select[name=searchingBranch]'
 ) {
     const selectTag = $(selectTagSelector)
-    selectTag.value = selectTag.getAttribute("init-branch");
-    selectTag.removeAttribute("init-branch");
+    selectTag.value = selectTag.getAttribute("data");
+    selectTag.removeAttribute("data");
     selectTag.addEventListener("change", async e => {
         searchingSupportingDataSource.data.branch = selectTag.value
         await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
@@ -496,7 +496,7 @@ function customizeSelectingTableInstanceEventInReportPages(
     tableSelector='div.center-page_list > table',
     reviewingTableSelector='.center-page_more-info_table-info-block'
 ) {
-    let selectedInstance = { id: null, data: {} }, counter = 0;
+    let selectedInstance = { id: null, data: {} };
     const reviewingTable = $(reviewingTableSelector);
 
     const customizeSelectingTableInstanceEvent = () => {

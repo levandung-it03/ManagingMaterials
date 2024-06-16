@@ -11,6 +11,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Component
@@ -121,5 +124,11 @@ public class StaticUtilMethods {
         calendar.set(dateAsArr[2], dateAsArr[1] - 1, dateAsArr[0]);
 
         return new java.sql.Date(calendar.getTimeInMillis());
+    }
+
+    /** Spring Core: this static method help us convert time millisecond to LocalDateTime **/
+    public LocalDateTime milisToLocalDateTime(Long mls) {
+        Instant instant = Instant.ofEpochMilli(mls);
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }
 }
