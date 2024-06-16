@@ -17,7 +17,7 @@ public class ResDtoReportForEmployeeActivities {
     private String ticketType;
     private String customerFullName;
     private String supplyName;
-    private Integer suppliesQuantity;
+    private String suppliesQuantity;
     private Double price;
     private Double totalPrice;
 }

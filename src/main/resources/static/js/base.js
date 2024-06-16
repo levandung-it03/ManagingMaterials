@@ -1,6 +1,6 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
-const paginationSize = 1;
+const paginationSize = 2;
 const urlParams = new URLSearchParams(window.location.search);
 const colorMap = {
     A: "#FFBF00",
@@ -493,50 +493,60 @@ function customizeRenderTableDataBySwitchingBranch(
 }
 
 function customizeSelectingTableInstanceEventInReportPages(
-    tableSelector='div.center-page_list table',
+    tableSelector='div.center-page_list > table',
     reviewingTableSelector='.center-page_more-info_table-info-block'
 ) {
-    const selectedInstance = { id: null, data: null };
+    let selectedInstance = { id: null, data: {} }, counter = 0;
     const reviewingTable = $(reviewingTableSelector);
-    [...$$(tableSelector + ' tbody tr')].forEach(instance => {
-        instance.addEventListener("click", e => {
-            if (instance.classList.contains('selected-table-instance')) {
-                instance.classList.remove('selected-table-instance');
-                selectedInstance.id = null;
-                selectedInstance.data = null;
-                if (reviewingTable) reviewingTable.querySelector('tbody').innerHTML = "";
-                return;
-            }
 
-            //--Refresh data-saver.
-            selectedInstance.data = {};
-
-            //--Save instance-cursor (id) and instance-data.
-            selectedInstance.id = instance.id.trim();
-            instance.querySelectorAll('td').forEach(cell => {
-                selectedInstance.data[cell.className.trim()] = cell.getAttribute("plain-value").trim();
+    const customizeSelectingTableInstanceEvent = () => {
+        [...$$(tableSelector + ' tbody tr')].forEach(instance => {
+            instance.addEventListener("click", e => {
+                //--Un-selecting current selected-row.
+                if (instance.classList.contains('selected-table-instance')) {
+                    instance.classList.remove('selected-table-instance');
+                    selectedInstance.id = null;
+                    selectedInstance.data = {};
+                    if (reviewingTable) reviewingTable.querySelector('tbody').innerHTML = "";
+                    return;
+                }
+    
+                //--Refresh data-saver.
+                //--Save instance-cursor (id) and instance-data.
+                selectedInstance.id = instance.id.trim();
+                selectedInstance.data = {};
+                instance.querySelectorAll('td').forEach(cell => {
+                    selectedInstance.data[cell.className.trim()] = cell.getAttribute("plain-value").trim();
+                });
+    
+                //--Make (new|current) selected-instance colored.
+                const selectingInstance = $(tableSelector + ' tbody tr.selected-table-instance');
+                if (selectingInstance)
+                    selectingInstance.classList.remove('selected-table-instance');
+                $(tableSelector + ` tbody tr[id='${selectedInstance.id}']`).classList.add('selected-table-instance');
+    
+                //--Parse saved-data into reviewing-all-info-block.
+                if (reviewingTable) {
+                    const reviewingRow = document.createElement("tr");
+                    reviewingRow.innerHTML = instance.innerHTML;
+                    reviewingTable.querySelector('tbody').innerHTML = reviewingRow.outerHTML;
+                }
             });
-
-            //--Make (new|current) selected-instance colored.
-            const selectingInstance = $(tableSelector + ' tbody tr.selected-table-instance');
-            if (selectingInstance)
-                selectingInstance.classList.remove('selected-table-instance');
-            $(tableSelector + ` tbody tr[id='${selectedInstance.id}']`).classList.add('selected-table-instance');
-
-            //--Parse saved-data into reviewing-all-info-block.
-            if (reviewingTable) {
-                const reviewingRow = document.createElement("tr");
-                reviewingRow.innerHTML = instance.innerHTML;
-                reviewingTable.querySelector('tbody').innerHTML = reviewingRow.outerHTML;
-            }
         });
-    });
+    }
+    customizeSelectingTableInstanceEvent();
 
     //--Make (new|current) selected-instance colored when table is changed.
     new MutationObserver(() => {
-        const selectingInstance = $(tableSelector + ' tbody tr.selected-table-instance');
-        if (selectingInstance)
-            selectingInstance.classList.remove('selected-table-instance');
-        $(tableSelector + ` tbody tr[id='${selectedInstance.id}']`).classList.add('selected-table-instance');
-    }).observe($(tableSelector + ' tbody'), {childList: true, subtree: true});
+        customizeSelectingTableInstanceEvent();
+        if (selectedInstance.id && selectedInstance.data) {
+            const oldSelectingInstanceInAnotherPage = $(tableSelector + ` tbody tr[id='${selectedInstance.id}']`);
+            if (oldSelectingInstanceInAnotherPage) {
+                const selectingInstance = $(tableSelector + ' tboady tr.selected-table-instance');
+                if (selectingInstance)  selectingInstance.classList.remove('selected-table-instance');
+    
+                oldSelectingInstanceInAnotherPage.classList.add('selected-table-instance');
+            }
+        }
+    }).observe($(tableSelector + ' tbody'), {childList: true});
 }

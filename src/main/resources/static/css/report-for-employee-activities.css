@@ -63,6 +63,11 @@ table.exporting-table-css tr td {
     padding-top: 2px;
     font-size: 0.8rem;
 }
+table.exporting-table-css tr td.empty-separator {
+    text-align: center;
+    width: 1%;
+    color: white;
+}
 /*Separating Blocks Of Times*/
 table.exporting-table-css tr td.createdMonth {
     width: 100%;
@@ -72,15 +77,15 @@ table.exporting-table-css tr td.createdMonth {
 }
 /*Calculating Total Data Blocks Of Times*/
 table.exporting-table-css tr td.calculatedMonth {
-    /*Total width of: .createdDate and .ticketId*/
-    width: 18%;
+    /*Total width of: .createdDate, .ticketId, .ticketType, .customerFullName, .supplyName (subtract 4 empty-separator)*/
+    width: 47%;
     display: block;
     text-align: left;
     font-weight: 600;
 }
 table.exporting-table-css tr td.totalSuppliesQuantity {
-    /*Total width of: .supplyName and .suppliesQuantity*/
-    width: 26%;
+    /*Total width of: .supplyName and .suppliesQuantity (subtract 1 empty-separator)*/
+    width: 25%;
     display: block;
     text-align: left;
     font-weight: 600;

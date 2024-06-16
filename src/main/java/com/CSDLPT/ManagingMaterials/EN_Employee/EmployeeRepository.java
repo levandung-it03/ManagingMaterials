@@ -130,61 +130,39 @@ public class EmployeeRepository {
         DBConnectionHolder connectHolder,
         ReqDtoReportForEmployeeActivities requiredInfoToSearchEmpActivities
     ) {
-        long mls = System.currentTimeMillis();
         List<ResDtoReportForEmployeeActivities> resultList = new java.util.ArrayList<>(List.of());
-        for (int i = 1; i <= 20; i++) {
-            String phieu = null, loaiPhieu = null;
-            if (i%2 == 0) {
-                phieu = "PX" + i;
-                loaiPhieu = "XUAT";
-            } else {
-                phieu = "PN" + i;
-                loaiPhieu = "NHAP";
+        try {
+            //--Prepare data to execute Query Statement.
+            CallableStatement statement = connectHolder.getConnection()
+                .prepareCall("{call SP_REPORT_EMPLOYEE_WORKING_STATUS(?, ?, ?)}");
+
+            statement.setInt(1, requiredInfoToSearchEmpActivities.getEmployeeId());
+            statement.setDate(2, staticUtilMethods
+                .dateUtilToSqlDate(requiredInfoToSearchEmpActivities.getStartingDate()));
+            statement.setDate(3, staticUtilMethods
+                .dateUtilToSqlDate(requiredInfoToSearchEmpActivities.getEndingDate()));
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String customer = resultSet.getString("HOTENKH");
+                resultList.add(ResDtoReportForEmployeeActivities.builder()
+                    .createdDate(resultSet.getDate("NGAY"))
+                    .ticketId(resultSet.getString("MAPHIEU"))
+                    .ticketType(resultSet.getString("LOAIPHIEU"))
+                    .customerFullName(customer.trim().equalsIgnoreCase("NULL") ? "Không" : customer)
+                    .supplyName(resultSet.getString("TENVT"))
+                    .suppliesQuantity(resultSet.getString("SOLUONG"))
+                    .price(resultSet.getDouble("DONGIA"))
+                    .totalPrice(resultSet.getDouble("TRIGIA"))
+                    .build());
             }
-            resultList.add(ResDtoReportForEmployeeActivities.builder()
-                .createdDate(new Date(mls))
-                .ticketId(phieu)
-                .ticketType(loaiPhieu)
-                .customerFullName("Nguyễn Thanh Khương Lương Thực Trường")
-                .supplyName("Một Đống Xà Phòng")
-                .suppliesQuantity(20)
-                .price(100000d)
-                .totalPrice(20*100000d)
-                .build()
-            );
-            mls += 24*60*60*1000*10;
+
+            //--Close all connection.
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'findAllEmployeeActivities' of EmployeeRepository: " + e);
         }
         return resultList;
-//        try {
-//            //--Prepare data to execute Query Statement.
-//            CallableStatement statement = connectHolder.getConnection()
-//                .prepareCall("{call SP_REPORT_EMPLOYEE_WORKING_STATUS(?, ?, ?)}");
-//
-//            statement.setInt(1, requiredInfoToSearchEmpActivities.getEmployeeId());
-//            statement.setDate(2, staticUtilMethods
-//                .dateUtilToSqlDate(requiredInfoToSearchEmpActivities.getStartingDate()));
-//            statement.setDate(3, staticUtilMethods
-//                .dateUtilToSqlDate(requiredInfoToSearchEmpActivities.getEndingDate()));
-//
-//            ResultSet resultSet = statement.executeQuery();
-//            while (resultSet.next())
-//                resultList.add(ResDtoReportForEmployeeActivities.builder()
-//                    .createdDate(resultSet.getDate("NGAY"))
-//                    .ticketId(resultSet.getString("MAPHIEU"))
-//                    .ticketType(resultSet.getString("LOAI"))
-//                    .customerFullName(resultSet.getString("HOTENKH"))
-//                    .supplyName(resultSet.getString("TENVT"))
-//                    .suppliesQuantity(resultSet.getInt("SOLUONG"))
-//                    .price(resultSet.getDouble("DONGIA"))
-//                    .totalPrice(resultSet.getDouble("TRIGIA"))
-//                    .build());
-//
-//            //--Close all connection.
-//            statement.close();
-//        } catch (SQLException e) {
-//            logger.info("Error In 'findAllEmployeeActivities' of EmployeeRepository: " + e);
-//        }
-//        return resultList;
     }
 
     /**
@@ -202,3 +180,28 @@ public class EmployeeRepository {
         statement.setInt(9, 0);
     }
 }
+
+//        long mls = System.currentTimeMillis();
+//        for (int i = 1; i <= 20; i++) {
+//            String phieu = null, loaiPhieu = null;
+//            if (i%2 == 0) {
+//                phieu = "PX" + i;
+//                loaiPhieu = "XUAT";
+//            } else {
+//                phieu = "PN" + i;
+//                loaiPhieu = "NHAP";
+//            }
+//            resultList.add(ResDtoReportForEmployeeActivities.builder()
+//                .createdDate(new Date(mls))
+//                .ticketId(phieu)
+//                .ticketType(loaiPhieu)
+//                .customerFullName("Nguyễn Thanh Khương Lương Thực Trường")
+//                .supplyName("Một Đống Xà Phòng")
+//                .suppliesQuantity(20)
+//                .price(100000d)
+//                .totalPrice(20*100000d)
+//                .build()
+//            );
+//            mls += 24*60*60*1000*10;
+//        }
+//        return resultList;
