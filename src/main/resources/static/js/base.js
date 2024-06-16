@@ -483,7 +483,11 @@ function customizeRenderTableDataBySwitchingBranch(
     searchingSupportingDataSource,
     selectTagSelector='div.table-tools .right-grid select[name=searchingBranch]'
 ) {
-    $(selectTagSelector).addEventListener("click", async e => {
+    const selectTag = $(selectTagSelector)
+    selectTag.value = selectTag.getAttribute("init-branch");
+    selectTag.removeAttribute("init-branch");
+    selectTag.addEventListener("change", async e => {
+        searchingSupportingDataSource.data.branch = selectTag.value
         await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
     });
 }

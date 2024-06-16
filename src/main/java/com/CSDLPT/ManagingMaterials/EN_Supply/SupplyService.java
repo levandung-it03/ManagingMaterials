@@ -43,6 +43,20 @@ public class SupplyService {
             return modelAndView;
         }
 
+        public ModelAndView getReportForSupplyPage(HttpServletRequest request, Model model) throws SQLException {
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            //--Prepare common-components of ModelAndView if we need.
+            ModelAndView modelAndView = staticUtilMethods
+                .customResponsiveModelView(request, model, "report-for-supply");
+
+            //--Close Connection.
+            connectionHolder.removeConnection();
+
+            return modelAndView;
+        }
+
         public ResDtoRetrievingData<Supply> findSupply(
             HttpServletRequest request,
             ReqDtoRetrievingData<Supply> searchingObject
@@ -52,6 +66,7 @@ public class SupplyService {
             searchingObject.setSearchingTable("Vattu");
             searchingObject.setSearchingTableIdName("MAVT");
             searchingObject.setSortingCondition("ORDER BY TENVT ASC");
+            searchingObject.setBranch("CN1");
 
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }

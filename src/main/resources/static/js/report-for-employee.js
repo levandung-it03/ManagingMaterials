@@ -72,7 +72,7 @@ async function CustomizeExportationFileModules() {
                 await pdfFilesExporter.buildPreviewPages(fetchingConfigObject)
                     .then(() => {
                         //--Open preview-page after building page successfully.
-                        $(previewInfoContainer).style.height = $('html body').offsetHeight + "px";
+                        $(previewInfoContainer).style.minHeight = $('html body').offsetHeight + "px";
                         $(previewInfoContainer).classList.remove("closed");
 
                         //--Customize clicking-pdf-exporting-btn event.

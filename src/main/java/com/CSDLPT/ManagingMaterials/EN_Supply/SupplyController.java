@@ -34,6 +34,11 @@ public class SupplyController {
         return branchServices.getManageSupplyPage(request, model);
     }
 
+    @GetMapping("/branch/supply/report-for-supply")
+    public ModelAndView getReportForSupplyPage(HttpServletRequest request, Model model) throws SQLException {
+        return branchServices.getReportForSupplyPage(request, model);
+    }
+
     /*_____________RequestMethod.POST: Supply-entity-interaction_____________*/
     @PostMapping("${url.post.branch.prefix.v1}/find-supply-by-values")
     public ResponseEntity<ResDtoRetrievingData<Supply>> findingSuppliesByValues(
@@ -116,7 +121,7 @@ public class SupplyController {
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
             logger.info(e.toString());
-        }catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_02");
             logger.info(e.toString());
         } catch (SQLException e) {

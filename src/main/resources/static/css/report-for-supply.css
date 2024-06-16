@@ -1,0 +1,65 @@
+html body {
+    background-color: #f9fafc;
+    position: relative;
+}
+.center-page_list .table-tools .right-grid{
+    flex-direction: row-reverse;
+}
+    /*--Customize Supply List--*/
+html body table tbody {
+    height: 62vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
+    scrollbar-width: thin; /* Options are auto, thin, and none */
+}
+
+table tr th#supplyId,
+table tr td.supplyId{
+    text-align: start;
+    padding-left: 100px;
+    width: 25%;
+}
+
+table tr th#supplyName,
+table tr td.supplyName{
+    text-align: start;
+    width: 35%;
+}
+table tr th#unit,
+table tr td.unit,
+table tr th#quantityInStock,
+table tr td.quantityInStock {
+    text-align: center;
+    width: 20%;
+}
+
+table.exporting-table-css tr {
+    align-items: start;
+    min-height: 26px;
+}
+table.exporting-table-css tr th,
+table.exporting-table-css tr td {
+    display: block;
+    padding-top: 2px;
+    font-size: 0.8rem;
+}
+
+table.exporting-table-css tr th#supplyId,
+table.exporting-table-css tr td.supplyId{
+    text-align: start;
+    padding-left: 40px;
+    width: 25%;
+}
+table.exporting-table-css tr th#supplyName,
+table.exporting-table-css tr td.supplyName{
+    text-align: start;
+    width: 35%;
+}
+table.exporting-table-css tr th#unit,
+table.exporting-table-css tr td.unit,
+table.exporting-table-css tr th#quantityInStock,
+table.exporting-table-css tr td.quantityInStock {
+    text-align: center;
+    width: 20%;
+}

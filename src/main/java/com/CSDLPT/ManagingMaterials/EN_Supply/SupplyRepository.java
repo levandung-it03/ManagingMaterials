@@ -47,7 +47,7 @@ public class SupplyRepository {
             //--Register the output parameter
             statement.registerOutParameter(1, Types.BOOLEAN);
             statement.execute();
-            //--Return 1(true) if supplyId is already exist
+            //--Return 1(true) if supplyId is already used
             result = statement.getBoolean(1);
 
             //--Close all connection.
