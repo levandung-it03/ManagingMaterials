@@ -36,13 +36,12 @@ async function CustomizeExportationFileModules() {
                 const createdDate = new Date(row.createdDate);
                 const createdMonth = (createdDate.getMonth() + 1) + "-" + createdDate.getFullYear();
 
-                //--First time initalization.
+                //--First time initialization.
                 if (!Object.keys(_this.usefulVariablesStorage).includes("statisticInfoOfEachMonth"))
                     _this.usefulVariablesStorage.statisticInfoOfEachMonth = {};
                 
                 //--Each first time that reaching new-month-block.
                 if (!Object.keys(_this.usefulVariablesStorage.statisticInfoOfEachMonth).includes(createdMonth)) {
-                    _this.usefulVariablesStorage.statisticInfoOfEachMonth
                     _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth] = {
                         totalSuppliesQuantity: 0,
                         totalPrices: 0,
