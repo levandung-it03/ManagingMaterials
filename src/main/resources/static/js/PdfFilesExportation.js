@@ -129,7 +129,9 @@ class PdfFilesExportation {
         doc.setFontSize(12);
         margins.top += 10;
         [...$$('div.preview-page-description div')].forEach(description => {
-            doc.text(description.textContent.trim(), 10, margins.top, {align:"left"});
+            const text = description.textContent.trim();
+            log(text);
+            doc.text(text, 10, margins.top, {align:"left"});
             margins.top += (description.offsetHeight * ratioLibs.unitRatioPxAndMm) * 0.7;
         });
 
@@ -142,15 +144,22 @@ class PdfFilesExportation {
             styles: { cellPadding: 1, fontSize: 10, halign: 'left', font: 'Arial', fontStyle: 'normal' },
             margin: margins,
             didDrawCell: (data) => {
-                //--When the iterater reach the last cell of each row.
-                if (data.column.index == headData.length - 1) {
+                //--Colors the header-separator.
+                Object.entries(data.row.cells).forEach(pair => {
+                    const text = [...pair[1].text].reduce((res, text) => res + text, "").trim();
+                    if (text === "")    pair[1].styles.fillColor = 200;
+                    //--Hiding empty-separator
+                    if (text == "-")    pair[1].styles.textColor = 255;
+                });
+                //--When the iterator reach the last cell of each row.
+                if (data.column.index === headData.length - 1) {
                     //--If this line is the last line, stop halding method to prevent exception.
                     if (data.row.index + 1 >= data.table.body.length)
                         return;
 
                     const nextRowHeight = data.table.body[data.row.index + 1].height;
-                    const curentPageHeight = doc.internal.pageSize.height;
-                    const remainingPageSpace = curentPageHeight //--Total page-height.
+                    const currentPageHeight = doc.internal.pageSize.height;
+                    const remainingPageSpace = currentPageHeight //--Total page-height.
                         - data.cursor.y //--Subtract all of drawed-row-height.
                         - data.table.body[data.row.index].height //--Subtract the standing-row (it's already drawed but the cursorY hasn't stepped yet).
                         - margins.bottom; //--Subtract the bottom-page-margin.

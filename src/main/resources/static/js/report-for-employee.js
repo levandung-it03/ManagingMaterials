@@ -50,7 +50,7 @@ async function CustomizeExportationFileModules() {
                 <td plain-value="${row.branch}" class="branch">${row.branch}</td>
                 <td plain-value="${row.deletedStatus}" class="deletedStatus">${row.deletedStatus}</td>
             </tr>`,
-        moreFeatuers: () => {},
+        moreFeatures: () => {},
     };
 
     await pdfFilesExporter.loadAllNecessaryLibs()
@@ -60,9 +60,7 @@ async function CustomizeExportationFileModules() {
                 //--Prepare data for preview-descriptions.
                 fetchingConfigObject.descriptionComponents = [
                     `<div class="preview-table-container_descriptions">
-                        <span> Chi nhánh: <span class="previewing-branch">
-                                ${$('.table-tools .select-branch-to-search select').value}
-                        </span></span>
+                        <span> Chi nhánh: <span class="previewing-branch">${$('.table-tools .select-branch-to-search select').value}</span></span>
                     </div>`,
                 ];
                 //--Prepare data for preview-statistic.

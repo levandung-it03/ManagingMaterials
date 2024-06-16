@@ -5,6 +5,8 @@ async function ListComponent(searchingSupportingDataSource) {
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent('div.center-page_list table');
+
+    customizeSelectingTableInstanceEventInReportPages();
 }
 
 function GeneralMethods() {
@@ -21,14 +23,14 @@ async function CustomizeExportationFileModules() {
         fetchDataAction: "/service/v1/branch/find-all-employee-activities-for-report",
         usefulVariablesStorage: {},
         fieldObjects: [
-            { cssName: "createdDate", utf8Name: "Ngày tạo" },
-            { cssName: "ticketId", utf8Name: "Mã phiếu" },
-            { cssName: "ticketType", utf8Name: "Loại phiếu" },
-            { cssName: "customerFullName", utf8Name: "Tên khách hàng" },
-            { cssName: "supplyName", utf8Name: "Tên vật tư" },
-            { cssName: "suppliesQuantity", utf8Name: "Số lượng" },
-            { cssName: "price", utf8Name: "Đơn giá" },
-            { cssName: "totalPrice", utf8Name: "Trị giá" },
+            {cssName: "createdDate", utf8Name: "Ngày tạo"},
+            {cssName: "ticketId", utf8Name: "Mã phiếu"},
+            {cssName: "ticketType", utf8Name: "Loại phiếu"},
+            {cssName: "customerFullName", utf8Name: "Tên khách hàng"},
+            {cssName: "supplyName", utf8Name: "Tên vật tư"},
+            {cssName: "suppliesQuantity", utf8Name: "Số lượng"},
+            {cssName: "price", utf8Name: "Đơn giá"},
+            {cssName: "totalPrice", utf8Name: "Trị giá"},
         ],
         rowFormattingEngine: (row) => {
             const _this = fetchingConfigObject;
@@ -39,7 +41,7 @@ async function CustomizeExportationFileModules() {
                 //--First time initialization.
                 if (!Object.keys(_this.usefulVariablesStorage).includes("statisticInfoOfEachMonth"))
                     _this.usefulVariablesStorage.statisticInfoOfEachMonth = {};
-                
+
                 //--Each first time that reaching new-month-block.
                 if (!Object.keys(_this.usefulVariablesStorage.statisticInfoOfEachMonth).includes(createdMonth)) {
                     _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth] = {
@@ -49,19 +51,19 @@ async function CustomizeExportationFileModules() {
                         lastLineIndex: null,
                     };
                 }
-                log(_this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth])
+
                 _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth].totalSuppliesQuantity
-                    += Number.parseInt(row.suppliesQuantity);
+                    += Number.parseInt(row.suppliesQuantity.split(" ")[0]);
                 _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth].totalPrices
                     += Number.parseFloat(row.totalPrice);
                 _this.usefulVariablesStorage.statisticInfoOfEachMonth[createdMonth].lastLineIndex = row.index;
             })();
-            
+
             return (function runningRowFormattingEngineMainLogics() {
                 const customerFullName = row.customerFullName ? row.customerFullName : "Không";
                 const price = VNDCurrencyFormatEngine(row.price, false);
                 const totalPrice = VNDCurrencyFormatEngine(row.totalPrice, false);
-                return `<tr index=${row.index} id="${row.ticketId}">
+                return `<tr index=${row.index} class="${row.ticketId}">
                         <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
                         <td plain-value="${row.ticketId}" class="ticketId">${row.ticketId}</td>
                         <td plain-value="${row.ticketType}" class="ticketType"><b>${row.ticketType}</b></td>
@@ -76,27 +78,35 @@ async function CustomizeExportationFileModules() {
         moreFeatures: () => {
             const _this = fetchingConfigObject;
             Object.entries(_this.usefulVariablesStorage.statisticInfoOfEachMonth).forEach(pair => {
-                //--Get first-line and last-line in current-month-block.
-                const firstLine = $(`${_this.previewInfoContainer} table tbody tr[index="${pair[1].firstLineIndex}"]`);
-                const lastLine = $(`${_this.previewInfoContainer} table tbody tr[index="${pair[1].lastLineIndex}"]`);
-
-                firstLine.outerHTML = `<tr>
-                    <td plain-value="${pair[0]}" class="createdMonth">Tháng: ${pair[0]}</td>
-                </tr>` + firstLine.outerHTML;
-
-                lastLine.outerHTML += `<tr>
+                const statisticLine = `<tr>
                     <td plain-value="${pair[0]}" class="calculatedMonth">Tổng tháng: ${pair[0]}</td>
-                    <td class="ticketType"></td>
-                    <td class="customerFullName"></td>
-                    <td></td><td></td>
-                    <td plain-value="${pair[1].totalSuppliesQuantity}" class="totalSuppliesQuantity">
-                        Tổng số lượng: ${pair[1].totalSuppliesQuantity}
-                    </td>
-                    <td></td>
-                    <td plain-value="${VNDCurrencyFormatEngine(pair[1].totalPrices, false)}" class="totalPrices">
-                        Tổng trị giá: ${VNDCurrencyFormatEngine(pair[1].totalPrices, false)}
-                    </td>
+                        <td class="empty-separator">-</td>
+                        <td class="empty-separator">-</td>
+                        <td class="empty-separator">-</td>
+                        <td class="empty-separator">-</td>
+                        <td plain-value="${pair[1].totalSuppliesQuantity}" class="totalSuppliesQuantity">
+                            Tổng số lượng: ${pair[1].totalSuppliesQuantity}
+                        </td>
+                        <td class="empty-separator">-</td>
+                        <td plain-value="${VNDCurrencyFormatEngine(pair[1].totalPrices, false)}" class="totalPrices">
+                            Tổng trị giá: ${VNDCurrencyFormatEngine(pair[1].totalPrices, false)}
+                        </td>
+                    </tr>`;
+                const headerLine = `<tr style="background-color: var(--smoking-grey);">
+                    <td plain-value="${pair[0]}" class="createdMonth">Tháng: ${pair[0]}</td>
                 </tr>`;
+
+                //--Get first-line in current-month-block.
+                const firstLine = $(`${_this.previewInfoContainer} table tbody tr[index="${pair[1].firstLineIndex}"]`);
+                //--If there's just 1 line of current-month-block.
+                if (pair[1].firstLineIndex === pair[1].lastLineIndex) {
+                    firstLine.outerHTML = headerLine + firstLine.outerHTML + statisticLine;
+                } else {
+                    //--Get last-line in current-month-block.
+                    const lastLine = $(`${_this.previewInfoContainer} table tbody tr[index="${pair[1].lastLineIndex}"]`);
+                    firstLine.outerHTML = headerLine + firstLine.outerHTML;
+                    lastLine.outerHTML += statisticLine;
+                }
             });
         }
     };
@@ -154,7 +164,7 @@ async function CustomizeExportationFileModules() {
                             <span><b>CMND</b>: ${employeeBodyDataCells.identifier}</span>
                         </div>`,
                         `<div class="preview-table-container_descriptions">
-                            <span><b>Mã nhân viên</b>: ${employeeBodyDataCells.address}</span>
+                            <span><b>Địa chỉ</b>: ${employeeBodyDataCells.address}</span>
                         </div>`,
                         `<div class="preview-table-container_descriptions">
                             <span><b>Trạng thái xoá</b>: ${employeeBodyDataCells.deletedStatus}</span>
@@ -222,7 +232,6 @@ async function CustomizeExportationFileModules() {
         {
             tableLabel: "người",
             callModulesOfExtraFeatures: async () => {
-                customizeSelectingTableInstanceEventInReportPages();
             }
         }
     );

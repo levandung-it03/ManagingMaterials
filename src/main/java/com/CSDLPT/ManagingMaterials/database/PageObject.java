@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PageObject {
     private Integer page = 1;
-    private Integer size = 1;
+    private Integer size = 2;
 
     /**Spring MVC: Get the "page" param in HttpServletRequest, customize and return as PageObject.**/
     public PageObject(HttpServletRequest request) {
