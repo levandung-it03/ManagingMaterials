@@ -1,0 +1,156 @@
+html body {
+    background-color: #f9fafc;
+    position: relative;
+}
+table.exporting-table-css tr {
+    align-items: start;
+    min-height: 26px;
+}
+table.exporting-table-css tr th,
+table.exporting-table-css tr td {
+    display: block;
+    padding-top: 2px;
+    font-size: 0.8rem;
+}
+table.exporting-table-css tr td.empty-separator {
+    text-align: center;
+    width: 1%;
+    color: white;
+}
+/*Separating Blocks Of Times*/
+table.exporting-table-css tr td.createdMonth {
+    width: 100%;
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+/*Calculating Total Data Blocks Of Times*/
+table.exporting-table-css tr td.calculatedMonth {
+    /*Total width of: .createdDate, .ticketId, .ticketType, .customerFullName, .supplyName (subtract 4 empty-separator)*/
+    width: 47%;
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+table.exporting-table-css tr td.totalSuppliesQuantity {
+    /*Total width of: .supplyName and .suppliesQuantity (subtract 1 empty-separator)*/
+    width: 25%;
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+table.exporting-table-css tr td.totalPrices {
+    /*Total width of: .price and .totalPrice*/
+    width: 22%;
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+table.exporting-table-css tr th#createdDate,
+table.exporting-table-css tr td.createdDate {
+    text-align: center;
+    width: 10%;
+}
+table.exporting-table-css tr th#ticketId,
+table.exporting-table-css tr td.ticketId {
+    text-align: center;
+    width: 8%;
+
+}
+table.exporting-table-css tr th#ticketType,
+table.exporting-table-css tr td.ticketType {
+    text-align: center;
+    width: 9%;
+}
+table.exporting-table-css tr th#customerFullName,
+table.exporting-table-css tr td.customerFullName {
+    text-align: start;
+    width: 24%;
+}
+table.exporting-table-css tr th#supplyName,
+table.exporting-table-css tr td.supplyName {
+    text-align: start;
+    width: 15%;
+}
+
+table.exporting-table-css tr th#suppliesQuantity,
+table.exporting-table-css tr td.suppliesQuantity {
+    text-align: start;
+    width: 11%;
+}
+table.exporting-table-css tr th#price,
+table.exporting-table-css tr td.price {
+    text-align: start;
+    width: 10%;
+}
+table.exporting-table-css tr th#totalPrice,
+table.exporting-table-css tr td.totalPrice {
+    text-align: start;
+    width: 12%;
+}
+
+.center-page_more-info {
+    margin: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: var(--smoking-grey);
+}
+.center-page_more-info .more-info-title {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 25px 30px;
+    border-bottom: 1px var(--grey-of-header-border) solid;
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+}
+.center-page_more-info .info-blocks {
+    width: 48%;
+}
+.center-page_more-info .info-blocks fieldset {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 25px 30px;
+    height: 55px;
+    position: relative;
+    background-color: white;
+}
+.center-page_more-info .info-blocks legend {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.center-page_more-info .info-blocks select,
+.center-page_more-info .info-blocks input {
+    width: 100%;
+    height: 95%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 13px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+.center-page_more-info .center-page_more-info_table-info-block {
+    width: 100%;
+
+}
+.center-page_more-info .center-page_more-info_table-info-block table,
+.center-page_more-info .center-page_more-info_table-info-block table thead,
+.center-page_more-info .center-page_more-info_table-info-block table tbody {
+    display: block;
+    height: auto!important;
+    min-width: auto;
+    width: 100%;
+    background-color: white;
+}
+.center-page_more-info .center-page_more-info_table-info-block table tbody tr {
+    width: 100%;
+}

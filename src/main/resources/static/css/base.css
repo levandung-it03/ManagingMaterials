@@ -459,8 +459,7 @@ html body .report-pages {
 }
 html body .report-pages .center-page_list {
     width: 100%;
-    margin: 20px;
-    margin-bottom: 0;
+    margin: 20px 20px 0;
     height: 82vh;
 }
 html body .report-pages .table-footer .table-footer_main {
@@ -473,12 +472,11 @@ div.preview-table-container {
     z-index: 2;
     width: 100%;
     /* min-height: 100vh; */
-    align-items: stretch;
+    align-items: center;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: start;
-    align-items: center;
     padding-top: 90px;
     background-color: rgba(0, 0, 0, 0.5);
 }
