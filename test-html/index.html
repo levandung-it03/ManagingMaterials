@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- * Import Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+    <title>Home</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- home.css -->
+    <link rel="stylesheet" type="text/css" href="static/css/base.css" />
+
+    <!-- header.css -->
+    <link rel="stylesheet" type="text/css" href="static/css/header.css" />
+
+    <!-- statistic.css -->
+    <link rel="stylesheet" type="text/css" href="static/css/statisitc.css" />
+  </head>
+
+  <body>
+    <!-- * Original Error Message Handler -->
+    <!-- <c:if test="${errorMessage != null}">
+      <div class="error-service-message">
+        <span>${errorMessage}</span>
+        <i
+          id="error-service-message_close-btn"
+          class="fa fa-times-circle"
+          aria-hidden="true"
+        ></i>
+      </div>
+    </c:if> -->
+
+    <!-- * Original Header Section -->
+    <!-- <%@ include file="/WEB-INF/jsp/header.jsp" %> -->
+
+    <!-- * Header section -->
+    <div id="header">
+      <div class="header-wrapper center">
+        <ul id="nav" class="center">
+          <li><a href="/branch/employee/manage-employee">NHÂN VIÊN</a></li>
+          <li><a href="/branch/supply/manage-supply">VẬT TƯ</a></li>
+          <li><a href="/branch/warehouse/manage-warehouse">KHO</a></li>
+          <li>
+            <a href="">
+              LẬP PHIẾU
+              <i class="fa-solid fa-angle-down"></i>
+            </a>
+            <div>
+              <ul class="subnav">
+                <li><a href="/branch/order/manage-order">ĐƠN ĐẶT HÀNG</a></li>
+                <li>
+                  <a
+                    href="/branch/supplies-importation/manage-supplies-importation"
+                    >PHIẾU NHẬP</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="/branch/supplies-exportation/manage-supplies-exportation"
+                    >PHIẾU XUẤT</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <a href="">
+              BÁO CÁO
+              <i class="fa-solid fa-angle-down"></i>
+            </a>
+            <div>
+              <ul class="subnav">
+                <li><a href="#">DANH SÁCH NHÂN VIÊN</a></li>
+                <li><a href="#">DANH SÁCH VẬT TƯ</a></li>
+                <li><a href="#">CHI TIẾT NHẬP XUẤT</a></li>
+                <li><a href="#">ĐƠN HÀNG KHÔNG CÓ PHIẾU NHẬP</a></li>
+                <li><a href="#">HOẠT ĐỘNG NHÂN VIÊN</a></li>
+                <li><a href="#">TỔNG HỢP NHẬP XUẤT</a></li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        <div class="avatar">
+          <!-- * Mock User Data -->
+          <span class="mock-avatar center">Minh</span>
+          <!-- Hiển thị khung thông tin tài khoản -->
+          <div class="account-wrapper">
+            <div class="account-info">
+              <div class="info center">
+                <span id="employeeId">Mã nhân viên: 121002</span>
+                <span id="full-name">Họ tên: Nguyen Nhat Minh</span>
+                <span id="branch">Chi Nhanh: Chi nhanh 1</span>
+                <span id="role">Vai trò: User</span>
+              </div>
+            </div>
+            <div class="account-btn">
+              <a href="">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Đăng xuất
+              </a>
+              <a href="">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                Báo cáo
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="greeting-container">
+      <h2>Ứng dụng quản lí vật tư</h2>
+    </div>
+
+    <div class="statistic-analysis-container">
+      <!-- * Summary statistic data cards -->
+      <div id="summary-statistic-data" class="summary-statistic-data">
+        <div class="card">
+          <h3>Tổng số vật tư</h3>
+          <p id="total-supplies">22</p>
+        </div>
+        <div class="card">
+          <h3>Tổng doanh thu chi nhánh</h3>
+          <p id="total-revenue">1,000,000,000 VND</p>
+        </div>
+        <div class="card">
+          <h3>Tổng số nhân viên</h3>
+          <p id="total-active-employees">50</p>
+        </div>
+        <div class="card">
+          <h3>Tổng số đơn xuất vật tư</h3>
+          <p id="total-export-orders">70</p>
+        </div>
+        <div class="card">
+          <h3>Số đơn đặt chưa được nhập</h3>
+          <p id="pending-import-orders">17</p>
+        </div>
+      </div>
+
+      <!-- * Statistic charts -->
+      <div class="chart-container">
+        <h3>Tổng hợp nhập xuất trong năm 2023</h3>
+        <canvas id="monthly-comparison-chart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Xu hướng nhập và xuất của từng vật tư</h3>
+        <canvas id="trend-comparison-chart"></canvas>
+      </div>
+      <div class="chart-container">
+        <h3>Tỉ lệ tồn kho của các vật tư</h3>
+        <canvas id="inventory-percentage-chart"></canvas>
+      </div>
+    </div>
+  </body>
+
+  <script src="static/js/chart.js"></script>
+</html>
