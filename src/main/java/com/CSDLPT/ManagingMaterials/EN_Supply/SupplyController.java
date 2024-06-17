@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ReqDtoTicketsForDetailSuppliesReport;
+import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoSupplyForImportToBuildDialog;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoTicketsForDetailSuppliesReport;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
@@ -58,6 +59,21 @@ public class SupplyController {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(branchServices.findSupply(request, searchingObject));
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return null;
+        }
+    }
+
+    @PostMapping("${url.post.branch.prefix.v1}/find-supply-by-values-for-order-detail")
+    public ResponseEntity<ResDtoRetrievingData<ResDtoSupplyForImportToBuildDialog>> findSupplyForOrderDetail(
+        @RequestBody ReqDtoRetrievingData<ResDtoSupplyForImportToBuildDialog> searchingObject,
+        HttpServletRequest request
+    ) {
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(branchServices.findSupplyForOrderDetail(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;

@@ -4,6 +4,7 @@ import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesExportation.dtos.ReqDtoSuppliesExportation;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesExportation.dtos.ResDtoExportationWithImportationInfo;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesExportationDetail.SuppliesExportationDetailRepository;
 import com.CSDLPT.ManagingMaterials.EN_Warehouse.WarehouseRepository;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.InnerJoinObject;
@@ -30,6 +31,7 @@ public class SuppliesExportationService {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesExportationRepository suppliesExportationRepository;
+        private final SuppliesExportationDetailRepository suppliesExportationDetailRepository;
         private final WarehouseRepository warehouseRepository;
         private final BranchRepository branchRepository;
 
@@ -108,6 +110,10 @@ public class SuppliesExportationService {
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, exportation.getWarehouseIdAsFk()))
                 throw new NoSuchElementException("error_warehouse_02");
 
+            if (suppliesExportationDetailRepository
+                .existBySuppliesExportationId(connectHolder, exportation.getSuppliesExportationId()))
+                throw new NoSuchElementException("error_suppliesExportation_03");
+
             //--May throw SQLException if id is already existing.
             suppliesExportationRepository.updateById(connectHolder, SuppliesExportation.builder()
                 .suppliesExportationId(exportation.getSuppliesExportationId())
@@ -124,7 +130,10 @@ public class SuppliesExportationService {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
             if (suppliesExportationRepository.findById(connectHolder, exportationId).isEmpty())
-                throw new NoSuchElementException("Supplies Exportation Id is invalid");
+                throw new NoSuchElementException("error_suppliesExportation_02");
+
+            if (suppliesExportationDetailRepository.existBySuppliesExportationId(connectHolder, exportationId))
+                throw new NoSuchElementException("error_suppliesExportation_03");
 
             suppliesExportationRepository.deleteById(connectHolder, exportationId);
 

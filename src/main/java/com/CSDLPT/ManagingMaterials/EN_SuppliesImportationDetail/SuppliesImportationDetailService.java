@@ -1,6 +1,8 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail;
 
+import com.CSDLPT.ManagingMaterials.EN_Order.OrderRepository;
 import com.CSDLPT.ManagingMaterials.EN_OrderDetail.dtos.ReqDtoDataForDetail;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportationRepository;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
@@ -14,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -25,8 +28,10 @@ public class SuppliesImportationDetailService {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesImportationDetailRepository suppliesImportationDetailRepository;
+        private final SuppliesImportationRepository suppliesImportationRepository;
 
-        public ModelAndView getManageSuppliesImportationDetailPage(HttpServletRequest request, Model model) {
+        public ModelAndView getManageSuppliesImportationDetailPage(HttpServletRequest request, Model model) throws SQLException {
+            DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
             //--Prepare a modelAndView object to symbolize the whole page.
             final String suppliesImportationId = request.getParameter("suppliesImportationId");
             ModelAndView modelAndView = staticUtilMethods
@@ -36,12 +41,18 @@ public class SuppliesImportationDetailService {
             SuppliesImportationDetail detail =
                 (SuppliesImportationDetail) model.asMap().get("submittedSuppliesImportationDetail");
             if (detail != null) modelAndView.addObject("importationDetail", detail);
-            else
+            else {
                 //--Give the default value to suppliesImportationDetail.
                 modelAndView.addObject("importationDetail", SuppliesImportationDetail.builder()
                     .suppliesImportationId(suppliesImportationId)
                     .build());
+                modelAndView.addObject("orderId", suppliesImportationRepository
+                    .findById(connectHolder, suppliesImportationId)
+                    .orElseThrow(() -> new NoSuchElementException("suppliesImportationId not found"))
+                    .getOrderId());
+            }
 
+            connectHolder.removeConnection();
             return modelAndView;
         }
 
@@ -80,12 +91,10 @@ public class SuppliesImportationDetailService {
             ).isPresent())
                 throw new DuplicateKeyException("This Supply Id is already existing in Sup-Import-List in DB");
 
-            //--Update supply quantity
-            if (suppliesImportationDetailRepository.updateSupplyQuantity(connectHolder,
-                importationDetail.getSupplyId(), importationDetail.getSuppliesQuantity()) == 0)
-                throw new SQLException("There's an error with SQL Server!");
+            int addRes = suppliesImportationDetailRepository.saveByStoredProc(connectHolder, importationDetail);
+            if (addRes == -1)   throw new NoSuchElementException("SupplyId is invalid");
+            if (addRes == 0)    throw new SQLException("Something wrong in your application");
 
-            suppliesImportationDetailRepository.save(connectHolder, importationDetail);
             //--Close connection
             connectHolder.removeConnection();
         }
@@ -103,47 +112,15 @@ public class SuppliesImportationDetailService {
             if (currentImportDetail.isEmpty())
                 throw new NoSuchElementException("Supplies-Importation-Detail not found");
 
-            //--Update supply quantity
-            SuppliesImportationDetail suppliesImportationDetail = currentImportDetail.get();
-            int quantityChange = importationDetail.getSuppliesQuantity() - suppliesImportationDetail.getSuppliesQuantity();
-            int updateResult = suppliesImportationDetailRepository.updateSupplyQuantity(connectHolder,
-                suppliesImportationDetail.getSupplyId(), quantityChange);
+            int updateRes = suppliesImportationDetailRepository.updateByStoredProc(connectHolder, importationDetail);
+            if (updateRes == 0)     throw new SQLException("Some thing wrong with application");
+            if (updateRes == -1)    throw new NoSuchElementException("SupplyId not found");
+            if (updateRes == -2)    throw new SQLIntegrityConstraintViolationException("New suppliesQuantity value is invalid");
 
-            if (updateResult == -1)
-                throw new SQLException("There's an error with SQL Server (Constraint Violation)");
-            else if (updateResult == 0)
-                throw new Exception("There's an error with SQL Server!");
-
-            suppliesImportationDetailRepository.update(connectHolder, importationDetail);
             //--Close connection
             connectHolder.removeConnection();
         }
 
-        public void deleteSuppliesImportationDetail(
-            String importationDetailId,
-            String supplyId,
-            HttpServletRequest request
-        ) throws Exception {
-            DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
-            Optional<SuppliesImportationDetail> currentImportDetail = suppliesImportationDetailRepository
-                .findById(connectHolder, importationDetailId, supplyId);
-            if (currentImportDetail.isEmpty())
-                throw new NoSuchElementException("Supplies-Importation-Detail not found");
-
-            //--Update supply quantity
-            SuppliesImportationDetail suppliesImportationDetail = currentImportDetail.get();
-            int updateResult = suppliesImportationDetailRepository.updateSupplyQuantity(connectHolder,
-                supplyId, -suppliesImportationDetail.getSuppliesQuantity());
-            if (updateResult == -1)
-                throw new SQLException("There's an error with SQL Server (Constraint Violation)");
-            else if (updateResult == 0)
-                throw new Exception("There's an error with SQL Server!");
-
-            suppliesImportationDetailRepository.delete(connectHolder, importationDetailId, supplyId);
-            //--Close connection
-            connectHolder.removeConnection();
-        }
     }
 
     @Service

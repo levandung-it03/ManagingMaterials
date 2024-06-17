@@ -49,7 +49,10 @@ public class FindingActionService {
             "%s WHERE %s %s LIKE '%%'+?+'%%' ",
             searchingObject.getJoiningCondition().isEmpty() ? "" : searchingObject.getJoiningCondition().trim(),
             searchingObject.getMoreCondition().isEmpty() ? "" : searchingObject.getMoreCondition().trim() + " AND ",
-            this.getCastedSqlDataTypeOfSearchedField(searchingObject.getSearchingField()).trim()
+            this.getCastedSqlDataTypeOfSearchedField(
+                searchingObject.getSearchingField(),
+                searchingObject.getObjectType()
+            ).trim()
         );
 
         //--IoC here.
@@ -162,11 +165,15 @@ public class FindingActionService {
     }
 
     /**Spring JdbcTemplate: This method help us find the corresponding SQL data by Java Data type**/
-    public String getCastedSqlDataTypeOfSearchedField(String fieldName) throws NoSuchFieldException {
+    public <T> String getCastedSqlDataTypeOfSearchedField(String fieldName, Class<T> objectType) throws NoSuchFieldException {
+        String tableName = "", objType = objectType.getSimpleName();
+        try { tableName = staticUtilMethods.columnNameStaticDictionary(objType).getFirst() + "."; }
+        catch (Exception ignored) {}
+
         List<String> fieldInfo = staticUtilMethods.columnNameStaticDictionary(fieldName);
         String sqlFieldName = fieldName.toUpperCase().contains("FK")
             ? staticUtilMethods.columnNameStaticDictionary(fieldName).get(1)
-            : staticUtilMethods.columnNameStaticDictionary(fieldName).getFirst();
+            : tableName + staticUtilMethods.columnNameStaticDictionary(fieldName).getFirst();
 
         //--Type-casting syntax of this query corresponding with data-type.
         return switch (fieldInfo.getLast()) {
@@ -179,11 +186,16 @@ public class FindingActionService {
     /**Spring JdbcTemplate: This method help us map the corresponding Java Obj Name to SQL column name**/
     public <T> String getOrderedFieldsForJoiningQuery(Class<T> objectType) {
         try {
+            String tableName = "", objType = objectType.getSimpleName();
+            try { tableName = staticUtilMethods.columnNameStaticDictionary(objType).getFirst() + "."; }
+            catch (Exception ignored) {}
+
             StringBuilder result = new StringBuilder();
             for (java.lang.reflect.Field field : objectType.getDeclaredFields()) {
                 if (field.getName().toUpperCase().contains("FK")) {
                     result.append(staticUtilMethods.columnNameStaticDictionary(field.getName()).get(1)).append(", ");
                 } else {
+                    result.append(tableName);
                     result.append(staticUtilMethods.columnNameStaticDictionary(field.getName()).getFirst()).append(", ");
                 }
             }

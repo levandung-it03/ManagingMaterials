@@ -115,12 +115,10 @@ table tr td.suppliesQuantity {
 }
 table tr th#price,
 table tr td.price {
-    width: 20%;
+    width: 30%;
 }
 table tr th#update,
-table tr td.update,
-table tr th#delete,
-table tr td.delete {
+table tr td.update {
     width: 10%;
 }
 

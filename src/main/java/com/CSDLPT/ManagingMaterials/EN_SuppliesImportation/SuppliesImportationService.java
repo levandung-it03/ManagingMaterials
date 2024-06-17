@@ -5,6 +5,7 @@ import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
 import com.CSDLPT.ManagingMaterials.EN_Order.OrderRepository;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ResDtoImportationWithImportationInfo;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail.SuppliesImportationDetailRepository;
 import com.CSDLPT.ManagingMaterials.EN_Warehouse.WarehouseRepository;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.InnerJoinObject;
@@ -31,6 +32,7 @@ public class SuppliesImportationService {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesImportationRepository suppliesImportationRepository;
+        private final SuppliesImportationDetailRepository suppliesImportationDetailRepository;
         private final WarehouseRepository warehouseRepository;
         private final OrderRepository orderRepository;
         private final BranchRepository branchRepository;
@@ -116,6 +118,10 @@ public class SuppliesImportationService {
             ).isPresent())
                 throw new DuplicateKeyException("error_order_02");
 
+            if (suppliesImportationDetailRepository
+                .existBySuppliesImportationId(connectHolder, importation.getSuppliesImportationId()))
+                throw new NoSuchElementException("error_suppliesImportation_04");
+
             SuppliesImportation updatedImportation = suppliesImportationRepository
                 .findById(connectHolder, importation.getSuppliesImportationId())
                 .orElseThrow(() -> new NoSuchElementException("error_suppliesImportation_02"));
@@ -132,7 +138,10 @@ public class SuppliesImportationService {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
             if (suppliesImportationRepository.findById(connectHolder, importationId).isEmpty())
-                throw new NoSuchElementException("Supplies Importation Id is invalid");
+                throw new NoSuchElementException("error_suppliesImportation_02");
+
+            if (suppliesImportationDetailRepository.existBySuppliesImportationId(connectHolder, importationId))
+                throw new NoSuchElementException("error_suppliesImportation_04");
 
             suppliesImportationRepository.deleteById(connectHolder, importationId);
 

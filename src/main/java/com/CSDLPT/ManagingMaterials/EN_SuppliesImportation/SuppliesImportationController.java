@@ -116,7 +116,7 @@ public class SuppliesImportationController {
             branchServices.deleteSuppliesImportation(importationId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_suppliesImportation_02");
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
         } catch (SQLIntegrityConstraintViolationException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_suppliesImportation_03");
         } catch (Exception e) {

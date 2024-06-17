@@ -21,6 +21,8 @@ class Dialog {
         $(addingFormDialogSupporterSelector + ` tbody`).addEventListener("click", e =>{
             $(`div.center-page_adding-form div[id*="${searchingSupportingDataSourceForDialog.data.searchingField}"] input`)
                 .value = e.target.closest("tr").id.trim();
+            try { searchingSupportingDataSourceForDialog.moreDialogFeatures(e.target.closest("tr")) }
+            catch (ignored) {}
             selectDialog.classList.add("closed");
         });
 
@@ -79,26 +81,33 @@ class OrderDialog extends Dialog {
 }
 
 class SupplyDialog extends Dialog {
-    constructor(tableBodySelector, roleFetching) {
+    constructor(tableBodySelector, roleFetching, condition=null, moreActionCallback=null, fetchAction=null) {
         super();
+        fetchAction = (fetchAction == null) ? "/find-supply-by-values" : fetchAction;
         this.searchingSupportingDataSourceForDialog = {
             //--Initialize field-values for firstly fetch action.
             data: {
                 currentPage: 1,
                 objectsQuantity: 0,
                 searchingField: "supplyId",
-                searchingValue: "",
+                searchingValue: condition != null ? condition : "",
             },
-
+            moreDialogFeatures: (trSelectedDomAsSupportingInputData) => {
+                if (moreActionCallback)
+                    moreActionCallback(trSelectedDomAsSupportingInputData);
+            },
             //--Main fields for searching-action.
             tableBody: $(tableBodySelector),
-            fetchDataAction: "/service/v1/" + roleFetching + "/find-supply-by-values",
+            fetchDataAction: "/service/v1/" + roleFetching + fetchAction,
             rowFormattingEngine: (row) => `
             <tr id="${row.supplyId}">
                 <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
                 <td plain-value="${row.supplyName}" class="supplyName">${row.supplyName}</td>
                 <td plain-value="${row.unit}" class="unit">${row.unit}</td>
-                <td plain-value="${row.quantityInStock}" class="quantityInStock">${row.quantityInStock}</td>
+                <td plain-value="${row.quantityInStock || row.suppliesQuantityFromOrderDetailAsFk}"
+                class="${row.quantityInStock != undefined ? "quantityInStock" : "suppliesQuantityFromOrderDetailAsFk"}">
+                    ${row.quantityInStock || row.suppliesQuantityFromOrderDetailAsFk}
+                </td>
             </tr>`
         };
     }

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -32,7 +33,7 @@ public class SuppliesImportationDetailController {
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
     @GetMapping("/branch/supplies-importation-detail/manage-supplies-importation-detail")
-    public ModelAndView getManageSuppliesImportationDetailPage(HttpServletRequest request, Model model) {
+    public ModelAndView getManageSuppliesImportationDetailPage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getManageSuppliesImportationDetailPage(request, model);
     }
 
@@ -71,11 +72,11 @@ public class SuppliesImportationDetailController {
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportationDetail", importationDetail);
+        } catch (NoSuchElementException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
         } catch (Exception e) {
             logger.info("Error from AddSuppliesImportationDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-            redirectAttributes.addFlashAttribute("submittedSuppliesImportationDetail", importationDetail);
         }
         return "redirect:" + standingUrl;
     }
@@ -97,9 +98,10 @@ public class SuppliesImportationDetailController {
         try {
             branchServices.updateSuppliesImportationDetail(importationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
-        } catch (SQLException e) {
-            logger.info("Error from UpdateSuppliesImportationsDetailController: " + e);
+        } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
+        } catch (SQLIntegrityConstraintViolationException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_supply_03");
         } catch (Exception e) {
             logger.info("Error from UpdateSuppliesImportationsDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
@@ -107,25 +109,4 @@ public class SuppliesImportationDetailController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-supplies-importation-detail")
-    public String deleteSuppliesImportationsDetail(
-        @RequestParam("deleteBtn") String importationDetailId,
-        @RequestParam("supplyId") String supplyId,
-        HttpServletRequest request,
-        RedirectAttributes redirectAttributes
-    ) {
-        try {
-            branchServices.deleteSuppliesImportationDetail(importationDetailId, supplyId, request);
-            redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
-        } catch (NoSuchElementException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
-        } catch (SQLException e) {
-            logger.info("Error from deleteSuppliesImportationsDetail: " + e);
-            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
-        } catch (Exception e) {
-            logger.info("Error from deleteSuppliesImportationsDetail: " + e);
-            redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
-        }
-        return "redirect:" + request.getHeader("Referer");
-    }
 }

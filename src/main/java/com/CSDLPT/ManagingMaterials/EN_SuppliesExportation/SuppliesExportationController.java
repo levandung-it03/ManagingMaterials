@@ -119,7 +119,7 @@ public class SuppliesExportationController {
             branchServices.deleteSuppliesExportation(exportationId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_suppliesExportation_02");
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
         } catch (Exception e) {
             logger.info("Error from DeleteSuppliesExportationController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");

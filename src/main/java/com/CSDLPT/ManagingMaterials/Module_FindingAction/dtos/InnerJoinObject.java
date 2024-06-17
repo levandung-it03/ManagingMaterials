@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class InnerJoinObject {
-    @Value("${mssql.database.name}")
     private String databaseName;
     private final String queryFormat = "INNER JOIN (SELECT %s FROM %s %s) AS %s ON %s.%s = %s.%s";
     private String left;

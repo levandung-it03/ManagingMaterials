@@ -44,7 +44,7 @@
                 <div class="form-input" id="supplyId">
                     <fieldset>
                         <legend>Mã vật tư</legend>
-                        <input name="supplyId" type="text" value="${importationDetail.supplyId}" maxlength="4" required/>
+                        <input name="supplyId" type="text" value="${importationDetail.supplyId}" maxlength="4" readonly/>
                         <i class="fa-regular fa-pen-to-square"></i>
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
@@ -53,6 +53,8 @@
                     <fieldset>
                         <legend>Số lượng</legend>
                         <input name="suppliesQuantity" type="number" value="${importationDetail.suppliesQuantity}" min="1" required/>
+                        <input name="suppliesQuantityFromOrderDetailAsFk" type="number"
+                               value="-1" min="0" readonly hidden/>
                     </fieldset>
                     <div class="form_text-input_err-message"></div>
                 </div>
@@ -85,33 +87,30 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
             </div>
-            <form action="/service/v1/branch/delete-supplies-importation-detail" method="POST">
-                <table>
-                    <thead>
-                        <tr>
-                            <th id="suppliesImportationId">
-                                Mã phiếu nhập
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                            </th>
-                            <th id="supplyId">
-                                Mã vật tư
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                            </th>
-                            <th id="suppliesQuantity">
-                                Số lượng
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                            </th>
-                            <th id="price">
-                                Đơn giá
-                                <i class="fa-solid fa-arrow-down-a-z"></i>
-                            </th>
-                            <th id="update">Cập nhật</th>
-                            <th id="delete">Xoá</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </form>
+            <table>
+                <thead>
+                <tr>
+                    <th id="suppliesImportationId">
+                        Mã phiếu nhập
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="supplyId">
+                        Mã vật tư
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="suppliesQuantity">
+                        Số lượng
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="price">
+                        Đơn giá
+                        <i class="fa-solid fa-arrow-down-a-z"></i>
+                    </th>
+                    <th id="update">Cập nhật</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
             <div class="table-footer">
                 <div class="table-footer_main"></div>
             </div>
@@ -119,7 +118,7 @@
     </div>
     <div class="select-dialog closed">
         <div class="select-dialog-container">
-            <span class="form-title">Vật tư</span>
+            <span class="form-title">Vật tư cho đơn đặt hàng <span class="orderIdAsFk">${orderId}</span></span>
             <table>
                 <thead>
                 <tr>
@@ -135,8 +134,8 @@
                         Đơn vị tính
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="quantityInStock">
-                        Số lượng tồn
+                    <th id="suppliesQuantityFromOrderDetailAsFk">
+                        Số lượng đặt
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
                 </tr>

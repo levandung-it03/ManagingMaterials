@@ -11,8 +11,14 @@ function AddSuppliesImportationDetailComponent() {
         },
         suppliesQuantity: {
             tag: $('input[name=suppliesQuantity]'),
-            validate: (value) => value > 0,
-            errorMessage: "Số lượng phải > 0."
+            validate: (value) => {
+                //--For adding
+                if ($('input[type=submit]').value.trim().toUpperCase() !== "CẬP NHẬT")
+                    return (value > 0)
+                        && (value <= Number.parseInt($('.center-page_adding-form input[name=suppliesQuantityFromOrderDetailAsFk]').value.trim()));
+                return true;
+            },
+            errorMessage: "Số lượng không quá số lượng đặt."
         },
         price: {
             tag: $('input[name=price]'),
@@ -20,8 +26,6 @@ function AddSuppliesImportationDetailComponent() {
             errorMessage: "Đơn giá phải >= 0"
         },
     };
-
-
 
     createErrBlocksOfInputTags(validatingBlocks);
     customizeValidateEventInputTags(validatingBlocks);
@@ -91,12 +95,6 @@ function GeneralMethods() {
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a>
                 </td>
-                <td class="table-row-btn delete">
-                    <button name="deleteBtn" value="${row.suppliesImportationId.trim()}">
-                        <input name="supplyId" type="text" value="${row.supplyId.trim()}" hidden/>
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button>
-                </td>
             </tr>`
     };
 
@@ -110,13 +108,21 @@ function GeneralMethods() {
                 //--Re-customize the listener of all updating-buttons.
                 customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
             }
-        }
+        },
+        "div.center-page_list"
     );
     await CustomizeBuildingFormSpectator(
         async () => {
             await new SupplyDialog(
                 'div.select-dialog table tbody',
-                "branch"
+                "branch",
+                `orderId:${$('span.orderIdAsFk').textContent.toUpperCase().trim()}`,
+                function moreActionCallback(trSelectedDom) {
+                    $('.center-page_adding-form input[name=suppliesQuantity]').value
+                        = $('.center-page_adding-form input[name=suppliesQuantityFromOrderDetailAsFk]').value
+                        = trSelectedDom.querySelector('td.suppliesQuantityFromOrderDetailAsFk').textContent.trim();
+                },
+                "/find-supply-by-values-for-order-detail"
             ).customizeToggleOpeningFormDialogDataSupporter();
         },
         'div.center-page_adding-form'

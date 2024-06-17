@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -79,16 +80,11 @@ public class SuppliesExportationDetailService {
             ).isPresent())
                 throw new DuplicateKeyException("This Supply Id is already existing in Sup-Export-List in DB");
 
-            //--Update supply quantity
-            int updateResult = suppliesExportationDetailRepository.updateSupplyQuantity(connectHolder,
-                exportationDetail.getSupplyId(), exportationDetail.getSuppliesQuantity());
+            int addRes = suppliesExportationDetailRepository.saveByStoredProc(connectHolder, exportationDetail);
+            if (addRes == -2)   throw new SQLIntegrityConstraintViolationException("quantityInStock is not enough");
+            if (addRes == -1)   throw new NoSuchElementException("SupplyId is invalid");
+            if (addRes == 0)    throw new SQLException("Something wrong in your application");
 
-            if (updateResult == -1)
-                throw new SQLException("There's an error with SQL Server (Constraint Violation)");
-            else if (updateResult == 0)
-                throw new Exception("There's an error with SQL Server!");
-
-            suppliesExportationDetailRepository.save(connectHolder, exportationDetail);
             //--Close connection
             connectHolder.removeConnection();
         }
@@ -106,44 +102,12 @@ public class SuppliesExportationDetailService {
             if (currentExportDetail.isEmpty())
                 throw new NoSuchElementException("Supplies-Exportation-Detail not found");
 
-            //--Update supply quantity
-            SuppliesExportationDetail suppliesExportationDetail = currentExportDetail.get();
-            int quantityChange = exportationDetail.getSuppliesQuantity() - suppliesExportationDetail.getSuppliesQuantity();
-            int updateResult = suppliesExportationDetailRepository.updateSupplyQuantity(connectHolder,
-                suppliesExportationDetail.getSupplyId(), quantityChange);
-
-            if (updateResult == -1)
-                throw new SQLException("There's an error with SQL Server (Constraint Violation)");
-            else if (updateResult == 0)
-                throw new Exception("There's an error with SQL Server!");
+            int updateRes = suppliesExportationDetailRepository.updateByStoredProc(connectHolder, exportationDetail);
+            if (updateRes == -2)    throw new SQLIntegrityConstraintViolationException("quantityInStock is not enough");
+            if (updateRes == -1)    throw new NoSuchElementException("SupplyId is invalid");
+            if (updateRes == 0)     throw new SQLException("Something wrong in your application");
 
             suppliesExportationDetailRepository.update(connectHolder, exportationDetail);
-            //--Close connection
-            connectHolder.removeConnection();
-        }
-
-        public void deleteSuppliesExportationDetail(
-            String exportationDetailId,
-            String supplyId,
-            HttpServletRequest request
-        ) throws Exception {
-            DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-
-            Optional<SuppliesExportationDetail> currentExportDetail = suppliesExportationDetailRepository
-                .findById(connectHolder, exportationDetailId, supplyId);
-            if (currentExportDetail.isEmpty())
-                throw new NoSuchElementException("Supplies-Exportation-Detail not found");
-
-            //--Update supply quantity
-            SuppliesExportationDetail suppliesExportationDetail = currentExportDetail.get();
-            int updateResult = suppliesExportationDetailRepository.updateSupplyQuantity(connectHolder,
-                supplyId, -suppliesExportationDetail.getSuppliesQuantity());
-            if (updateResult == -1)
-                throw new SQLException("There's an error with SQL Server (Constraint Violation)");
-            else if (updateResult == 0)
-                throw new Exception("There's an error with SQL Server!");
-
-            suppliesExportationDetailRepository.delete(connectHolder, exportationDetailId, supplyId);
             //--Close connection
             connectHolder.removeConnection();
         }

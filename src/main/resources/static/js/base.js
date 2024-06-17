@@ -375,7 +375,7 @@ function generatePaginationBar(observedTableContainer, searchingSupportingDataSo
     })();
 
     (function customizeSelectingInteractivePageButtons() {
-        $$('span.interact-page-btn').forEach(btn => {
+        [...$$(observedTableContainer + ' span.interact-page-btn')].forEach(btn => {
             btn.addEventListener("click", async e => {
                 if (!btn.classList.contains("deactivated")) {
                     //--If the selected btn is not the index-number-page-buttons.

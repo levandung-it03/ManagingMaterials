@@ -1,9 +1,10 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
 import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
-import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ReqDtoTicketsForDetailSuppliesReport;
+import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoSupplyForImportToBuildDialog;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoTicketsForDetailSuppliesReport;
+import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.InnerJoinObject;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class SupplyService {
@@ -40,7 +42,8 @@ public class SupplyService {
 
             //--Prepare branches-list for several pages
             DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));;
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
+            ;
             connectionHolder.removeConnection();
 
             return modelAndView;
@@ -67,9 +70,28 @@ public class SupplyService {
             //--Preparing data to fetch.
             searchingObject.setObjectType(Supply.class);
             searchingObject.setSearchingTable("Vattu");
-            searchingObject.setSearchingTableIdName("MAVT");
+            searchingObject.setSearchingTableIdName("Vattu.MAVT");
             searchingObject.setSortingCondition("ORDER BY TENVT ASC");
-            searchingObject.setBranch("CN1");
+
+            return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
+        }
+
+        public ResDtoRetrievingData<ResDtoSupplyForImportToBuildDialog> findSupplyForOrderDetail(
+            HttpServletRequest request,
+            ReqDtoRetrievingData<ResDtoSupplyForImportToBuildDialog> searchingObject
+        ) throws SQLException, NoSuchFieldException {
+            searchingObject.setObjectType(ResDtoSupplyForImportToBuildDialog.class);
+            searchingObject.setSearchingTable("Vattu");
+            searchingObject.setSearchingTableIdName("Vattu.MAVT");
+            searchingObject.setSortingCondition("ORDER BY TENVT ASC");
+            String[] conditionsAsArr = searchingObject.getSearchingValue().split(":");
+            searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
+                InnerJoinObject.builder()
+                    .left("Vattu").right("CTDDH").fields("CTDDH.MAVT, CTDDH.MasoDDH, CTDDH.SOLUONG").bridge("MAVT")
+                    .build()
+            )));
+            searchingObject.setMoreCondition("MasoDDH='" + conditionsAsArr[1] + "'");
+            searchingObject.setSearchingValue("");
 
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }

@@ -44,7 +44,7 @@
             <div class="form-input" id="supplyId">
                 <fieldset>
                     <legend>Mã vật tư</legend>
-                    <input name="supplyId" type="text" value="${exportationDetail.supplyId}" maxlength="4" required/>
+                    <input name="supplyId" type="text" value="${exportationDetail.supplyId}" maxlength="4" readonly/>
                     <i class="fa-regular fa-pen-to-square"></i>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
@@ -53,6 +53,7 @@
                 <fieldset>
                     <legend>Số lượng</legend>
                     <input name="suppliesQuantity" type="number" value="${exportationDetail.suppliesQuantity}" min="0" required/>
+                    <input name="quantityInStock" type="number" value="0" min="0" readonly hidden/>
                 </fieldset>
                 <div class="form_text-input_err-message"></div>
             </div>
@@ -85,33 +86,30 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
         </div>
-        <form action="/service/v1/branch/delete-supplies-exportation-detail" method="POST">
-            <table>
-                <thead>
-                <tr>
-                    <th id="suppliesExportationId">
-                        Mã phiếu xuất
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="supplyId">
-                        Mã vật tư
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="suppliesQuantity">
-                        Số lượng
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="price">
-                        Đơn giá
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="update">Cập nhật</th>
-                    <th id="delete">Xoá</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </form>
+        <table>
+            <thead>
+            <tr>
+                <th id="suppliesExportationId">
+                    Mã phiếu xuất
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="supplyId">
+                    Mã vật tư
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="suppliesQuantity">
+                    Số lượng
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="price">
+                    Đơn giá
+                    <i class="fa-solid fa-arrow-down-a-z"></i>
+                </th>
+                <th id="update">Cập nhật</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
         <div class="table-footer">
             <div class="table-footer_main"></div>
         </div>

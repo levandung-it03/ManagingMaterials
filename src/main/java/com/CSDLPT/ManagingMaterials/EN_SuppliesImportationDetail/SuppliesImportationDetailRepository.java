@@ -81,47 +81,61 @@ public class SuppliesImportationDetailRepository {
         return result;
     }
 
-    public int delete(DBConnectionHolder conHolder, String importationDetailId, String supplyId) {
-        int result = 0;
+    public boolean existBySuppliesImportationId(DBConnectionHolder conHolder, String suppliesImportationId) {
+        boolean result = false;
         try {
             PreparedStatement statement = conHolder.getConnection()
-                .prepareStatement("DELETE FROM CTPN WHERE MAPN=? AND MAVT=?");
-            statement.setString(1, importationDetailId);
-            statement.setString(2, supplyId);
+                .prepareStatement("SELECT TOP 1 * FROM CTPN WHERE MAPN=?");
+            statement.setString(1, suppliesImportationId);
 
-            result = statement.executeUpdate();
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())     result = true;
+
+            resultSet.close();
             statement.close();
         } catch (Exception e) {
-            logger.info("Error In 'delete' of SuppliesImportationRepository: " + e);
+            logger.info("Error In 'existBySuppliesImportationId' of SuppliesImportationRepository: " + e);
         }
         return result;
     }
 
-    public int updateSupplyQuantity(DBConnectionHolder conHolder, String supplyId, int quantity) {
+    public int saveByStoredProc(DBConnectionHolder conHolder, SuppliesImportationDetail importationDetail) {
         try {
-            /** SP_UPDATE_SUPPLY_QUANTITY
-             *  @OPTION NVARCHAR(6),
-             *  @MAVT NCHAR(4),
-             *  @SOLUONG INT
-             */
-            //--Prepare data to execute Stored Procedure.
             CallableStatement statement = conHolder.getConnection()
-                .prepareCall("{call SP_UPDATE_SUPPLY_QUANTITY('IMPORT',?,?)}");
-            statement.setString(1, supplyId);
-            statement.setInt(2, quantity);
+                .prepareCall("{call SP_ADD_SUPPLIES_IMPORTATION_DETAIL(?, ?, ?, ?)}");
+            statement.setString(1, importationDetail.getSuppliesImportationId());
+            statement.setString(2, importationDetail.getSupplyId());
+            statement.setInt(3, importationDetail.getSuppliesQuantity());
+            statement.setDouble(4, importationDetail.getPrice());
 
-            //--Retrieve affected rows to know if our Query worked correctly.
-            int result = statement.executeUpdate();
+            statement.executeUpdate();
 
-            //--Close all connection.
             statement.close();
-            return result;
-        } catch (SQLException e) {
-            logger.info("Error In 'updateSupplyQuantity' of SuppliesImportationRepository (Constraint Violation): " + e);
-            return -1;
+
+            return 1;
         } catch (Exception e) {
-            logger.info("Error In 'updateSupplyQuantity' of SuppliesImportationRepository: " + e);
+            logger.info("Error In 'saveByStoredProc' of SuppliesImportationRepository: " + e);
             return 0;
+        }
+    }
+
+    public int updateByStoredProc(DBConnectionHolder conHolder, SuppliesImportationDetail importationDetail) {
+        try {
+            CallableStatement statement = conHolder.getConnection()
+                .prepareCall("{call SP_UPDATE_SUPPLIES_IMPORTATION_DETAIL(?, ?, ?, ?)}");
+            statement.setString(1, importationDetail.getSuppliesImportationId());
+            statement.setString(2, importationDetail.getSupplyId());
+            statement.setInt(3, importationDetail.getSuppliesQuantity());
+            statement.setDouble(4, importationDetail.getPrice());
+
+            statement.executeUpdate();
+
+            statement.close();
+
+            return 1;
+        } catch (Exception e) {
+            logger.info("Error In 'updateByStoredProc' of SuppliesImportationRepository: " + e);
+            return e.getMessage().trim().length() == 2 ? Integer.parseInt(e.getMessage().trim()) : 0;
         }
     }
 }

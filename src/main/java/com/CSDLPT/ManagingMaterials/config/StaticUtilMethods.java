@@ -78,26 +78,34 @@ public class StaticUtilMethods {
             case "warehouseName", "TENKHO" -> List.of("TENKHO", "warehouseName", STR_TYPE);
 
             //--Supply(Vattu) Entity
+            case "Supply", "ResDtoSupplyForImportToBuildDialog" -> List.of("Vattu", "MAVT", STR_TYPE);
+            case "supplyIdAsFk", "Vattu" -> List.of("MAVT", "SupplyFromFk.MAVT", "SupplyFromFk", STR_TYPE);
             case "supplyId", "MAVT" -> List.of("MAVT", "supplyId", STR_TYPE);
             case "supplyName", "TENVT" -> List.of("TENVT", "supplyName", STR_TYPE);
             case "unit", "DVT" -> List.of("DVT", "unit", STR_TYPE);
             case "quantityInStock", "SOLUONGTON" -> List.of("SOLUONGTON", "quantityInStock", NUM_TYPE);
 
             //--Order(DatHang) Entity
+            case "Order" -> List.of("MasoDDH", "DatHang", STR_TYPE);
             case "orderId", "MasoDDH" -> List.of("MasoDDH", "orderId", STR_TYPE);
             case "supplier", "NhaCC" -> List.of("NhaCC", "supplier", STR_TYPE);
             case "createdDate", "NGAY" -> List.of("NGAY", "createdDate", DATE_TYPE);
             case "suppliesQuantity", "SOLUONG" -> List.of("SOLUONG", "suppliesQuantity", NUM_TYPE);
             case "price", "DONGIA" -> List.of("DONGIA", "price", NUM_TYPE);
 
+            //--OrderDetail(CTDDH) Entity
+            case "orderDetailId", "CTDDH" -> List.of("CTDDH", "OrderDetailFromFk.CTDDH", "OrderDetailFromFk", STR_TYPE);
+            case "suppliesQuantityFromOrderDetailAsFk" ->
+                List.of("SOLUONG", "OrderDetailFromFk.SOLUONG", "OrderDetailFromFk", NUM_TYPE);
+
             //--SuppliesImportation(PhieuNhap) Entity
-            case "suppliesImportation" -> List.of("PhieuNhap", "MAPN", STR_TYPE);
+            case "SuppliesImportation" -> List.of("PhieuNhap", "MAPN", STR_TYPE);
             case "suppliesImportationId", "MAPN" -> List.of("MAPN", "suppliesImportationId", STR_TYPE);
             case "suppliesImportationIdAsFk", "PhieuNhap" ->
                 List.of("MAPN", "SuppliesImportationFromFk.MAPN", "SuppliesImportationFromFk", STR_TYPE);
 
             //--SuppliesExportation(PhieuXuat) Entity
-            case "suppliesExportation" -> List.of("PhieuXuat", "MAPX", STR_TYPE);
+            case "SuppliesExportation" -> List.of("PhieuXuat", "MAPX", STR_TYPE);
             case "suppliesExportationId", "MAPX" -> List.of("MAPX", "suppliesExportationId", STR_TYPE);
             case "suppliesExportationIdAsFk", "PhieuXuat" ->
                 List.of("MAPX", "SuppliesExportationFromFk.MAPX", "SuppliesExportationFromFk", STR_TYPE);

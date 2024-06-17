@@ -47,6 +47,7 @@ public class ApplicationConfig {
 
         messagePairs.put("error_supply_01", "Mã vật tư hoặc tên vật tư đã tồn tại!");
         messagePairs.put("error_supply_02", "Vật tư đang được sử dụng!");
+        messagePairs.put("error_supply_03", "Vật tư có số lượng tồn quá thấp, hoặc vượt quá số lượng từ đơn đặt hàng!");
 
         messagePairs.put("error_warehouse_01", "Mã kho hoặc tên kho đã tồn tại!");
         messagePairs.put("error_warehouse_02", "Không tìm thấy Mã Kho");
@@ -59,9 +60,11 @@ public class ApplicationConfig {
         messagePairs.put("error_suppliesImportation_01", "Mã Phiếu Nhập đã tồn tại!");
         messagePairs.put("error_suppliesImportation_02", "Không tìm thấy Mã Phiếu Nhập");
         messagePairs.put("error_suppliesImportation_03", "Không thể xoá Phiếu Nhập do đã tồn tại Phiếu Xuất tương ứng");
+        messagePairs.put("error_suppliesImportation_04", "Không thể thao tác do Phiếu Nhập đã có các Chi tiết Phiếu Nhập");
 
         messagePairs.put("error_suppliesExportation_01", "Mã Phiếu Xuất đã tồn tại!");
         messagePairs.put("error_suppliesExportation_02", "Không tìm thấy Mã Phiếu Xuất");
+        messagePairs.put("error_suppliesExportation_03", "Không thể thao tác do Phiếu Xuất đã có các Chi tiết Phiếu Xuất");
 
         messagePairs.put("ngu", "ngu vai cac!");
 
