@@ -31,7 +31,11 @@ public class EmployeeController {
 
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/employee/manage-employee")
+    @GetMapping({
+        "/branch/employee/manage-employee",
+        "/company/employee/manage-employee",
+        "/user/employee/manage-employee"
+    })
     public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getManageEmployeePage(request, model);
     }

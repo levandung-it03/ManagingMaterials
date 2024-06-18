@@ -20,6 +20,8 @@ public class SecurityInterceptorConfig implements WebMvcConfigurer {
                 //--GET
                 "/home",
                 "/branch/**",
+                "/company/**",
+                "/user/**",
 
                 //--POST
                 "/service/v1/company/**",
