@@ -18,7 +18,7 @@ import java.util.Date;
 @Controller
 @RequiredArgsConstructor
 public class HomePageController {
-    private HomePageService homePageService;
+    private final HomePageService homePageService;
     private final StaticUtilMethods staticUtilMethods;
 
     @GetMapping("/home")

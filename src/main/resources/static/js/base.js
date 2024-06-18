@@ -41,6 +41,12 @@ function log(v) {
     console.log(v);
 }
 
+function getRoleFromJsp(roleContainerTagSelector="span.hiddenRole") {
+    const role = $(roleContainerTagSelector).textContent.toLowerCase().trim();
+    $(roleContainerTagSelector).outerHTML = "";
+    return role;
+}
+
 function VNDCurrencyFormatEngine(salary, hasCurrency=true) {
     const salaryAsString = salary + "";
     let result = "";

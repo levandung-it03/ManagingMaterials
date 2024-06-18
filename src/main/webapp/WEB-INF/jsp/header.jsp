@@ -49,11 +49,16 @@
                     </div>
                 </div>
                 <div class="account-btn">
-                    <a href="">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                        Đăng xuất
-                    </a>
-                    <a href="">
+                    <form method="POST" action="/service/v1/auth/logout">
+                        <button value="userInfo.employeeId">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Đăng xuất
+                        </button>
+                    </form>
+                    <script>
+                        document.querySelector(".account-btn form").onsubmit = (e) => (confirm("Xác nhận đăng xuất?") === true);
+                    </script>
+                    <a href="www.facebook.com/lvd11122003">
                         <i class="fa-solid fa-circle-exclamation"></i>
                         Báo cáo
                     </a>

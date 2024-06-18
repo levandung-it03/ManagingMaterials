@@ -76,20 +76,20 @@ async function ListComponent(searchingSupportingDataSource) {
     customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
 }
 
-async function customizeAddAccountFormDialog() {
+async function customizeAddAccountFormDialog(roleForFetching) {
     const formDialog = $('div#form-dialog');
 
     //--Customize closing form-dialog action.
     $('div#form-dialog_surrounding-frame').addEventListener("click", e => formDialog.classList.add("closed"));
     $('div.closing-dialog-btn').addEventListener("click", e => formDialog.classList.add("closed"));
 
-    function customizeSelectingAddAccountBtn() {
+    function customizeSelectingAddAccountBtn(roleForFetching) {
         [...$$('div.center-page_list table tbody tr td.addAccount a i')].forEach(btn => {
             btn.addEventListener("click", async e => {
                 const employeeId = e.target.parentElement.id;
                 await fetch(
                     window.location.origin
-                    + `/service/v1/branch/check-if-employee-account-is-existing?employeeId=${employeeId}`,
+                    + `/service/v1/${roleForFetching}/check-if-employee-account-is-existing?employeeId=${employeeId}`,
                     {//--Request Options
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
@@ -132,7 +132,7 @@ async function customizeAddAccountFormDialog() {
         });
     }
 
-    customizeSelectingAddAccountBtn();
+    customizeSelectingAddAccountBtn(roleForFetching);
     customizeToggleDisplayPasswordEvent();
 }
 
@@ -142,10 +142,11 @@ function GeneralMethods() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddEmployeeComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-employee",
+        updatingAction: `/service/v1/${roleForFetching}/update-employee`,
         componentsForUpdating: [
             //--Create 'select' block to serve selecting-another-branch.
             `<div class="form-select" id="branch">
@@ -175,7 +176,7 @@ function GeneralMethods() {
 
         //--Main fields for searching-action.
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-employee-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-employee-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.employeeId}">
                 <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
@@ -221,7 +222,7 @@ function GeneralMethods() {
                 //--Re-paint the colours of avatars.
                 paintAllAvatarColor();
                 //--Re-customize the listener of all adding-account-buttons.
-                await customizeAddAccountFormDialog();
+                await customizeAddAccountFormDialog(roleForFetching);
                 //--Re-customize the listener of all updating-buttons.
                 customizeGeneratingFormUpdateEvent(
                     'div.center-page_list',

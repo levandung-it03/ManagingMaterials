@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-employee.css">
 </head>
 <body>
+<span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
 <%--    <%@ include file="/WEB-INF/jsp/category.jsp" %>--%>
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 <div id="message-block">
@@ -33,7 +34,7 @@
 </div>
 <div class="center-page">
     <div class="center-page_adding-form">
-        <form action="/service/v1/branch/add-employee" method="post" modelAttribute="employee">
+        <form action="/service/v1/${userInfo.role.getJavaRole()}/add-employee" method="post" modelAttribute="employee">
             <div class="form-input" id="employeeId">
                 <fieldset>
                     <legend>Mã nhân viên</legend>
@@ -165,7 +166,7 @@
 <div id="form-dialog" class="closed">
     <div id="form-dialog_surrounding-frame"></div>
     <div id="form-dialog_adding-account">
-        <form action="/service/v1/branch/add-account" method="post" modelAttribute="account">
+        <form action="/service/v1/${userInfo.role.getJavaRole()}/add-account" method="post" modelAttribute="account">
             <span class="form-title">Tạo login</span>
             <div class="form-input" id="employeeId">
                 <fieldset>

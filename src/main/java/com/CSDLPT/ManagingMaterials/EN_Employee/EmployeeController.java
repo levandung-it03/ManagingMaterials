@@ -49,7 +49,11 @@ public class EmployeeController {
     }
 
     /*_____________RequestMethod.POST: Employee-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-employee-by-values")
+    @PostMapping({
+        "${url.post.branch.prefix.v1}/find-employee-by-values",
+        "${url.post.company.prefix.v1}/find-employee-by-values",
+        "${url.post.user.prefix.v1}/find-employee-by-values"
+    })
     public ResponseEntity<ResDtoRetrievingData<Employee>> findingEmployeesByValues(
         @RequestBody ReqDtoRetrievingData<Employee> searchingObject,
         HttpServletRequest request

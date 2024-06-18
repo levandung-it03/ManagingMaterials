@@ -34,6 +34,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
         try {
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
+            //--Make sure that requestUrl is made with corresponding userInfo.role
             if (!request.getRequestURI().contains("home") && !request.getRequestURI().contains(switch (userInfo.getRole()) {
                 case CHINHANH -> "branch";
                 case CONGTY -> "company";
