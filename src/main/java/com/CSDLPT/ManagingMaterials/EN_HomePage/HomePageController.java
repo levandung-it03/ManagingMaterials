@@ -41,7 +41,9 @@ public class HomePageController {
         return modelAndView;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/total-monthly-import")
+    @PostMapping({"${url.post.branch.prefix.v1}/total-monthly-import",
+        "${url.post.company.prefix.v1}/total-monthly-import",
+        "${url.post.user.prefix.v1}/total-monthly-import"})
     public ResponseEntity<TotalImportAndExportOfYearDto> findMonthlyTotalImportAndExport(HttpServletRequest request) {
         int currentYear = LocalDate.now().getYear();
         TotalImportAndExportOfYearDto totalImportAndExportOfYearDto =
@@ -49,13 +51,17 @@ public class HomePageController {
         return ResponseEntity.ok(totalImportAndExportOfYearDto);
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/supply-trend")
+    @PostMapping({"${url.post.branch.prefix.v1}/supply-trend",
+        "${url.post.company.prefix.v1}/supply-trend",
+        "${url.post.user.prefix.v1}/supply-trend"})
     public ResponseEntity<SupplyTrendDto> findSupplyTrend(HttpServletRequest request) {
         SupplyTrendDto supplyTrendDto = this.homePageService.getSupplyTrend(request);
         return ResponseEntity.ok(supplyTrendDto);
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/inventory")
+    @PostMapping({"${url.post.branch.prefix.v1}/inventory",
+        "${url.post.company.prefix.v1}/inventory",
+        "${url.post.user.prefix.v1}/inventory"})
     public ResponseEntity<InventoryPercentageDto> findInventoryPercentage(HttpServletRequest request) {
         InventoryPercentageDto inventoryPercentageDto = this.homePageService.getInventoryPercentages(request);
         return ResponseEntity.ok(inventoryPercentageDto);

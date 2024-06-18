@@ -102,7 +102,7 @@
 <%--  <script type="application/javascript" src="${pageContext.request.contextPath}/js/chart.js"></script>--%>
 <script>
     async function fetchData(resource) {
-        const url = window.location.origin + "/service/v1/branch" + resource;
+        const url = window.location.origin + "/service/v1/${userInfo.role.getJavaRole()}" + resource;
         console.log("url:", url);
         const payload = {
             method: 'POST',
