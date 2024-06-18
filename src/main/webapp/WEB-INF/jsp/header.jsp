@@ -3,9 +3,9 @@
 <div id="header">
     <div class="header-wrapper center">
         <ul id="nav" class="center">
-            <li><a href="/branch/employee/manage-employee">NHÂN VIÊN</a></li>
-            <li><a href="/branch/supply/manage-supply">VẬT TƯ</a></li>
-            <li><a href="/branch/warehouse/manage-warehouse">KHO</a></li>
+            <li><a href="/${userInfo.role.getJavaRole()}/employee/manage-employee">NHÂN VIÊN</a></li>
+            <li><a href="/${userInfo.role.getJavaRole()}/supply/manage-supply">VẬT TƯ</a></li>
+            <li><a href="/${userInfo.role.getJavaRole()}/warehouse/manage-warehouse">KHO</a></li>
             <li>
                 <a href="">
                     LẬP PHIẾU
@@ -13,9 +13,9 @@
                 </a>
                 <div>
                     <ul class="subnav">
-                        <li><a href="/branch/order/manage-order">ĐƠN ĐẶT HÀNG</a></li>
-                        <li><a href="/branch/supplies-importation/manage-supplies-importation">PHIẾU NHẬP</a></li>
-                        <li><a href="/branch/supplies-exportation/manage-supplies-exportation">PHIẾU XUẤT</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/order/manage-order">ĐƠN ĐẶT HÀNG</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/supplies-importation/manage-supplies-importation">PHIẾU NHẬP</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/supplies-exportation/manage-supplies-exportation">PHIẾU XUẤT</a></li>
                     </ul>
                 </div>
             </li>
@@ -26,11 +26,11 @@
                 </a>
                 <div>
                     <ul class="subnav">
-                        <li><a href="/branch/employee/report-for-employee">DANH SÁCH NHÂN VIÊN</a></li>
-                        <li><a href="/branch/supply/report-for-supply">DANH SÁCH VẬT TƯ</a></li>
-                        <li><a href="/branch/supply/report-for-detail-supplies-interact-info">CHI TIẾT NHẬP XUẤT</a></li>
-                        <li><a href="/branch/order/report-for-order-dont-have-import">ĐƠN HÀNG KHÔNG CÓ PHIẾU NHẬP</a></li>
-                        <li><a href="/branch/employee/report-for-employee-activities">HOẠT ĐỘNG NHÂN VIÊN</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/employee/report-for-employee">DANH SÁCH NHÂN VIÊN</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/supply/report-for-supply">DANH SÁCH VẬT TƯ</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/supply/report-for-detail-supplies-interact-info">CHI TIẾT NHẬP XUẤT</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/order/report-for-order-dont-have-import">ĐƠN HÀNG KHÔNG CÓ PHIẾU NHẬP</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/employee/report-for-employee-activities">HOẠT ĐỘNG NHÂN VIÊN</a></li>
                         <li><a href="#">TỔNG HỢP NHẬP XUẤT</a></li>
                     </ul>
                 </div>
