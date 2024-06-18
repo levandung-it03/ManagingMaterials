@@ -49,12 +49,13 @@ public class HomePageController {
         return ResponseEntity.ok(totalImportAndExportOfYearDto);
     }
 
-    @PostMapping("/home/supply-trend")
+    @PostMapping("${url.post.branch.prefix.v1}/supply-trend")
     public ResponseEntity<SupplyTrendDto> findSupplyTrend(HttpServletRequest request) {
-        return ResponseEntity.ok(null);
+        SupplyTrendDto supplyTrendDto = this.homePageService.getSupplyTrend(request);
+        return ResponseEntity.ok(supplyTrendDto);
     }
 
-    @PostMapping("/home/inventory")
+    @PostMapping("${url.post.branch.prefix.v1}/inventory")
     public ResponseEntity<InventoryPercentageDto> findInventoryPercentage(HttpServletRequest request) {
         InventoryPercentageDto inventoryPercentageDto = this.homePageService.getInventoryPercentages(request);
         return ResponseEntity.ok(inventoryPercentageDto);

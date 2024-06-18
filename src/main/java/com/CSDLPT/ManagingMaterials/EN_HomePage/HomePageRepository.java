@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_HomePage;
 
 import com.CSDLPT.ManagingMaterials.EN_HomePage.dto.InventoryPercentageDto;
+import com.CSDLPT.ManagingMaterials.EN_HomePage.dto.SupplyTrendDto;
 import com.CSDLPT.ManagingMaterials.EN_HomePage.dto.TotalImportAndExportOfYearDto;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Repository
@@ -103,14 +103,45 @@ public class HomePageRepository {
         return result;
     }
 
+    public SupplyTrendDto calculateSuppliesTrend(HttpServletRequest request) {
+        DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+        SupplyTrendDto result = new SupplyTrendDto();
+        try {
+            String queryString = "{call SP_SUPPLY_TREND()}";
+            PreparedStatement statement = connectionHolder.getConnection().prepareStatement(queryString);
+            ResultSet resultSet = statement.executeQuery();
+
+            List<String> supplies = new ArrayList<>();
+            List<Integer> totalImports = new ArrayList<>();
+            List<Integer> totalExports = new ArrayList<>();
+            while (resultSet.next()) {
+                supplies.add(resultSet.getString("TENVT"));
+                totalImports.add(resultSet.getInt("TONG_NHAP"));
+                totalExports.add(resultSet.getInt("TONG_XUAT"));
+            }
+
+            result.setSupplies(supplies);
+            result.setSupplyTotalImport(totalImports);
+            result.setSupplyTotalExport(totalExports);
+
+            //--Close all connection.
+            resultSet.close();
+            statement.close();
+        }
+        catch (Exception exception) {
+            logger.info("Error In 'calculateTotalImport' of HomePageRepository: " + exception);
+        }
+        return result;
+    }
+
     public TotalImportAndExportOfYearDto totalImportAndExportOfYear(HttpServletRequest request, int year) {
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
         TotalImportAndExportOfYearDto result = new TotalImportAndExportOfYearDto();
         try {
             String callSPStatement = "{call SP_REPORT_OF_PERCENTAGE_OF_IMPORT_AND_EXPORT(?, ?)}";
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(callSPStatement);
-            statement.setDate(0, new Date(year, 1, 1));
-            statement.setDate(1, new Date(year, 12, 31));
+            statement.setDate(1, new Date(year, 1, 1));
+            statement.setDate(2, new Date(year, 12, 31));
             ResultSet resultSet = statement.executeQuery();
 
             Map<Integer, Integer> monthlyTotalImport = new HashMap<>();

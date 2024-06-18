@@ -102,8 +102,7 @@
 <%--  <script type="application/javascript" src="${pageContext.request.contextPath}/js/chart.js"></script>--%>
 <script>
     async function fetchData(resource) {
-        const context = "${pageContext.request.contextPath}";
-        const url = window.location.origin + "/service/v1/branch/total-monthly-import"
+        const url = window.location.origin + "/service/v1/branch" + resource;
         console.log("url:", url);
         const payload = {
             method: 'POST',
@@ -127,7 +126,7 @@
     }
 
     async function buildMonthlyTotalImportAndExportChart() {
-        const resource = "/home/total-monthly-import";
+        const resource = "/total-monthly-import";
         const chartSourceData = await fetchData(resource);
         const monthlyImport = chartSourceData.monthlyImport;
         const monthlyExport = chartSourceData.monthlyExport;
@@ -183,7 +182,7 @@
     }
 
     async function buildSupplyTrendChart() {
-        const resource = "/home/supply-trend";
+        const resource = "/supply-trend";
         const chartSourceData = await fetchData(resource);
 
         const suppliesTrendData = {
@@ -225,7 +224,7 @@
     }
 
     async function buildInventoryPercentageChart() {
-        const resource = "/home/inventory";
+        const resource = "/inventory";
         const chartSourceData = await fetchData(resource);
 
         const inventoryPercentageData = {
