@@ -1,27 +1,7 @@
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const rangeValues = {
-  min: 100000,
-  max: 1000000,
-};
-
-var monthlyImport = [];
-var monthlyExport = [];
-for (var i = 1; i <= 12; i++) {
-  monthlyImport.push({
-    x: i,
-    y: getRandomInt(100000, 1000000),
-  });
-  monthlyExport.push({
-    x: i,
-    y: getRandomInt(100000, 1000000),
-  });
-}
-
-const selectingYear = 2023;
-const chartName = `Year ${selectingYear} Monthly Import and Export Totals`;
+const totalImportAndExportOfYearDto = "${totalImportAndExportOfYearDto}";
+const monthlyImport = totalImportAndExportOfYearDto.monthlyImport;
+const monthlyExport = totalImportAndExportOfYearDto.monthlyExport;
+const chartName = `Year ${totalImportAndExportOfYearDto.year} Monthly Import and Export Totals`;
 
 // Monthly Comparison Chart
 new Chart("monthly-comparison-chart", {
@@ -70,6 +50,8 @@ new Chart("monthly-comparison-chart", {
     },
   },
 });
+
+
 
 // Trend Comparison Chart (Example data, replace with actual data)
 var suppliesTrendData = {
@@ -165,10 +147,3 @@ new Chart("inventory-percentage-chart", {
   data: inventoryPercentageData,
   options: {},
 });
-
-// Example of populating card data - replace with actual data fetching logic
-document.getElementById("total-supplies").innerText = "100"; // Replace with actual total supplies
-document.getElementById("total-revenue").innerText = "$500,000"; // Replace with actual total revenue
-document.getElementById("total-active-employees").innerText = "50"; // Replace with actual active employees count
-document.getElementById("total-export-orders").innerText = "120"; // Replace with actual export orders count
-document.getElementById("pending-import-orders").innerText = "10"; // Replace with actual pending import orders count

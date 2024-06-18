@@ -34,10 +34,6 @@ public class AccountController {
     public ModelAndView getLoginPage(HttpServletRequest request, Model model) {
         return publicServices.getLoginPage(request, model);
     }
-    @GetMapping("/home")
-    public ModelAndView getHomePage(HttpServletRequest request, Model model) {
-        return publicServices.getHomePage(request, model);
-    }
 
     /*_________________________________________Role_Components_Separator____________________________________________
      *____________________________________________________________________________________________________________*/
