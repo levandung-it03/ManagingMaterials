@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -94,6 +95,8 @@ public class OrderDetailController {
         try {
             branchServices.updateOrderDetail(orderDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
+        } catch (SQLIntegrityConstraintViolationException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_orderDetail_01");
         } catch (Exception e) {
             logger.info("Error from UpdateOrderDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
@@ -114,6 +117,8 @@ public class OrderDetailController {
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
+        }  catch (SQLIntegrityConstraintViolationException e) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_orderDetail_02");
         } catch (Exception e) {
             logger.info("Error from deleteOrderDetail: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");

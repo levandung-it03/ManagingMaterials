@@ -1,5 +1,10 @@
 package com.CSDLPT.ManagingMaterials.EN_Order;
 
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ReqDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ResDtoOrderWithImportantInfo;
+import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ResDtoReportForOrderDontHaveImport;
+import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +12,7 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -61,6 +67,37 @@ public class OrderRepository {
             logger.info("Error In 'findById' of OrderRepository: " + e);
         }
         return result;
+    }
+
+    public List<ResDtoReportForOrderDontHaveImport> findAllOrderDontHaveImport(
+        DBConnectionHolder connectHolder,
+        ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject
+    ) {
+        List<ResDtoReportForOrderDontHaveImport> resultList = new java.util.ArrayList<>(List.of());
+        try {
+            //--Prepare data to execute Query Statement.
+            CallableStatement statement = connectHolder.getConnection()
+                .prepareCall("{call SP_FIND_ALL_ORDER_DONT_HAVE_IMPORT}");
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                resultList.add(ResDtoReportForOrderDontHaveImport.builder()
+                    .orderId(resultSet.getString("MasoDDH"))
+                    .createdDate(resultSet.getDate("NGAY"))
+                    .supplier(resultSet.getString("NhaCC"))
+                    .employeeFullName(resultSet.getString("HOTEN"))
+                    .supplyName(resultSet.getString("TENVT"))
+                    .suppliesQuantity(resultSet.getString("SOLUONG"))
+                    .price(resultSet.getDouble("DONGIA"))
+                    .build());
+            }
+
+            //--Close all connection.
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'findAllEmployeeActivities' of EmployeeRepository: " + e);
+        }
+        return resultList;
     }
 
     public int save(DBConnectionHolder conHolder, Order order) {
