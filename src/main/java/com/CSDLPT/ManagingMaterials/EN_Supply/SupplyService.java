@@ -24,7 +24,7 @@ import java.util.NoSuchElementException;
 public class SupplyService {
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final SupplyRepository supplyRepository;
         private final FindingActionService findingActionService;
@@ -179,6 +179,11 @@ public class SupplyService {
 
             return result;
         }
+    }
+
+    @Service
+    public static class BranchServices {
+
     }
 
     @Service

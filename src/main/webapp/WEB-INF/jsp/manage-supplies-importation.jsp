@@ -40,34 +40,36 @@
         </c:if>
     </div>
     <div class="center-page">
-        <div class="center-page_adding-form">
-            <form action="/service/v1/${userInfo.role.getJavaRole()}/add-supplies-importation" method="POST" modelAttribute="suppliesImportation">
-                <div class="form-input" id="suppliesImportationId">
-                    <fieldset>
-                        <legend>Mã phiếu nhập</legend>
-                        <input name="suppliesImportationId" type="text" value="${suppliesImportation.suppliesImportationId}" maxlength="8" required/>
-                    </fieldset>
-                    <div class="form_text-input_err-message"></div>
-                </div>
-                <div class="form-input" id="orderId">
-                    <fieldset>
-                        <legend>Mã đơn đặt hàng</legend>
-                        <input name="orderId" type="text" value="${suppliesImportation.orderId}" maxlength="8" required/>
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </fieldset>
-                    <div class="form_text-input_err-message"></div>
-                </div>
-                <div class="form-input" id="warehouseIdAsFk">
-                    <fieldset>
-                        <legend>Mã kho</legend>
-                        <input name="warehouseIdAsFk" type="text" value="${suppliesImportation.warehouseIdAsFk}" maxlength="4" required/>
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </fieldset>
-                </div>
-                <div id="rest-components-for-updating"></div>
-                <input type="submit" value="Tạo phiếu nhập">
-            </form>
-        </div>
+        <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+            <div class="center-page_adding-form">
+                <form action="/service/v1/${userInfo.role.getJavaRole()}/add-supplies-importation" method="POST" modelAttribute="suppliesImportation">
+                    <div class="form-input" id="suppliesImportationId">
+                        <fieldset>
+                            <legend>Mã phiếu nhập</legend>
+                            <input name="suppliesImportationId" type="text" value="${suppliesImportation.suppliesImportationId}" maxlength="8" required/>
+                        </fieldset>
+                        <div class="form_text-input_err-message"></div>
+                    </div>
+                    <div class="form-input" id="orderId">
+                        <fieldset>
+                            <legend>Mã đơn đặt hàng</legend>
+                            <input name="orderId" type="text" value="${suppliesImportation.orderId}" maxlength="8" required/>
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </fieldset>
+                        <div class="form_text-input_err-message"></div>
+                    </div>
+                    <div class="form-input" id="warehouseIdAsFk">
+                        <fieldset>
+                            <legend>Mã kho</legend>
+                            <input name="warehouseIdAsFk" type="text" value="${suppliesImportation.warehouseIdAsFk}" maxlength="4" required/>
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </fieldset>
+                    </div>
+                    <div id="rest-components-for-updating"></div>
+                    <input type="submit" value="Tạo phiếu nhập">
+                </form>
+            </div>
+        </c:if>
         <div class="center-page_list">
             <div class="table-tools">
                 <div class="table-description">
