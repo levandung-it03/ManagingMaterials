@@ -28,7 +28,7 @@ import java.util.NoSuchElementException;
 public class SuppliesImportationService {
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesImportationRepository suppliesImportationRepository;
@@ -151,13 +151,16 @@ public class SuppliesImportationService {
     }
 
     @Service
-    @RequiredArgsConstructor
+    public static class BranchServices {
+
+    }
+
+    @Service
     public static class CompanyServices {
 
     }
 
     @Service
-    @RequiredArgsConstructor
     public static class UserServices {
 
     }

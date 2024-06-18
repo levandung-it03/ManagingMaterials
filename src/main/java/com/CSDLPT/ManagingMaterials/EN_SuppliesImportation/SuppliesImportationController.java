@@ -26,19 +26,23 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class SuppliesImportationController {
-    private final SuppliesImportationService.BranchServices branchServices;
+    private final SuppliesImportationService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/supplies-importation/manage-supplies-importation")
+    @GetMapping({"/branch/supplies-importation/manage-supplies-importation",
+        "/company/supplies-importation/manage-supplies-importation",
+        "/user/supplies-importation/manage-supplies-importation"})
     public ModelAndView getManageSuppliesImportationPage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getManageSuppliesImportationPage(request, model);
+        return authenticatedServices.getManageSuppliesImportationPage(request, model);
     }
 
     /*_____________RequestMethod.POST: Supplies-Importation-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-supplies-importation-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-supplies-importation-by-values",
+        "${url.post.company.prefix.v1}/find-supplies-importation-by-values",
+        "${url.post.user.prefix.v1}/find-supplies-importation-by-values"})
     public ResponseEntity<ResDtoRetrievingData<ResDtoImportationWithImportationInfo>> findingSuppliesImportationsByValues(
         @RequestBody ReqDtoRetrievingData<ResDtoImportationWithImportationInfo> searchingObject,
         HttpServletRequest request
@@ -46,14 +50,15 @@ public class SuppliesImportationController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findSuppliesImportation(request, searchingObject));
+                .body(authenticatedServices.findSuppliesImportation(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-supplies-importation")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-supplies-importation",
+        "${url.post.user.prefix.v1}/add-supplies-importation"})
     public String addSuppliesImportation(
         @ModelAttribute("suppliesImportation") ReqDtoSuppliesImportation importation,
         HttpServletRequest request,
@@ -68,7 +73,7 @@ public class SuppliesImportationController {
         }
 
         try {
-            branchServices.addSuppliesImportation(importation, request);
+            authenticatedServices.addSuppliesImportation(importation, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (NoSuchElementException | DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
@@ -81,7 +86,8 @@ public class SuppliesImportationController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-supplies-importation")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-supplies-importation",
+        "${url.post.user.prefix.v1}/update-supplies-importation"})
     public String updateSuppliesImportation(
         @ModelAttribute("suppliesImportation") ReqDtoSuppliesImportation importation,
         HttpServletRequest request,
@@ -95,7 +101,7 @@ public class SuppliesImportationController {
         }
 
         try {
-            branchServices.updateSuppliesImportation(importation, request);
+            authenticatedServices.updateSuppliesImportation(importation, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException | DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
@@ -106,14 +112,15 @@ public class SuppliesImportationController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-supplies-importation")
+    @PostMapping({"${url.post.branch.prefix.v1}/delete-supplies-importation",
+        "${url.post.user.prefix.v1}/delete-supplies-importation"})
     public String deleteSuppliesImportation(
         @RequestParam("deleteBtn") String importationId,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         try {
-            branchServices.deleteSuppliesImportation(importationId, request);
+            authenticatedServices.deleteSuppliesImportation(importationId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());

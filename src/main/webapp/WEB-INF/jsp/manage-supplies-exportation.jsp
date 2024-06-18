@@ -144,33 +144,33 @@
     </div>
     <c:if test="${userInfo.role.getJavaRole() != 'company'}">
         <div class="select-dialog closed">
-        <div class="select-dialog-container">
-            <span class="form-title">Kho</span>
-            <table>
-                <thead>
-                <tr>
-                    <th id="warehouseId">
-                        Mã
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="warehouseName">
-                        Tên kho
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="address">
-                        Địa chỉ
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <div class="table-footer">
-                <div class="table-footer_main"></div>
+            <div class="select-dialog-container">
+                <span class="form-title">Kho</span>
+                <table>
+                    <thead>
+                    <tr>
+                        <th id="warehouseId">
+                            Mã
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="warehouseName">
+                            Tên kho
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="address">
+                            Địa chỉ
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="table-footer">
+                    <div class="table-footer_main"></div>
+                </div>
+                <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
             </div>
-            <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
         </div>
-    </div>
     </c:if>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/Dialogs.js"></script>

@@ -24,7 +24,7 @@ public class SuppliesImportationDetailService {
 
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesImportationDetailRepository suppliesImportationDetailRepository;
@@ -124,13 +124,16 @@ public class SuppliesImportationDetailService {
     }
 
     @Service
-    @RequiredArgsConstructor
+    public static class BranchServices {
+
+    }
+
+    @Service
     public static class CompanyServices {
 
     }
 
     @Service
-    @RequiredArgsConstructor
     public static class UserServices {
 
     }

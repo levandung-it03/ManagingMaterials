@@ -13,8 +13,17 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-supplies-importation.css">
+    <c:if test="${userInfo.role.getJavaRole() == 'company'}">
+        <style>
+            .center-page_list table tr th#warehouseIdAsFk,
+            .center-page_list table tr td.warehouseIdAsFk {
+                width: calc(20% + 2*8%);
+            }
+        </style>
+    </c:if>
 </head>
 <body>
+    <span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
     <%@ include file="/WEB-INF/jsp/header.jsp" %>
     <div id="message-block">
         <c:if test="${errorMessage != null}">
@@ -32,7 +41,7 @@
     </div>
     <div class="center-page">
         <div class="center-page_adding-form">
-            <form action="/service/v1/branch/add-supplies-importation" method="POST" modelAttribute="suppliesImportation">
+            <form action="/service/v1/${userInfo.role.getJavaRole()}/add-supplies-importation" method="POST" modelAttribute="suppliesImportation">
                 <div class="form-input" id="suppliesImportationId">
                     <fieldset>
                         <legend>Mã phiếu nhập</legend>
@@ -89,7 +98,7 @@
                     </div>
                 </div>
             </div>
-            <form action="/service/v1/branch/delete-supplies-importation" method="POST">
+            <form action="/service/v1/${userInfo.role.getJavaRole()}/delete-supplies-importation" method="POST">
                 <table>
                     <thead>
                         <tr>
@@ -114,8 +123,10 @@
                                 <i class="fa-solid fa-arrow-down-a-z"></i>
                             </th>
                             <th id="detail">Chi tiết</th>
-                            <th id="update">Cập nhật</th>
-                            <th id="delete">Xoá</th>
+                            <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+                                <th id="update">Cập nhật</th>
+                                <th id="delete">Xoá</th>
+                            </c:if>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -162,34 +173,36 @@
             <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
         </div>
     </div>
-    <div class="select-dialog closed" id="select-dialog_warehouse">
-        <div class="select-dialog-container">
-            <span class="form-title">Kho</span>
-            <table>
-                <thead>
-                <tr>
-                    <th id="warehouseId">
-                        Mã
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="warehouseName">
-                        Tên kho
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="address">
-                        Địa chỉ
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <div class="table-footer">
-                <div class="table-footer_main"></div>
+    <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+        <div class="select-dialog closed" id="select-dialog_warehouse">
+            <div class="select-dialog-container">
+                <span class="form-title">Kho</span>
+                <table>
+                    <thead>
+                    <tr>
+                        <th id="warehouseId">
+                            Mã
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="warehouseName">
+                            Tên kho
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="address">
+                            Địa chỉ
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="table-footer">
+                    <div class="table-footer_main"></div>
+                </div>
+                <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
             </div>
-            <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
         </div>
-    </div>
+    </c:if>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/Dialogs.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-supplies-importation.js"></script>
