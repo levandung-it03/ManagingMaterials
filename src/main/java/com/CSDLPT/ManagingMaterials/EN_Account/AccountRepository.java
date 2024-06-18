@@ -33,7 +33,7 @@ public class AccountRepository {
                 .branch(account.getBranch())
                 .employeeId(resultSet.getInt("MANV"))
                 .fullName(resultSet.getString("HOTEN"))
-                .role(SQLRoleEnum.valueOf(resultSet.getString("TENNHOM")))
+                .role(RoleEnum.valueOf(resultSet.getString("TENNHOM")))
                 .build();
         } else {
             throw new NoSuchElementException("Employee Not Found");

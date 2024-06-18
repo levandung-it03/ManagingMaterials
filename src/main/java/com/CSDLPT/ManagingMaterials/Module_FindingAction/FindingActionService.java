@@ -1,6 +1,6 @@
 package com.CSDLPT.ManagingMaterials.Module_FindingAction;
 
-import com.CSDLPT.ManagingMaterials.EN_Account.SQLRoleEnum;
+import com.CSDLPT.ManagingMaterials.EN_Account.RoleEnum;
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
@@ -40,7 +40,7 @@ public class FindingActionService {
 
         //--Find searching branch
         ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
-        if (userInfo.getRole().equals(SQLRoleEnum.CONGTY))
+        if (userInfo.getRole().equals(RoleEnum.CONGTY))
             if (!searchingObject.getBranch().isEmpty() && !userInfo.getBranch().equals(searchingObject.getBranch()))
                 searchingObject.setSearchingTable("LINK1." + databaseName + ".DBO." + searchingObject.getSearchingTable());
 

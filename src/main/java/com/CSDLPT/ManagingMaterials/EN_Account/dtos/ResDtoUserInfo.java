@@ -1,6 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Account.dtos;
 
-import com.CSDLPT.ManagingMaterials.EN_Account.SQLRoleEnum;
+import com.CSDLPT.ManagingMaterials.EN_Account.RoleEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +16,5 @@ public class ResDtoUserInfo {
     private String branch;
     private Integer employeeId;
     private String fullName;
-    private SQLRoleEnum role;
+    private RoleEnum role;
 }
