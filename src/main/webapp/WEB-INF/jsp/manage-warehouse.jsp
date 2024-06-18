@@ -12,8 +12,17 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-warehouse.css">
+    <c:if test="${userInfo.role.getJavaRole() == 'company'}">
+        <style>
+            .center-page_list table tr th#warehouseName,
+            .center-page_list table tr td.warehouseName {
+                width: calc(30% + 2*7.5%);
+            }
+        </style>
+    </c:if>
 </head>
 <body>
+<span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 <div id="message-block">
     <c:if test="${errorMessage != null}">
@@ -30,32 +39,34 @@
     </c:if>
 </div>
 <div class="center-page">
-    <div class="center-page_adding-form">
-        <form action="/service/v1/branch/add-warehouse" method="post" modelAttribute="warehouse">
-            <div class="form-input" id="warehouseId">
-                <fieldset>
-                    <legend>Mã kho</legend>
-                    <input name="warehouseId" type="text" value="${warehouse.warehouseId}" maxlength="4" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="warehouseName">
-                <fieldset>
-                    <legend>Tên kho</legend>
-                    <input name="warehouseName" type="text" value="${warehouse.warehouseName}" maxlength="30" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="address">
-                <fieldset>
-                    <legend>Địa chỉ</legend>
-                    <input name="address" type="text" value="${warehouse.address}" maxlength="100" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <input type="submit" value="Thêm kho">
-        </form>
-    </div>
+    <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+        <div class="center-page_adding-form">
+            <form action="/service/v1/${userInfo.role.getJavaRole()}/add-warehouse" method="post" modelAttribute="warehouse">
+                <div class="form-input" id="warehouseId">
+                    <fieldset>
+                        <legend>Mã kho</legend>
+                        <input name="warehouseId" type="text" value="${warehouse.warehouseId}" maxlength="4" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="warehouseName">
+                    <fieldset>
+                        <legend>Tên kho</legend>
+                        <input name="warehouseName" type="text" value="${warehouse.warehouseName}" maxlength="30" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="address">
+                    <fieldset>
+                        <legend>Địa chỉ</legend>
+                        <input name="address" type="text" value="${warehouse.address}" maxlength="100" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <input type="submit" value="Thêm kho">
+            </form>
+        </div>
+    </c:if>
     <div class="center-page_list">
         <div class="table-tools">
             <div class="table-description">
@@ -85,7 +96,7 @@
                 </div>
             </div>
         </div>
-        <form action="/service/v1/branch/delete-warehouse" method="POST">
+        <form action="/service/v1/${userInfo.role.getJavaRole()}/delete-warehouse" method="POST">
             <table>
                 <thead>
                 <tr>
@@ -101,8 +112,10 @@
                         Địa chỉ
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="update">Cập nhật</th>
-                    <th id="delete">Xoá</th>
+                    <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+                        <th id="update">Cập nhật</th>
+                        <th id="delete">Xoá</th>
+                    </c:if>
                 </tr>
                 </thead>
                 <tbody>
