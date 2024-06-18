@@ -17,7 +17,6 @@ import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 public class SupplyService {
-
     @Service
     @RequiredArgsConstructor
     public static class BranchServices {
