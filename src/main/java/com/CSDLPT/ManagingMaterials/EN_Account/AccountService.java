@@ -42,7 +42,7 @@ public class AccountService {
 
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final AccountRepository accountRepository;
 
         public String checkIfEmployeeAccountIsExisting(HttpServletRequest request, String employeeId) throws SQLException {
@@ -67,6 +67,13 @@ public class AccountService {
             //--Close Connection.
             connectionHolder.removeConnection();
         }
+    }
+
+
+
+    @Service
+    public static class BranchServices {
+
     }
 
     @Service

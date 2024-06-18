@@ -19,13 +19,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Validator;
 
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
 public class EmployeeController {
-    private final EmployeeService.BranchServices branchServices;
+    private final EmployeeService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
@@ -35,21 +34,21 @@ public class EmployeeController {
         "/company/employee/manage-employee",
         "/user/employee/manage-employee"})
     public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getManageEmployeePage(request, model);
+        return authenticatedServices.getManageEmployeePage(request, model);
     }
 
     @GetMapping({"/branch/employee/report-for-employee",
         "/company/employee/report-for-employee",
         "/user/employee/report-for-employee"})
     public ModelAndView getReportForEmployeePage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getReportForEmployeePage(request, model);
+        return authenticatedServices.getReportForEmployeePage(request, model);
     }
 
     @GetMapping({"/branch/employee/report-for-employee-activities",
         "/company/employee/report-for-employee-activities",
         "/user/employee/report-for-employee-activities"})
     public ModelAndView getReportForEmployeeActivitiesPage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getReportForEmployeeActivitiesPage(request, model);
+        return authenticatedServices.getReportForEmployeeActivitiesPage(request, model);
     }
 
     /*_____________RequestMethod.POST: Employee-entity-interaction_____________*/
@@ -63,7 +62,7 @@ public class EmployeeController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findEmployee(request, searchingObject));
+                .body(authenticatedServices.findEmployee(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
@@ -80,7 +79,7 @@ public class EmployeeController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findAllEmployeeActivities(request, requiredInfoToSearchEmpActivities));
+                .body(authenticatedServices.findAllEmployeeActivities(request, requiredInfoToSearchEmpActivities));
         } catch (Exception e) {
             logger.info(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -102,7 +101,7 @@ public class EmployeeController {
         }
 
         try {
-            branchServices.addEmployee(request, employee);
+            authenticatedServices.addEmployee(request, employee);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException ignored) {
             redirectAttributes.addFlashAttribute("submittedEmployee", employee);
@@ -122,7 +121,7 @@ public class EmployeeController {
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
-            branchServices.updateEmployee(employee, request);
+            authenticatedServices.updateEmployee(employee, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NumberFormatException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
@@ -142,7 +141,7 @@ public class EmployeeController {
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
-            branchServices.deleteEmployee(employeeId, request);
+            authenticatedServices.deleteEmployee(employeeId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NumberFormatException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");

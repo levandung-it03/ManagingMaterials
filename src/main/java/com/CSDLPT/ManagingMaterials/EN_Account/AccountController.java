@@ -24,7 +24,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AccountController {
     private final AccountService.PublicServices publicServices;
-    private final AccountService.BranchServices branchServices;
+    private final AccountService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
@@ -50,7 +50,7 @@ public class AccountController {
         try {
                 return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.checkIfEmployeeAccountIsExisting(request, employeeId));
+                .body(authenticatedServices.checkIfEmployeeAccountIsExisting(request, employeeId));
         } catch (Exception e) {
             logger.info(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -71,7 +71,7 @@ public class AccountController {
         }
 
         try {
-            branchServices.addAccount(request, account);
+            authenticatedServices.addAccount(request, account);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException ignored) {
             redirectAttributes.addFlashAttribute("errorCode", "error_account_02");

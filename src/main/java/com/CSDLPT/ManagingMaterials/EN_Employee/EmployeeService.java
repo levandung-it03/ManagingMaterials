@@ -25,7 +25,7 @@ public class EmployeeService {
 
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final EmployeeRepository employeeRepository;
         private final BranchRepository branchRepository;
@@ -185,6 +185,11 @@ public class EmployeeService {
 
             return result;
         }
+    }
+
+    @Service
+    public static class BranchServices {
+
     }
 
     @Service
