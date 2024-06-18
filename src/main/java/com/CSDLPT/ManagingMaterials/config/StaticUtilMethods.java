@@ -36,8 +36,10 @@ public class StaticUtilMethods {
 
         //--Prepare data for Header of Pages.
         ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
-        if (userInfo != null)
+        if (userInfo != null) {
+            modelAndView.addObject("userRoleFromApp",  userInfo.getRole().);
             modelAndView.addObject("userInfo",  userInfo);
+        }
 
         return modelAndView;
     }

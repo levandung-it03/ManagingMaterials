@@ -45,4 +45,13 @@ public class AuthenticateController {
         }
         return "redirect:/login";
     }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        request.setAttribute("connectionHolder", null);
+        request.getSession().removeAttribute("userInfo");
+        request.getSession().removeAttribute("errorMessage");
+        request.getSession().removeAttribute("succeedMessage");
+        return "redirect:/login";
+    }
 }

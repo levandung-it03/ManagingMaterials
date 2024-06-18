@@ -111,20 +111,31 @@
 
 .account-btn {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: column;
 }
 
+.account-btn form {
+    display: block;
+    width: 100%;
+}
+.account-btn button,
 .account-btn a {
     color: black;
     font-size: 18px;
     text-align: start;
     padding: 5px 20px;
+    width: 100%;
+    height: 38px;
 }
 
+.account-btn button:hover,
 .account-btn a:hover {
     background-color: lightgray;
+    cursor: pointer;
 }
 
+.account-btn button i,
 .account-btn a i {
     margin-right: 10px;
 }
