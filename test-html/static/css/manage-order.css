@@ -1,0 +1,212 @@
+html {
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+div.center-page_adding-form form {
+    padding: 28px;
+    margin: 20px 0 20px 20px;
+    width: calc(100% - 2* 20px);
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 1px var(--black-text) solid;
+    border-radius: 10px;
+    color: var(--grey-text-form);
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-height: 94%;
+}
+
+div.center-page_adding-form form .form-input,
+div.center-page_adding-form form .form-select {
+    position: relative;
+    min-height: 70px !important;
+}
+
+div.center-page_adding-form .form-input label,
+div.center-page_adding-form .form-select label {
+    display: block;
+    padding: 4px;
+}
+
+/*--Customize each input tag--*/
+div.center-page_adding-form form div#orderId,
+div.center-page_adding-form form div#supplier,
+div.center-page_adding-form form div#warehouseIdAsFk {
+    width: 100%;
+}
+div.center-page_adding-form form div#warehouseIdAsFk input{
+    width: 90%;
+}
+div.center-page_adding-form form div#warehouseIdAsFk i{
+    cursor: pointer;
+}
+/*------------*/
+
+div.center-page_adding-form .form-input fieldset,
+div.center-page_adding-form .form-select fieldset {
+    width: 100%;
+    height: 55px;
+    border: 2px var(--grey-border) solid;
+    border-radius: 10px;
+    padding: 0 10px;
+}
+div.center-page_adding-form .form-input fieldset legend,
+div.center-page_adding-form .form-select fieldset legend {
+    color: var(--black-text);
+    font-weight: 100;
+}
+div.center-page_adding-form .form-input input,
+div.center-page_adding-form .form-select select {
+    outline: none;
+    border: none;
+    width: 100%;
+}
+
+div.center-page_adding-form .form-input_err-message {
+    position: relative;
+}
+
+.err-message-block {
+    position: absolute;
+    display: none;
+    color: red;
+    font-size: 12px;
+    padding-left: 10px;
+}
+
+div.center-page_adding-form form span#cancel-updating {
+    display: block;
+    padding: 8px 0;
+    margin: 30px auto auto;
+}
+div.center-page_adding-form form input[type=submit] {
+    padding: 12px 42px;
+    margin: 30px auto auto;
+}
+
+#error-message-close-btn:hover {
+    cursor: pointer;
+}
+
+/*--Customize Order List--*/
+table tr td {
+    height: 60px;
+}
+table tr th#orderId,
+table tr td.orderId {
+    text-align: start;
+    width: 10%;
+    padding-left: 20px
+}
+table tr th#createdDate,
+table tr td.createdDate {
+    width: 15%;
+}
+table tr th#supplier,
+table tr td.supplier {
+    text-align: start;
+    width: 20%;
+}
+table tr th#employeeIdAsFk,
+table tr td.employeeIdAsFk {
+    text-align: start;
+    width: 20%;
+}
+table tr th#warehouseIdAsFk,
+table tr td.warehouseIdAsFk {
+    width: 18%;
+}
+table tr th#createdDate,
+table tr td.createdDate,
+table tr th#detail,
+table tr td.detail,
+table tr th#update,
+table tr td.update,
+table tr th#delete,
+table tr td.delete{
+    width: 8%;
+}
+
+table tr td.detail i:hover {
+    cursor: pointer;
+    background-color: #0dac67;
+    color: #ffffff;
+}
+
+/* Custom select-dialog */
+div.select-dialog {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+div.select-dialog div.select-dialog-container {
+    width: 40%;
+    padding: 28px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px var(--black-text) solid;
+    border-radius: 10px;
+    color: var(--grey-text-form);
+    font-size: 0.9rem;
+    font-weight: 600;
+    position: relative;
+}
+
+div.select-dialog span.form-title {
+    display: block;
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+}
+
+div.select-dialog div.closing-dialog-btn {
+    position: absolute;
+    top: 0;
+    right: 15px;
+    font-size: 2.5rem;
+    transition: color ease 0.2s, scale ease 0.2s;
+}
+div.select-dialog div.closing-dialog-btn:hover {
+    cursor: pointer;
+    color: grey;
+    scale: 1.1;
+}
+
+.closed {
+    display: none!important;
+}
+
+/*--Customize Warehouse List--*/
+.select-dialog table {
+    width: 100%;
+}
+.select-dialog table tr:hover {
+    background-color: rgba(0,0,0,0.1);
+}
+.select-dialog table tr td {
+    height: 45px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+.select-dialog table tr th#warehouseId,
+.select-dialog table tr td.warehouseId {
+    text-align: start;
+    width: 20%;
+    padding-left: 20px;
+}
+.select-dialog table tr th#warehouseName,
+.select-dialog table tr td.warehouseName {
+    text-align: start;
+    width: 35%;
+}
+.select-dialog table tr th#address,
+.select-dialog table tr td.address {
+    text-align: start;
+    width: 45%;
+}
