@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -24,19 +23,23 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class SuppliesExportationDetailController {
-    private final SuppliesExportationDetailService.BranchServices branchServices;
+    private final SuppliesExportationDetailService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
-    /** Spring MVC: Branch-role controllers **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/supplies-exportation-detail/manage-supplies-exportation-detail")
+    @GetMapping({"/branch/supplies-exportation-detail/manage-supplies-exportation-detail",
+        "/company/supplies-exportation-detail/manage-supplies-exportation-detail",
+        "/user/supplies-exportation-detail/manage-supplies-exportation-detail"})
     public ModelAndView getManageSuppliesExportationDetailPage(HttpServletRequest request, Model model) {
-        return branchServices.getManageSuppliesExportationDetailPage(request, model);
+        return authenticatedServices.getManageSuppliesExportationDetailPage(request, model);
     }
 
     /*_____________RequestMethod.POST: Supplies-Exportation-Detail-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-supplies-exportation-detail-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-supplies-exportation-detail-by-values",
+        "${url.post.company.prefix.v1}/find-supplies-exportation-detail-by-values",
+        "${url.post.user.prefix.v1}/find-supplies-exportation-detail-by-values"})
     public ResponseEntity<ResDtoRetrievingData<SuppliesExportationDetail>> findingSuppliesExportationDetailByValues(
         @RequestBody ReqDtoRetrievingData<SuppliesExportationDetail> searchingObject,
         HttpServletRequest request
@@ -44,14 +47,15 @@ public class SuppliesExportationDetailController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findingSuppliesExportationDetail(request, searchingObject));
+                .body(authenticatedServices.findingSuppliesExportationDetail(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-supplies-exportation-detail")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-supplies-exportation-detail",
+        "${url.post.user.prefix.v1}/add-supplies-exportation-detail"})
     public String addSuppliesExportationDetail(
         @ModelAttribute("exportationDetail") SuppliesExportationDetail exportationDetail,
         HttpServletRequest request,
@@ -66,7 +70,7 @@ public class SuppliesExportationDetailController {
         }
 
         try {
-            branchServices.addSuppliesExportationDetail(exportationDetail, request);
+            authenticatedServices.addSuppliesExportationDetail(exportationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
@@ -81,7 +85,8 @@ public class SuppliesExportationDetailController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-supplies-exportation-detail")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-supplies-exportation-detail",
+        "${url.post.user.prefix.v1}/update-supplies-exportation-detail"})
     public String updateSuppliesExportationDetail(
         @ModelAttribute("exportationDetail") SuppliesExportationDetail exportationDetail,
         HttpServletRequest request,
@@ -96,7 +101,7 @@ public class SuppliesExportationDetailController {
         }
 
         try {
-            branchServices.updateSuppliesExportationDetail(exportationDetail, request);
+            authenticatedServices.updateSuppliesExportationDetail(exportationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         }  catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");

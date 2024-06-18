@@ -50,10 +50,11 @@ function GeneralMethods() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSuppliesExportationDetailComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-supplies-exportation-detail",
+        updatingAction: `/service/v1/${roleForFetching}/update-supplies-exportation-detail`,
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {
             (function customizeSupplyIdInputTagToServeUpdatingAction() {
@@ -82,48 +83,55 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-supplies-exportation-detail-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-supplies-exportation-detail-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.suppliesExportationId}">
                 <td plain-value="${row.suppliesExportationId}" class="suppliesExportationId">${row.suppliesExportationId}</td>
                 <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
                 <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
                 <td plain-value="${row.price}" class="price">${VNDCurrencyFormatEngine(row.price)}</td>
-                <td class="table-row-btn update">
+                ${roleForFetching !== "company" ? `<td class="table-row-btn update">
                     <a id="${row.suppliesExportationId}">
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a>
-                </td>
+                </td>` : ""}
             </tr>`
     };
 
     GeneralMethods();
-    AddSuppliesExportationDetailComponent();
     CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "phiếu",
-            callModulesOfExtraFeatures: () => {
+            callModulesOfExtraFeatures: (roleForFetching) => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
+                if (roleForFetching !== "company")
+                    customizeGeneratingFormUpdateEvent(
+                        'div.center-page_list',
+                        updatingSupportingDataSource
+                    );
             }
         }
     );
-    await CustomizeBuildingFormSpectator(
-        async () => {
-            await new SupplyDialog(
-                'div.select-dialog table tbody',
-                "branch",
-                null,
-                function moreActionCallback(trSelectedDom) {
-                    $('.center-page_adding-form input[name=suppliesQuantity]').value
-                        = $('.center-page_adding-form input[name=quantityInStock]').value
-                        = trSelectedDom.querySelector('td.quantityInStock').textContent.trim();
-                }
-            ).customizeToggleOpeningFormDialogDataSupporter();
-        },
-        'div.center-page_adding-form'
-    );
     await ListComponentForSuppliesExportationDetail(searchingSupportingDataSource);
+    if (roleForFetching !== "company") {
+        AddSuppliesExportationDetailComponent();
+        await CustomizeBuildingFormSpectator(
+            async () => {
+                await new SupplyDialog(
+                    'div.select-dialog table tbody',
+                    roleForFetching,
+                    null,
+                    function moreActionCallback(trSelectedDom) {
+                        $('.center-page_adding-form input[name=suppliesQuantity]').value
+                            = $('.center-page_adding-form input[name=quantityInStock]').value
+                            = trSelectedDom.querySelector('td.quantityInStock').textContent.trim();
+                    }
+                ).customizeToggleOpeningFormDialogDataSupporter();
+            },
+            'div.center-page_adding-form'
+        );
+    }
 })();

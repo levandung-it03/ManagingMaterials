@@ -113,7 +113,7 @@ function GeneralMethods() {
             }
         }
     );
-    await ListComponentForOrder(searchingSupportingDataSource, roleForFetching);
+    await ListComponentForOrder(searchingSupportingDataSource);
     if (roleForFetching !== "company") {
         AddOrderComponent();
         await CustomizeBuildingFormSpectator(

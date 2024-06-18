@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
 public class SuppliesExportationService {
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesExportationRepository suppliesExportationRepository;
@@ -140,6 +140,11 @@ public class SuppliesExportationService {
             //--Close connection
             connectHolder.removeConnection();
         }
+    }
+
+    @Service
+    public static class BranchServices {
+
     }
 
     @Service
