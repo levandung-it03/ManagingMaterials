@@ -3,13 +3,13 @@ function GeneralMethods() {
     customizeClosingNoticeMessageEvent();
 }
 
-async function CustomizeExportationFileModules() {
+async function CustomizeExportationFileModules(roleForFetching) {
     const pdfFilesExporter = new PdfFilesExportation();
     const previewInfoContainer = 'div.preview-table-container';
     const fetchingConfigObject = {
         previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Danh sách chi tiết số lượng - trị giá hàng nhập hoặc xuất',
-        fetchDataAction: "/service/v1/branch/find-tickets-for-detail-supplies-report",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-tickets-for-detail-supplies-report`,
         usefulVariablesStorage: {
             statisticInfoOfEachMonth: {},
             statisticInfoOfAllMonth: { totalPrices: 0 }
@@ -153,6 +153,7 @@ async function CustomizeExportationFileModules() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     GeneralMethods();
-    await CustomizeExportationFileModules();
+    await CustomizeExportationFileModules(roleForFetching);
 })();

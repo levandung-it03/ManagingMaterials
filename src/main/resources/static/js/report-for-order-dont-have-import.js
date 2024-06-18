@@ -12,13 +12,13 @@ function GeneralMethods() {
     customizeClosingNoticeMessageEvent();
 }
 
-async function CustomizeExportationFileModules() {
+async function CustomizeExportationFileModules(roleForFetching) {
     const pdfFilesExporter = new PdfFilesExportation();
     const previewInfoContainer = 'div.preview-table-container';
     const fetchingConfigObject = {
         previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Danh sách đơn đặt hàng chưa có phiếu nhập',
-        fetchDataAction: "/service/v1/branch/find-order-dont-have-import-for-report",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-order-dont-have-import-for-report`,
         usefulVariablesStorage: {},
         dataObject: {
             //--If page-number is "0", it's means that we will search all the list without pagination.
@@ -80,6 +80,7 @@ async function CustomizeExportationFileModules() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
         data: {
@@ -90,8 +91,9 @@ async function CustomizeExportationFileModules() {
             branch: "",
         },
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-order-dont-have-import-for-report",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-order-dont-have-import-for-report`,
         rowFormattingEngine: (row) => `
             <tr id="${row.orderId}">
                 <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
@@ -114,5 +116,5 @@ async function CustomizeExportationFileModules() {
         }
     );
     await ListComponent(searchingSupportingDataSource);
-    await CustomizeExportationFileModules();
+    await CustomizeExportationFileModules(roleForFetching);
 })();

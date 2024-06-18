@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/report-for-employee.css">
 </head>
 <body>
+    <span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
     <%@ include file="/WEB-INF/jsp/header.jsp" %>
     <div id="message-block">
         <c:if test="${errorMessage != null}">
