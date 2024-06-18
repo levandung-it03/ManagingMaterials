@@ -140,8 +140,8 @@ public class HomePageRepository {
         try {
             String callSPStatement = "{call SP_REPORT_OF_PERCENTAGE_OF_IMPORT_AND_EXPORT(?, ?)}";
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(callSPStatement);
-            statement.setDate(1, new Date(year, 1, 1));
-            statement.setDate(2, new Date(year, 12, 31));
+            statement.setDate(1,  Date.valueOf(year + "-01-01"));
+            statement.setDate(2, Date.valueOf(year + "-12-31"));
             ResultSet resultSet = statement.executeQuery();
 
             Map<Integer, Integer> monthlyTotalImport = new HashMap<>();
@@ -181,7 +181,7 @@ public class HomePageRepository {
                     .toList();
             result.setYear(year);
             result.setMonthlyImport(monthlyTotalImportList);
-            result.setMonthlyImport(monthlyTotalExportList);
+            result.setMonthlyExport(monthlyTotalExportList);
 
             //--Close all connection.
             resultSet.close();
