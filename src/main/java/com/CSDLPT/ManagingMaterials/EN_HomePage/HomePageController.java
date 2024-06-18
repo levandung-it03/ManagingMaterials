@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Controller
@@ -40,9 +41,9 @@ public class HomePageController {
         return modelAndView;
     }
 
-    @PostMapping("/home/total-monthly-import")
+    @PostMapping("${url.post.branch.prefix.v1}/total-monthly-import")
     public ResponseEntity<TotalImportAndExportOfYearDto> findMonthlyTotalImportAndExport(HttpServletRequest request) {
-        int currentYear = new Date().getYear();
+        int currentYear = LocalDate.now().getYear();
         TotalImportAndExportOfYearDto totalImportAndExportOfYearDto =
                 this.homePageService.getMonthlyTotalImportAndExportOfYear(request, currentYear);
         return ResponseEntity.ok(totalImportAndExportOfYearDto);

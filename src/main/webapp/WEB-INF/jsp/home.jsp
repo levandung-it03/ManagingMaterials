@@ -103,7 +103,7 @@
 <script>
     async function fetchData(resource) {
         const context = "${pageContext.request.contextPath}";
-        const url = window.location.origin + context + resource;
+        const url = window.location.origin + "/service/v1/branch/total-monthly-import"
         console.log("url:", url);
         const payload = {
             method: 'POST',
