@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_HomePage;
 
 import com.CSDLPT.ManagingMaterials.EN_HomePage.dto.InventoryPercentageDto;
+import com.CSDLPT.ManagingMaterials.EN_HomePage.dto.SupplyTrendDto;
 import com.CSDLPT.ManagingMaterials.EN_HomePage.dto.TotalImportAndExportOfYearDto;
 import com.CSDLPT.ManagingMaterials.EN_Supply.Supply;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
@@ -80,6 +81,10 @@ public class HomePageService {
 
     public TotalImportAndExportOfYearDto getMonthlyTotalImportAndExportOfYear(HttpServletRequest request, int year) {
         return this.homePageRepository.totalImportAndExportOfYear(request, year);
+    }
+
+    public SupplyTrendDto getSupplyTrend(HttpServletRequest request) {
+        return this.homePageRepository.calculateSuppliesTrend(request);
     }
 
     public InventoryPercentageDto getInventoryPercentages(HttpServletRequest request) {
