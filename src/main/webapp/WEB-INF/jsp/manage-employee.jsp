@@ -13,6 +13,22 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-employee.css">
+    <c:if test="${userInfo.role.getJavaRole() == 'company'}">
+        <style>
+            .center-page_list table tr th#base-profile,
+            .center-page_list table tr td.base-profile {
+                width: calc(23% + 2*7%);
+            }
+        </style>
+    </c:if>
+    <c:if test="${userInfo.role.getJavaRole() == 'user'}">
+        <style>
+            .center-page_list table tr th#base-profile,
+            .center-page_list table tr td.base-profile {
+                width: calc(23% + 9%);
+            }
+        </style>
+    </c:if>
 </head>
 <body>
 <span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
@@ -33,65 +49,67 @@
     </c:if>
 </div>
 <div class="center-page">
-    <div class="center-page_adding-form">
-        <form action="/service/v1/${userInfo.role.getJavaRole()}/add-employee" method="post" modelAttribute="employee">
-            <div class="form-input" id="employeeId">
-                <fieldset>
-                    <legend>Mã nhân viên</legend>
-                    <input name="employeeId" type="number" value="${employee.employeeId}" readonly/>
-                </fieldset>
+    <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+        <div class="center-page_adding-form">
+            <form action="/service/v1/${userInfo.role.getJavaRole()}/add-employee" method="post" modelAttribute="employee">
+                <div class="form-input" id="employeeId">
+                    <fieldset>
+                        <legend>Mã nhân viên</legend>
+                        <input name="employeeId" type="number" value="${employee.employeeId}" readonly/>
+                    </fieldset>
+                </div>
+                <div class="form-input" id="identifier">
+                    <fieldset>
+                        <legend>CMND</legend>
+                        <input name="identifier" type="text" value="${employee.identifier}" maxlength="20" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input strong-text" id="lastName">
+                    <fieldset>
+                        <legend>Họ nhân viên</legend>
+                        <input name="lastName" type="text" value="${employee.lastName}" maxlength="40" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input strong-text" id="firstName">
+                    <fieldset>
+                        <legend>Tên nhân viên</legend>
+                        <input name="firstName" type="text" value="${employee.firstName}" maxlength="10" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input strong-text" id="address">
+                    <fieldset>
+                        <legend>Địa chỉ</legend>
+                        <input name="address" type="text" value="${employee.address}" maxlength="100" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="birthday">
+                    <fieldset>
+                        <legend>Ngày sinh</legend>
+                        <input name="birthday" type="date" value="${employee.birthday}" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="salary">
+                    <fieldset>
+                        <legend>Lương</legend>
+                        <input name="salary" type="number" value="${String.format("%.0f", employee.salary)}" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div id="rest-components-for-updating"></div>
+                <input type="submit" value="Thêm nhân viên" />
+            </form>
+            <div id="branchesList" style="display:none">
+                <c:forEach items="${branchesList}" var="branch">
+                    <span class="hidden-data-fields" type="blacks text" name="branch">${branch}</span>
+                </c:forEach>
             </div>
-            <div class="form-input" id="identifier">
-                <fieldset>
-                    <legend>CMND</legend>
-                    <input name="identifier" type="text" value="${employee.identifier}" maxlength="20" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input strong-text" id="lastName">
-                <fieldset>
-                    <legend>Họ nhân viên</legend>
-                    <input name="lastName" type="text" value="${employee.lastName}" maxlength="40" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input strong-text" id="firstName">
-                <fieldset>
-                    <legend>Tên nhân viên</legend>
-                    <input name="firstName" type="text" value="${employee.firstName}" maxlength="10" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input strong-text" id="address">
-                <fieldset>
-                    <legend>Địa chỉ</legend>
-                    <input name="address" type="text" value="${employee.address}" maxlength="100" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="birthday">
-                <fieldset>
-                    <legend>Ngày sinh</legend>
-                    <input name="birthday" type="date" value="${employee.birthday}" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="salary">
-                <fieldset>
-                    <legend>Lương</legend>
-                    <input name="salary" type="number" value="${String.format("%.0f", employee.salary)}" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div id="rest-components-for-updating"></div>
-            <input type="submit" value="Thêm nhân viên" />
-        </form>
-        <div id="branchesList" style="display:none">
-            <c:forEach items="${branchesList}" var="branch">
-                <span class="hidden-data-fields" type="blacks text" name="branch">${branch}</span>
-            </c:forEach>
         </div>
-    </div>
+    </c:if>
     <div class="center-page_list">
         <div class="table-tools">
             <div class="table-description">
@@ -102,7 +120,8 @@
                 <div class="select-branch-to-search">
                     <fieldset>
                         <legend>Chi nhánh</legend>
-                        <select name="searchingBranch" disabled="${userInfo.role == 'CONGTY' ? 'fasle' : 'true'}" data="${userInfo.branch}">
+<%--                        <select name="searchingBranch" disabled="${userInfo.role == 'CONGTY' ? 'fasle' : 'true'}" data="${userInfo.branch}">--%>
+                        <select name="searchingBranch" disabled="${userInfo.role.getJavaRole()=='company'}" data="${userInfo.branch}">
                             <c:forEach items="${branchesList}" var="branch">
                                 <option value="${branch.trim()}">${branch.trim()}</option>
                             </c:forEach>
@@ -126,7 +145,7 @@
                 </div>
             </div>
         </div>
-        <form action="/service/v1/branch/delete-employee" method="POST">
+        <form action="/service/v1/${userInfo.role.getJavaRole()}/delete-employee" method="POST">
             <table>
                 <thead>
                 <tr>
@@ -150,9 +169,13 @@
                         Lương
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="update">Cập nhật</th>
-                    <th id="addAccount">Thêm tài khoản</th>
-                    <th id="delete">Xoá</th>
+                    <c:if test="${userInfo.role.getJavaRole() != 'user'}">
+                        <th id="addAccount">Thêm tài khoản</th>
+                    </c:if>
+                    <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+                        <th id="update">Cập nhật</th>
+                        <th id="delete">Xoá</th>
+                    </c:if>
                 </tr>
                 </thead>
                 <tbody></tbody>
@@ -163,66 +186,73 @@
         </div>
     </div>
 </div>
-<div id="form-dialog" class="closed">
-    <div id="form-dialog_surrounding-frame"></div>
-    <div id="form-dialog_adding-account">
-        <form action="/service/v1/${userInfo.role.getJavaRole()}/add-account" method="post" modelAttribute="account">
-            <span class="form-title">Tạo login</span>
-            <div class="form-input" id="employeeId">
-                <fieldset>
-                    <legend>Mã nhân viên</legend>
-                    <input name="employeeId" type="number" value="" readonly/>
-                </fieldset>
-            </div>
-            <div class="form-input strong-text" id="fullName">
-                <fieldset>
-                    <legend>Họ và tên</legend>
-                    <input name="fullName" type="text" value="" maxlength="40" readonly/>
-                </fieldset>
-            </div>
-            <div class="form-select" id="role">
-                <fieldset>
-                    <legend>Vai trò</legend>
-                    <select name="role">
-                        <option value="CHINHANH">Chi nhánh</option>
-                        <option value="USER">Người dùng</option>
-                    </select>
-                </fieldset>
-            </div>
-            <div class="form-input" id="username">
-                <fieldset>
-                    <legend>Tên đăng nhập</legend>
-                    <input name="username" type="text" value="" maxlength="10" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="password">
-                <fieldset>
-                    <legend>Mật khẩu</legend>
-                    <input name="password" type="password" value="" maxlength="20" required/>
-                    <div class="password_toggle-hidden">
-                        <i id="password" class="show-pass fa-solid fa-eye"></i>
-                        <i id="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
-                    </div>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="retypePassword">
-                <fieldset>
-                    <legend>Mật khẩu xác nhận</legend>
-                    <input name="retypePassword" type="password" value="" maxlength="20" required/>
-                    <div class="password_toggle-hidden">
-                        <i id="password" class="show-pass fa-solid fa-eye"></i>
-                        <i id="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
-                    </div>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <button name="submit">Thêm tài khoản</button>
-        </form>
-        <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
+<c:if test="${userInfo.role.getJavaRole() != 'user'}">
+    <div id="form-dialog" class="closed">
+        <div id="form-dialog_surrounding-frame"></div>
+        <div id="form-dialog_adding-account">
+            <form action="/service/v1/${userInfo.role.getJavaRole()}/add-account" method="post" modelAttribute="account">
+                <span class="form-title">Tạo login</span>
+                <div class="form-input" id="employeeId">
+                    <fieldset>
+                        <legend>Mã nhân viên</legend>
+                        <input name="employeeId" type="number" value="" readonly/>
+                    </fieldset>
+                </div>
+                <div class="form-input strong-text" id="fullName">
+                    <fieldset>
+                        <legend>Họ và tên</legend>
+                        <input name="fullName" type="text" value="" maxlength="40" readonly/>
+                    </fieldset>
+                </div>
+                <div class="form-select" id="role">
+                    <fieldset>
+                        <legend>Vai trò</legend>
+                        <select name="role">
+                            <c:if test="${userInfo.role.getJavaRole() == 'branch'}">
+                                <option value="CHINHANH">Chi nhánh</option>
+                                <option value="USER">Người dùng</option>
+                            </c:if>
+                            <c:if test="${userInfo.role.getJavaRole() == 'company'}">
+                                <option value="CONGTY">Công ty</option>
+                            </c:if>
+                        </select>
+                    </fieldset>
+                </div>
+                <div class="form-input" id="username">
+                    <fieldset>
+                        <legend>Tên đăng nhập</legend>
+                        <input name="username" type="text" value="" maxlength="10" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="password">
+                    <fieldset>
+                        <legend>Mật khẩu</legend>
+                        <input name="password" type="password" value="" maxlength="20" required/>
+                        <div class="password_toggle-hidden">
+                            <i id="password" class="show-pass fa-solid fa-eye"></i>
+                            <i id="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
+                        </div>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="retypePassword">
+                    <fieldset>
+                        <legend>Mật khẩu xác nhận</legend>
+                        <input name="retypePassword" type="password" value="" maxlength="20" required/>
+                        <div class="password_toggle-hidden">
+                            <i id="password" class="show-pass fa-solid fa-eye"></i>
+                            <i id="password" class="hide-pass hidden fa-regular fa-eye-slash"></i>
+                        </div>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <button name="submit">Thêm tài khoản</button>
+            </form>
+            <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
+        </div>
     </div>
-</div>
+</c:if>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
 <script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-employee.js"></script>
 </body>

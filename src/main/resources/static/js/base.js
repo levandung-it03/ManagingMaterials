@@ -74,8 +74,8 @@ function customizeClosingNoticeMessageEvent() {
 
 }
 
-function createErrBlocksOfInputTags(validatingBlocks) {
-    [...$$('.form-input .form_text-input_err-message')].forEach((e) => {
+function createErrBlocksOfInputTags(validatingBlocks, formSelector="form") {
+    [...$$(formSelector + ' div.form-input .form_text-input_err-message')].forEach((e) => {
         e.innerHTML = `
         <span class='err-message-block' id='${e.parentNode.id}'>
             ${validatingBlocks[e.parentNode.id].errorMessage}

@@ -32,6 +32,29 @@ function AddEmployeeComponent() {
             validate: (value) => value >= 4000000,
             errorMessage: "Lương phải >= 4.000.000"
         },
+    };
+
+    createErrBlocksOfInputTags(validatingBlocks, 'div.center-page_adding-form form');
+    customizeValidateEventInputTags(validatingBlocks);
+    customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
+    recoveryAllSelectTagData();
+    customizeAutoFormatStrongInputTextEvent();
+}
+
+async function ListComponent(searchingSupportingDataSource) {
+    //--Firstly "fetch" data to put into empty-table-as-list.
+    await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
+
+    customizeSearchingListEvent(searchingSupportingDataSource);
+    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
+    customizeSortingListEvent();
+
+    customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
+}
+
+async function customizeAddAccountFormDialog(roleForFetching) {
+    const formDialog = $('div#form-dialog');
+    const validatingBlocks = {
         username: {
             tag: $('input[name=username]'),
             validate: function (value) {
@@ -56,28 +79,10 @@ function AddEmployeeComponent() {
             errorMessage: "Mật khẩu không khớp."
         },
     };
-
-    createErrBlocksOfInputTags(validatingBlocks);
+    createErrBlocksOfInputTags(validatingBlocks, "div#form-dialog form");
     customizeValidateEventInputTags(validatingBlocks);
-    customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
     customizeSubmitFormAction('div#form-dialog_adding-account form', validatingBlocks);
-    recoveryAllSelectTagData();
     customizeAutoFormatStrongInputTextEvent();
-}
-
-async function ListComponent(searchingSupportingDataSource) {
-    //--Firstly "fetch" data to put into empty-table-as-list.
-    await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
-
-    customizeSearchingListEvent(searchingSupportingDataSource);
-    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
-    customizeSortingListEvent();
-
-    customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
-}
-
-async function customizeAddAccountFormDialog(roleForFetching) {
-    const formDialog = $('div#form-dialog');
 
     //--Customize closing form-dialog action.
     $('div#form-dialog_surrounding-frame').addEventListener("click", e => formDialog.classList.add("closed"));
@@ -143,6 +148,21 @@ function GeneralMethods() {
 
 (async function main() {
     const roleForFetching = getRoleFromJsp();
+    const buildButtonsByConditions = (row) => {
+        const addAccountBtn = `<td class="table-row-btn addAccount">
+            <a id="${row.employeeId}"><i class="fa-regular fa-pen-to-square"></i></a>
+        </td>`;
+        const updateBtn = `<td class="table-row-btn update">
+            <a id="${row.employeeId}"><i class="fa-regular fa-pen-to-square"></i></a>
+        </td>`;
+        const deleteBtn = `<td class="table-row-btn delete">
+            <button name="deleteBtn" value="${row.employeeId}"><i class="fa-regular fa-trash-can"></i></button>
+        </td>`;
+        if (roleForFetching == "company")   return addAccountBtn;
+        if (roleForFetching == "user")      return updateBtn + deleteBtn;
+        if (roleForFetching == "branch")    return addAccountBtn + updateBtn + deleteBtn;
+        else return "";
+    }
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddEmployeeComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
@@ -194,26 +214,11 @@ function GeneralMethods() {
                 <td plain-value="${row.address}" class="address">${row.address}</td>
                 <td plain-value="${row.salary}" class="salary">${VNDCurrencyFormatEngine(row.salary)}</td>
                 <td style="display:none" plain-value="${row.branch}" class="branch">${row.branch}</td>
-                <td class="table-row-btn update">
-                    <a id="${row.employeeId}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </a>
-                </td>
-                <td class="table-row-btn addAccount">
-                    <a id="${row.employeeId}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </a>
-                </td>
-                <td class="table-row-btn delete">
-                    <button name="deleteBtn" value="${row.employeeId}">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button>
-                </td>
+                ${buildButtonsByConditions(row)}
             </tr>`
     };
 
     GeneralMethods();
-    AddEmployeeComponent();
     CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
@@ -221,15 +226,16 @@ function GeneralMethods() {
             callModulesOfExtraFeatures: async () => {
                 //--Re-paint the colours of avatars.
                 paintAllAvatarColor();
+
                 //--Re-customize the listener of all adding-account-buttons.
-                await customizeAddAccountFormDialog(roleForFetching);
+                if (roleForFetching !== "user")  await customizeAddAccountFormDialog(roleForFetching);
+
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent(
-                    'div.center-page_list',
-                    updatingSupportingDataSource
-                );
+                if (roleForFetching !== "company")
+                    customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
             }
         }
     );
     await ListComponent(searchingSupportingDataSource);
+    if (roleForFetching !== "company")  AddEmployeeComponent();
 })();

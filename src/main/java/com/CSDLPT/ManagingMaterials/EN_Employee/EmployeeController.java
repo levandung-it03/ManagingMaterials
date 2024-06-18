@@ -29,31 +29,33 @@ public class EmployeeController {
     private final Validator hibernateValidator;
     private final Logger logger;
 
-    /** Spring MVC: Branch-role controllers **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping({
-        "/branch/employee/manage-employee",
+    @GetMapping({"/branch/employee/manage-employee",
         "/company/employee/manage-employee",
-        "/user/employee/manage-employee"
-    })
+        "/user/employee/manage-employee"})
     public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getManageEmployeePage(request, model);
     }
-    @GetMapping("/branch/employee/report-for-employee")
+
+    @GetMapping({"/branch/employee/report-for-employee",
+        "/company/employee/report-for-employee",
+        "/user/employee/report-for-employee"})
     public ModelAndView getReportForEmployeePage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getReportForEmployeePage(request, model);
     }
-    @GetMapping("/branch/employee/report-for-employee-activities")
+
+    @GetMapping({"/branch/employee/report-for-employee-activities",
+        "/company/employee/report-for-employee-activities",
+        "/user/employee/report-for-employee-activities"})
     public ModelAndView getReportForEmployeeActivitiesPage(HttpServletRequest request, Model model) throws SQLException {
         return branchServices.getReportForEmployeeActivitiesPage(request, model);
     }
 
     /*_____________RequestMethod.POST: Employee-entity-interaction_____________*/
-    @PostMapping({
-        "${url.post.branch.prefix.v1}/find-employee-by-values",
+    @PostMapping({"${url.post.branch.prefix.v1}/find-employee-by-values",
         "${url.post.company.prefix.v1}/find-employee-by-values",
-        "${url.post.user.prefix.v1}/find-employee-by-values"
-    })
+        "${url.post.user.prefix.v1}/find-employee-by-values"})
     public ResponseEntity<ResDtoRetrievingData<Employee>> findingEmployeesByValues(
         @RequestBody ReqDtoRetrievingData<Employee> searchingObject,
         HttpServletRequest request
@@ -68,7 +70,9 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/find-all-employee-activities-for-report")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-all-employee-activities-for-report",
+        "${url.post.company.prefix.v1}/find-all-employee-activities-for-report",
+        "${url.post.user.prefix.v1}/find-all-employee-activities-for-report"})
     public ResponseEntity<ResDtoRetrievingData<ResDtoReportForEmployeeActivities>> findAllEmployeeActivities(
         @RequestBody ReqDtoReportForEmployeeActivities requiredInfoToSearchEmpActivities,
         HttpServletRequest request
@@ -83,7 +87,7 @@ public class EmployeeController {
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-employee")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-employee", "${url.post.user.prefix.v1}/add-employee"})
     public String addEmployee(
         @ModelAttribute("employee") Employee employee,
         HttpServletRequest request,
@@ -110,7 +114,7 @@ public class EmployeeController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-employee")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-employee", "${url.post.user.prefix.v1}/update-employee"})
     public String updateEmployee(
         @ModelAttribute("employee") Employee employee,
         HttpServletRequest request,
@@ -130,7 +134,7 @@ public class EmployeeController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-employee")
+    @PostMapping({"${url.post.branch.prefix.v1}/delete-employee", "${url.post.user.prefix.v1}/delete-employee"})
     public String deleteEmployee(
         @RequestParam("deleteBtn") String employeeId,
         HttpServletRequest request,

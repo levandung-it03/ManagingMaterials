@@ -41,7 +41,8 @@ public class AccountController {
 
     /** Spring MVC: Branch-role controllers **/
     /*_____________RequestMethod.POST: Account-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/check-if-employee-account-is-existing")
+    @PostMapping({"${url.post.branch.prefix.v1}/check-if-employee-account-is-existing",
+        "${url.post.company.prefix.v1}/check-if-employee-account-is-existing"})
     public ResponseEntity<String> checkIfEmployeeAccountIsExisting(
         @RequestParam("employeeId") String employeeId,
         HttpServletRequest request
@@ -55,7 +56,8 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-    @PostMapping("${url.post.branch.prefix.v1}/add-account")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-account",
+        "${url.post.company.prefix.v1}/add-account"})
     public String addAccount(
         @RequestBody ReqDtoAddingAccount account,
         HttpServletRequest request,

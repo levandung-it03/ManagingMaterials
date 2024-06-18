@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Employee;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.RoleEnum;
 import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ReqDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
@@ -31,20 +32,25 @@ public class EmployeeService {
         private final FindingActionService findingActionService;
 
         public ModelAndView getManageEmployeePage(HttpServletRequest request, Model model) throws SQLException {
-            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            //--Get Current_Login_User from Session.
+            ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
             //--Prepare common-components of ModelAndView if we need.
             ModelAndView modelAndView = staticUtilMethods
                 .customResponsiveModelView(request, model, "manage-employee");
+
+            //--Company-role can't add employees, so we don't need to prepare under those data variables.
+            if (userInfo.getRole().equals(RoleEnum.CONGTY))
+                return modelAndView;
+
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
             //--If there's an error when handle data with DB, take the submitted-employee-info and give it back to this page
             Employee employee = (Employee) model.asMap().get("submittedEmployee");
             if (employee != null)   modelAndView.addObject("employee", employee);
                 //--If the redirected employee-info doesn't exist, so this is the plain (empty) adding-form.
             else {
-                //--Get Current_Login_User from Session.
-                ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
                 Integer nextEmployeeId = employeeRepository.getNextEmployeeId(connectionHolder, userInfo.getBranch());
 
                 //--Save auto-generated into session for AddEmployeeAction.
