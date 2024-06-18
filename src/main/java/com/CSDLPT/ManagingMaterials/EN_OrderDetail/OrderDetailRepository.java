@@ -41,6 +41,24 @@ public class OrderDetailRepository {
         return result;
     }
 
+    public boolean existByOrderId(DBConnectionHolder conHolder, String orderId) {
+        boolean result = false;
+        try {
+            PreparedStatement statement = conHolder.getConnection()
+                .prepareStatement("SELECT TOP 1 * FROM CTDDH WHERE MasoDDH=?");
+            statement.setString(1, orderId);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())     result = true;
+
+            resultSet.close();
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'existByOrderId' of OrderRepository: " + e);
+        }
+        return result;
+    }
+
     public int save(DBConnectionHolder conHolder, OrderDetail orderDetail) {
         int result = 0;
         try {

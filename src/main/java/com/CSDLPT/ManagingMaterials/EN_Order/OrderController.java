@@ -1,7 +1,10 @@
 package com.CSDLPT.ManagingMaterials.EN_Order;
 
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ReqDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ReqDtoOrder;
 import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ResDtoOrderWithImportantInfo;
+import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ResDtoReportForOrderDontHaveImport;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesExportation.dtos.ReqDtoSuppliesExportation;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
@@ -36,6 +39,10 @@ public class OrderController {
     public ModelAndView getManageOrderPage(HttpServletRequest request, Model model) {
         return branchServices.getManageOrderPage(request, model);
     }
+    @GetMapping("/branch/order/report-for-order-dont-have-import")
+    public ModelAndView getReportForOrderDontHaveImportPage(HttpServletRequest request, Model model) throws SQLException {
+        return branchServices.getReportForOrderDontHaveImportPage(request, model);
+    }
 
     /*_____________RequestMethod.POST: Order-entity-interaction_____________*/
     @PostMapping("${url.post.branch.prefix.v1}/find-order-by-values")
@@ -50,6 +57,20 @@ public class OrderController {
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
+        }
+    }
+    @PostMapping("${url.post.branch.prefix.v1}/find-order-dont-have-import-for-report")
+    public ResponseEntity<ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport>> findAllOrderDontHaveImport(
+        @RequestBody ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject,
+        HttpServletRequest request
+    ) {
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(branchServices.findAllOrderDontHaveImport(request, searchingObject));
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
     @PostMapping("${url.post.branch.prefix.v1}/find-order-for-supplies-importation-by-values")

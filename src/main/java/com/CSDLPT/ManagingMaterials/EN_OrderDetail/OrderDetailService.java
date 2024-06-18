@@ -1,5 +1,9 @@
 package com.CSDLPT.ManagingMaterials.EN_OrderDetail;
 
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportation;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportationRepository;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail.SuppliesImportationDetail;
+import com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail.SuppliesImportationDetailRepository;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.EN_OrderDetail.dtos.ReqDtoDataForDetail;
@@ -14,7 +18,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 public class OrderDetailService {
 
@@ -24,6 +30,8 @@ public class OrderDetailService {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final OrderDetailRepository orderDetailRepository;
+        private final SuppliesImportationRepository suppliesImportationRepository;
+        private final SuppliesImportationDetailRepository suppliesImportationDetailRepository;
 
         public ModelAndView getManageOrderDetailPage(HttpServletRequest request, Model model) {
             //--Prepare a modelAndView object to symbolize the whole page.
@@ -91,22 +99,47 @@ public class OrderDetailService {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
             orderDetail.trimAllFieldValues();
 
+            //--Check if order already has importation and get importation id
+            Optional<SuppliesImportation> importation = suppliesImportationRepository
+                .findByOrderId(connectHolder, orderDetail.getOrderId());
+            if (importation.isPresent()){
+                //--Check if order detail has corresponding importation detail
+                Optional<SuppliesImportationDetail> importationDetail = suppliesImportationDetailRepository
+                    .findById(connectHolder, importation.get().getSuppliesImportationId(), orderDetail.getSupplyId());
+                if (importationDetail.isPresent()){
+                    //--If quantity in order detail is smaller than in importation then throw exception
+                    if (orderDetail.getSuppliesQuantity() < importationDetail.get().getSuppliesQuantity())
+                        throw new SQLIntegrityConstraintViolationException("New suppliesQuantity value is invalid");
+                }
+            }
+
+
             orderDetailRepository.update(connectHolder, orderDetail);
             //--Close connection
             connectHolder.removeConnection();
         }
 
         public void deleteOrderDetail(
-            String orderDetailId,
+            String orderId,
             String supplyId,
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
-            if (orderDetailRepository.findById(connectHolder, orderDetailId, supplyId).isEmpty())
+            if (orderDetailRepository.findById(connectHolder, orderId, supplyId).isEmpty())
                 throw new NoSuchElementException("Order-Detail not found");
 
-            orderDetailRepository.delete(connectHolder, orderDetailId, supplyId);
+            //--Check if order already has importation and get importation id
+            Optional<SuppliesImportation> importation = suppliesImportationRepository
+                .findByOrderId(connectHolder, orderId);
+            if (importation.isPresent()){
+                //--Check if order detail has corresponding importation detail
+                if (suppliesImportationDetailRepository.findById(connectHolder, importation.get()
+                    .getSuppliesImportationId(), supplyId).isPresent())
+                    throw new SQLIntegrityConstraintViolationException("Order Detail already had corresponding Importation Detail");
+            }
+
+            orderDetailRepository.delete(connectHolder, orderId, supplyId);
             //--Close connection
             connectHolder.removeConnection();
         }
