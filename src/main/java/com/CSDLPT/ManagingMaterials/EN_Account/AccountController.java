@@ -39,7 +39,7 @@ public class AccountController {
      *____________________________________________________________________________________________________________*/
 
 
-    /** Spring MVC: Branch-role controllers **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.POST: Account-entity-interaction_____________*/
     @PostMapping({"${url.post.branch.prefix.v1}/check-if-employee-account-is-existing",
         "${url.post.company.prefix.v1}/check-if-employee-account-is-existing"})

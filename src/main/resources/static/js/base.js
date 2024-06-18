@@ -469,7 +469,7 @@ function CustomizeFetchingActionSpectator(
         generatePaginationBar(observedTableContainer, searchingSupportingDataSource);
 
         //--Call all rest custom modules.
-        await moreFeatures.callModulesOfExtraFeatures();
+        await moreFeatures.callModulesOfExtraFeatures(searchingSupportingDataSource.roleForFetching);
 
         //--Configure the observer to observe changes to the table's child list
     }).observe($(observedTableContainer + ' tbody'), {childList: true, subtree: true});

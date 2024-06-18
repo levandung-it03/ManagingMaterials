@@ -44,10 +44,11 @@ function GeneralMethods() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddOrderDetailComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-order-detail",
+        updatingAction: `/service/v1/${roleForFetching}/update-order-detail`,
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {
             (function customizeSupplyIdInputTagToServeUpdatingAction() {
@@ -76,48 +77,53 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-order-detail-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-order-detail-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.orderId}">
                 <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
                 <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
                 <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
                 <td plain-value="${row.price}" class="price">${VNDCurrencyFormatEngine(row.price)}</td>
-                <td class="table-row-btn update">
-                    <a id="${row.orderId} ${row.supplyId}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </a>
+                ${roleForFetching !== "company" ? `<td class="table-row-btn update">
+                    <a id="${row.orderId} ${row.supplyId}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 <td class="table-row-btn delete">
                     <button name="deleteBtn" value="${row.orderId.trim()}">
                         <input name="supplyId" type="text" value="${row.supplyId.trim()}" hidden/>
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
-                </td>
+                </td>` : ""}
             </tr>`
     };
 
     GeneralMethods();
-    AddOrderDetailComponent();
     CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "chi tiết đơn",
-            callModulesOfExtraFeatures: () => {
+            callModulesOfExtraFeatures: (roleForFetching) => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
+                if (roleForFetching !== "company")
+                    customizeGeneratingFormUpdateEvent(
+                        'div.center-page_list',
+                        updatingSupportingDataSource
+                    );
             }
         }
     );
-    await CustomizeBuildingFormSpectator(
-        async () => {
-            await new SupplyDialog(
-                'div.select-dialog table tbody',
-                "branch"
-            ).customizeToggleOpeningFormDialogDataSupporter();
-        },
-        'div.center-page_adding-form'
-    );
     await ListComponentForOrderDetail(searchingSupportingDataSource);
+    if (roleForFetching !== "company") {
+        AddOrderDetailComponent();
+        await CustomizeBuildingFormSpectator(
+            async () => {
+                await new SupplyDialog(
+                    'div.select-dialog table tbody',
+                    roleForFetching
+                ).customizeToggleOpeningFormDialogDataSupporter();
+            },
+            'div.center-page_adding-form'
+        );
+    }
 })();

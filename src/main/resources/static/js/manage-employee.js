@@ -46,10 +46,11 @@ async function ListComponent(searchingSupportingDataSource) {
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
-    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
+    if (searchingSupportingDataSource.roleForFetching === "company")
+        customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 
 async function customizeAddAccountFormDialog(roleForFetching) {
@@ -195,6 +196,7 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
         fetchDataAction: `/service/v1/${roleForFetching}/find-employee-by-values`,
         rowFormattingEngine: (row) => `
@@ -223,7 +225,7 @@ function GeneralMethods() {
         searchingSupportingDataSource,
         {
             tableLabel: "người",
-            callModulesOfExtraFeatures: async () => {
+            callModulesOfExtraFeatures: async (roleForFetching) => {
                 //--Re-paint the colours of avatars.
                 paintAllAvatarColor();
 

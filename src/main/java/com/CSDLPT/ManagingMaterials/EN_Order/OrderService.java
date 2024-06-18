@@ -37,7 +37,7 @@ public class OrderService {
 
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final OrderRepository orderRepository;
@@ -176,6 +176,7 @@ public class OrderService {
             //--Close connection
             connectHolder.removeConnection();
         }
+
         public ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport> findAllOrderDontHaveImport(
             HttpServletRequest request,
             ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject
@@ -191,6 +192,12 @@ public class OrderService {
 
             return result;
         }
+    }
+
+
+    @Service
+    public static class BranchServices {
+
     }
 
     @Service

@@ -76,7 +76,7 @@
                 <div class="select-branch-to-search">
                     <fieldset>
                         <legend>Chi nhánh</legend>
-                        <select name="searchingBranch" disabled="${userInfo.role == 'CONGTY' ? 'fasle' : 'true'}" data="${userInfo.branch}">
+                        <select name="searchingBranch" ${userInfo.role.getJavaRole() == 'company' ? '' : 'disabled'} data="${userInfo.branch}">
                             <c:forEach items="${branchesList}" var="branch">
                                 <option value="${branch.trim()}">${branch.trim()}</option>
                             </c:forEach>

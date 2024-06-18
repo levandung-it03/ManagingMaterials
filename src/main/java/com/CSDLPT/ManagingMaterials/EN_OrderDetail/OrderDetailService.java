@@ -26,7 +26,7 @@ public class OrderDetailService {
 
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final OrderDetailRepository orderDetailRepository;
@@ -143,6 +143,11 @@ public class OrderDetailService {
             //--Close connection
             connectHolder.removeConnection();
         }
+    }
+
+    @Service
+    public static class BranchServices {
+
     }
 
     @Service
