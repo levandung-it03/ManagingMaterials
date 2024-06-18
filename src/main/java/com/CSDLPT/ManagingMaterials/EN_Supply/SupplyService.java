@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 public class SupplyService {
-
     @Service
     @RequiredArgsConstructor
     public static class BranchServices {
