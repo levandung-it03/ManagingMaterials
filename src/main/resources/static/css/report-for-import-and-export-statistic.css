@@ -1,0 +1,109 @@
+html body {
+    background-color: #f9fafc;
+    position: relative;
+    min-height: 100vh;
+}
+html body div.report-pages {
+    min-height: 0!important;
+}
+table.exporting-table-css tr {
+    align-items: start;
+    min-height: 26px;
+}
+table.exporting-table-css tr th,
+table.exporting-table-css tr td {
+    display: block;
+    padding-top: 2px;
+    font-size: 0.8rem;
+}
+/*Separating Blocks Of Times*/
+table.exporting-table-css tr td.month {
+    width: 100%;
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+/*Calculating Total Data Blocks Of Times*/
+table.exporting-table-css tr td.calculatedMonth {
+    width: 45%;
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+table.exporting-table-css tr td.totalSuppliesQuantity {
+    width: 25%;
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+table.exporting-table-css tr td.totalPrices {
+    width: 30%;
+    display: block;
+    text-align: left;
+    font-weight: 600;
+}
+table.exporting-table-css tr th#columnData,
+table.exporting-table-css tr td.columnData {
+    text-align: center;
+    width: 20%;
+}
+
+table.exporting-table-css tr th#totalPrices,
+table.exporting-table-css tr td.totalPrices {
+    text-align: left;
+    width: 30%;
+}
+
+.center-page_more-info {
+    margin: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: var(--smoking-grey);
+}
+.center-page_more-info .more-info-title {
+    display: block;
+    width: 100%;
+    text-align: left;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 25px 30px;
+    border-bottom: 1px var(--grey-of-header-border) solid;
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+}
+.center-page_more-info .info-blocks {
+    width: 48%;
+}
+.center-page_more-info .info-blocks fieldset {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 25px 30px;
+    height: 55px;
+    position: relative;
+    background-color: white;
+}
+.center-page_more-info .info-blocks legend {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+.center-page_more-info .info-blocks select,
+.center-page_more-info .info-blocks input {
+    width: 100%;
+    height: 95%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 13px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+.preview-table-container_descriptions {
+    justify-content: center !important;
+}
