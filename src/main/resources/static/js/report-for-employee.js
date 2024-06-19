@@ -25,7 +25,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
             currentPage: 0,
             searchingField: "employeeId",
             searchingValue: "",
-            branch: $('.table-tools .select-branch-to-search select').value,
+            $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim()
         },
         fieldObjects: [
             {cssName: "employeeId", utf8Name: "Mã"},
@@ -94,7 +94,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
             objectsQuantity: 0,
             searchingField: "employeeId",
             searchingValue: "",
-            branch: $('.table-tools .select-branch-to-search select').value,
+            $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim()
         },
         //--Main fields for searching-action.
         roleForFetching: roleForFetching,
