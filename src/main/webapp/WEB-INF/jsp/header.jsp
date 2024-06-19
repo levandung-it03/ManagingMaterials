@@ -31,7 +31,7 @@
                         <li><a href="/${userInfo.role.getJavaRole()}/supply/report-for-detail-supplies-interact-info">CHI TIẾT NHẬP XUẤT</a></li>
                         <li><a href="/${userInfo.role.getJavaRole()}/order/report-for-order-dont-have-import">ĐƠN HÀNG KHÔNG CÓ PHIẾU NHẬP</a></li>
                         <li><a href="/${userInfo.role.getJavaRole()}/employee/report-for-employee-activities">HOẠT ĐỘNG NHÂN VIÊN</a></li>
-                        <li><a href="#">TỔNG HỢP NHẬP XUẤT</a></li>
+                        <li><a href="/${userInfo.role.getJavaRole()}/report/service/v1/branch/import-and-export-statistic">TỔNG HỢP NHẬP XUẤT</a></li>
                     </ul>
                 </div>
             </li>
