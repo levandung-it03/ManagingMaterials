@@ -5,6 +5,7 @@ import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Branch.Branch;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -19,6 +20,8 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class StaticUtilMethods {
+    @Value("${mssql.database.name}")
+    private static String databaseName;
     private final Map<String, String> responseMessages;
     public static final String NUM_TYPE = "NUMBER";
     public static final String STR_TYPE = "TEXT";
@@ -139,5 +142,9 @@ public class StaticUtilMethods {
     public LocalDateTime milisToLocalDateTime(Long mls) {
         Instant instant = Instant.ofEpochMilli(mls);
         return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+    }
+
+    public String getDatabaseName() {
+        return this.getDatabaseName();
     }
 }

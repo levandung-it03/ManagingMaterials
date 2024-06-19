@@ -67,8 +67,14 @@ public class SuppliesImportationService {
 
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             List<InnerJoinObject> joinObjects = List.of(
-                InnerJoinObject.builder().left("PhieuNhap").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV").build(),
-                InnerJoinObject.builder().left("PhieuNhap").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO").build()
+                InnerJoinObject.builder()
+                    .databaseName(staticUtilMethods.getDatabaseName())
+                    .left("PhieuNhap").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV")
+                    .build(),
+                InnerJoinObject.builder()
+                    .databaseName(staticUtilMethods.getDatabaseName())
+                    .left("PhieuNhap").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO")
+                    .build()
             );
             if (userInfo.getRole().equals(RoleEnum.CONGTY))
                 if (!searchingObject.getBranch().isEmpty() && !userInfo.getBranch().equals(searchingObject.getBranch()))
