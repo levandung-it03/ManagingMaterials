@@ -20,12 +20,16 @@ public class ReportController {
     private final ReportService reportService;
     private final StaticUtilMethods staticUtilMethods;
 
-    @GetMapping("/report/service/v1/branch/import-and-export-statistic")
+    @GetMapping({"${url.post.branch.prefix.v1}/report/import-and-export-statistic",
+            "${url.post.company.prefix.v1}/report/import-and-export-statistic",
+            "${url.post.user.prefix.v1}/report/import-and-export-statistic"})
     public ModelAndView renderImportAndExportStatistic(HttpServletRequest request, Model model) {
-        return staticUtilMethods.customResponsiveModelView(request, model, "home");
+        return staticUtilMethods.customResponsiveModelView(request, model, "report-for-import-and-export-statistic");
     }
 
-    @PostMapping("/service/v1/branch/import-and-export-statistic")
+    @PostMapping({"${url.post.branch.prefix.v1}/import-and-export-statistic",
+            "${url.post.company.prefix.v1}/import-and-export-statistic",
+            "${url.post.user.prefix.v1}/import-and-export-statistic"})
     public ResponseEntity<ResDtoRetrievingData<ImportAndExportStatistic>> findImportAndExportStatistic(
             @RequestBody ImportAndExportStatisticDto payload,
             HttpServletRequest request) {
