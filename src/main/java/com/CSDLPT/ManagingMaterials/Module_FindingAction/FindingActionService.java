@@ -46,7 +46,7 @@ public class FindingActionService {
 
         //--Generate the condition syntax of query.
         String conditionOfQuery = String.format(
-            "%s WHERE %s %s LIKE '%%'+?+'%%' ",
+            "%s WHERE %s %s LIKE N'%%'+?+'%%' ",
             searchingObject.getJoiningCondition().isEmpty() ? "" : searchingObject.getJoiningCondition().trim(),
             searchingObject.getMoreCondition().isEmpty() ? "" : searchingObject.getMoreCondition().trim() + " AND ",
             this.getCastedSqlDataTypeOfSearchedField(
@@ -171,9 +171,15 @@ public class FindingActionService {
         catch (Exception ignored) {}
 
         List<String> fieldInfo = staticUtilMethods.columnNameStaticDictionary(fieldName);
-        String sqlFieldName = fieldName.toUpperCase().contains("FK")
-            ? staticUtilMethods.columnNameStaticDictionary(fieldName).get(1)
-            : tableName + staticUtilMethods.columnNameStaticDictionary(fieldName).getFirst();
+        String sqlFieldName;
+        if (fieldName.toUpperCase().contains("FK"))
+            sqlFieldName = staticUtilMethods.columnNameStaticDictionary(fieldName).get(1);
+        else {
+            sqlFieldName = staticUtilMethods.columnNameStaticDictionary(fieldName).getFirst();
+            //--Ignoring fields which is defined as SQL methods.
+            if (!sqlFieldName.contains("(") && !sqlFieldName.contains(".") && !sqlFieldName.contains(")"))
+                sqlFieldName = tableName + sqlFieldName;
+        }
 
         //--Type-casting syntax of this query corresponding with data-type.
         return switch (fieldInfo.getLast()) {
@@ -195,8 +201,12 @@ public class FindingActionService {
                 if (field.getName().toUpperCase().contains("FK")) {
                     result.append(staticUtilMethods.columnNameStaticDictionary(field.getName()).get(1)).append(", ");
                 } else {
-                    result.append(tableName);
-                    result.append(staticUtilMethods.columnNameStaticDictionary(field.getName()).getFirst()).append(", ");
+                    String fieldNameInSQL = staticUtilMethods.columnNameStaticDictionary(field.getName()).getFirst();
+                    //--Ignoring fields which is defined as SQL methods.
+                    if (!fieldNameInSQL.contains("(") && !fieldNameInSQL.contains(".") && !fieldNameInSQL.contains(")"))
+                        result.append(tableName);
+
+                    result.append(fieldNameInSQL).append(", ");
                 }
             }
             return result.substring(0, result.length() - 2);

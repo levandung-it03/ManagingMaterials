@@ -43,7 +43,7 @@ class Dialog {
 }
 
 class OrderDialog extends Dialog {
-    constructor(tableBodySelector, roleFetching) {
+    constructor(tableBodySelector, roleFetching, condition=null, moreActionCallback=null, fetchAction=null) {
         super();
         this.searchingSupportingDataSourceForDialog = {
             //--Initialize field-values for firstly fetch action.
@@ -55,6 +55,10 @@ class OrderDialog extends Dialog {
             },
 
             //--Main fields for searching-action.
+            moreDialogFeatures: (trSelectedDomAsSupportingInputData) => {
+                if (moreActionCallback)
+                    moreActionCallback(trSelectedDomAsSupportingInputData);
+            },
             tableBody: $(tableBodySelector),
             fetchDataAction: "/service/v1/" + roleFetching + "/find-order-for-supplies-importation-by-values",
             rowFormattingEngine: (row) => `

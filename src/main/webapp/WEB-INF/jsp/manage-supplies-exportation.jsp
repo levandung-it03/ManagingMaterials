@@ -63,7 +63,7 @@
                         <fieldset>
                             <legend>Mã kho</legend>
                             <input name="warehouseIdAsFk" type="text" value="${suppliesExportation.warehouseIdAsFk}"
-                                   maxlength="4" required/>
+                                   maxlength="4" required readonly/>
                             <i class="fa-regular fa-pen-to-square"></i>
                         </fieldset>
                         <div class="form_text-input_err-message"></div>

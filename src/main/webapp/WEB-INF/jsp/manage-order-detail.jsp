@@ -53,7 +53,7 @@
                     <div class="form-input" id="supplyId">
                         <fieldset>
                             <legend>Mã vật tư</legend>
-                            <input name="supplyId" type="text" value="${orderDetail.supplyId}" maxlength="4" required/>
+                            <input name="supplyId" type="text" value="${orderDetail.supplyId}" maxlength="4" required readonly/>
                             <i class="fa-regular fa-pen-to-square"></i>
                         </fieldset>
                         <div class="form_text-input_err-message"></div>

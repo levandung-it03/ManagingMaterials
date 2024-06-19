@@ -1,6 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/header.css">
 <div id="header">
+    <c:if test="${userInfo.role.getJavaRole() == 'company'}">
+        <style>
+            .center-page_list {
+                width: 100%!important;
+            }
+        </style>
+    </c:if>
     <div class="header-wrapper center">
         <ul id="nav" class="center">
             <li><a href="/${userInfo.role.getJavaRole()}/employee/manage-employee">NHÂN VIÊN</a></li>
