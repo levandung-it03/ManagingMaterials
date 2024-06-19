@@ -126,7 +126,12 @@ function GeneralMethods() {
             async () => {
                 await new OrderDialog(
                     'div#select-dialog_order table tbody',
-                    roleForFetching
+                    roleForFetching,
+                    null,
+                    function moreActionCallback(trSelectedDom) {
+                        $('.center-page_adding-form input[name=warehouseIdAsFk]').value
+                            = trSelectedDom.querySelector('td.warehouseIdAsFk').textContent.split("-")[0].trim();
+                    },
                 ).customizeToggleOpeningFormDialogDataSupporter('div#select-dialog_order');
                 await new WarehouseDialog(
                     'div#select-dialog_warehouse table tbody',

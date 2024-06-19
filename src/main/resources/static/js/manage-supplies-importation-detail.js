@@ -40,8 +40,6 @@ async function ListComponentForSuppliesImportationDetail(searchingSupportingData
 
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
-
-    customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
 }
 
 function GeneralMethods() {

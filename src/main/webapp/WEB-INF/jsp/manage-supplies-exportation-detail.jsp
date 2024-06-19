@@ -54,7 +54,7 @@
                 <div class="form-input" id="supplyId">
                     <fieldset>
                         <legend>Mã vật tư</legend>
-                        <input name="supplyId" type="text" value="${exportationDetail.supplyId}" maxlength="4" readonly/>
+                        <input name="supplyId" type="text" value="${exportationDetail.supplyId}" maxlength="4" readonly required/>
                         <i class="fa-regular fa-pen-to-square"></i>
                     </fieldset>
                     <div class="form_text-input_err-message"></div>

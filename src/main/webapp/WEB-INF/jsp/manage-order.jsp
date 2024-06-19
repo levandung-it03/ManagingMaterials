@@ -61,7 +61,7 @@
                         <fieldset>
                             <legend>Mã kho</legend>
                             <input name="warehouseIdAsFk" type="text" value="${order.warehouseIdAsFk}" maxlength="4"
-                                   required/>
+                                   required readonly/>
                             <i class="fa-regular fa-pen-to-square"></i>
                         </fieldset>
                     </div>
