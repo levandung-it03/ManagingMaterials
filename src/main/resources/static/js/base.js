@@ -493,8 +493,6 @@ function customizeRenderTableDataBySwitchingBranch(
     selectTag.value = selectTag.getAttribute("data");
     selectTag.removeAttribute("data");
     selectTag.addEventListener("change", async e => {
-        log(selectTag)
-        log(selectTag.value)
         searchingSupportingDataSource.data.branch = selectTag.value
         await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
     });

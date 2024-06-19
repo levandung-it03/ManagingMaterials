@@ -40,7 +40,7 @@ async function ListComponent(searchingSupportingDataSource) {
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
-    if (searchingSupportingDataSource.roleForFetching === 'company')
+    if (searchingSupportingDataSource.roleForFetching === "company")
         customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 
@@ -69,6 +69,7 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
         fetchDataAction: `/service/v1/${roleForFetching}/find-warehouse-by-values`,
         rowFormattingEngine: (row) => `
