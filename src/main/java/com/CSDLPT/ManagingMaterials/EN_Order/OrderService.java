@@ -180,12 +180,15 @@ public class OrderService {
         public ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport> findAllOrderDontHaveImport(
             HttpServletRequest request,
             ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject
-        ) throws SQLException {
+        ) throws SQLException, NoSuchFieldException {
             //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
             DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
-            ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport> result = new ResDtoRetrievingData<>();
-            result.setResultDataSet(orderRepository.findAllOrderDontHaveImport(connectionHolder, searchingObject));
+            searchingObject.setObjectType(ResDtoOrderWithImportantInfo.class);
+            searchingObject.setSortingCondition(" ORDER BY MasoDDH ASC");
+
+            ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport> result = orderRepository
+                .findAllOrderDontHaveImport(connectionHolder, searchingObject);
 
             //--Close Connection.
             connectionHolder.removeConnection();
