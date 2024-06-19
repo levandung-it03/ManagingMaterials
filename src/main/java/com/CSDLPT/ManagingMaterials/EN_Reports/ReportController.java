@@ -20,7 +20,9 @@ public class ReportController {
     private final ReportService reportService;
     private final StaticUtilMethods staticUtilMethods;
 
-    @GetMapping("/report/import-and-export-statistic")
+    @GetMapping({"/branch/report/import-and-export-statistic",
+            "/company/report/import-and-export-statistic",
+            "/user/report/import-and-export-statistic"})
     public ModelAndView renderImportAndExportStatistic(HttpServletRequest request, Model model) {
         return staticUtilMethods.customResponsiveModelView(request, model, "report-for-import-and-export-statistic");
     }
