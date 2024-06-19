@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.RoleEnum;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ReqDtoTicketsForDetailSuppliesReport;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoTicketsForDetailSuppliesReport;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
@@ -126,19 +127,21 @@ public class SupplyRepository {
 
     public List<ResDtoTicketsForDetailSuppliesReport> findTicketsForDetailSuppliesReport(
         DBConnectionHolder connectHolder,
-        ReqDtoTicketsForDetailSuppliesReport requiredInfoToSearchDetailSupplies
+        ReqDtoTicketsForDetailSuppliesReport requiredInfoToSearchDetailSupplies,
+        Integer employeeId
     ) {
         List<ResDtoTicketsForDetailSuppliesReport> resultList = new ArrayList<>();
         try {
             //--Prepare data to execute Query Statement.
             CallableStatement statement = connectHolder.getConnection()
-                .prepareCall("{call SP_FIND_TICKETS_FOR_DETAIL_SUPPLIES_REPORT(?, ?, ?)}");
+                .prepareCall("{call SP_FIND_TICKETS_FOR_DETAIL_SUPPLIES_REPORT(?, ?, ?, ?)}");
 
             statement.setString(1, requiredInfoToSearchDetailSupplies.getTicketsType());
             statement.setDate(2, staticUtilMethods
                 .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getStartingDate()));
             statement.setDate(3, staticUtilMethods
                 .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getEndingDate()));
+            statement.setString(4, employeeId.toString());
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {

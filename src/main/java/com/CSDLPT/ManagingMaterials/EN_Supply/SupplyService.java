@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ReqDtoTicketsForDetailSuppliesReport;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoSupplyForImportToBuildDialog;
@@ -169,10 +170,13 @@ public class SupplyService {
             //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
             DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
+            ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             ResDtoRetrievingData<ResDtoTicketsForDetailSuppliesReport> result = new ResDtoRetrievingData<>();
-            result.setResultDataSet(
-                supplyRepository.findTicketsForDetailSuppliesReport(connectionHolder, requiredInfoToSearchDetailSupplies)
-            );
+            result.setResultDataSet(supplyRepository.findTicketsForDetailSuppliesReport(
+                connectionHolder,
+                requiredInfoToSearchDetailSupplies,
+                userInfo.getEmployeeId()
+            ));
 
             //--Close Connection.
             connectionHolder.removeConnection();

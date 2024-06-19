@@ -171,8 +171,8 @@ form span#cancel-updating:hover {
 
 /*--------Table as list--------*/
 .center-page_list {
-    width: 78%;
-    margin: 20px 20px 20px 0;
+    width: 77%;
+    margin: 20px;
     background-color: #ffffff;
     border-radius: 10px;
     border: 1px var(--black-text) solid;
