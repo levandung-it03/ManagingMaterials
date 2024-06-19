@@ -40,7 +40,7 @@ async function ListComponentForSuppliesExportation(searchingSupportingDataSource
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
-    if (searchingSupportingDataSource.roleForFetching !== "company")
+    if (searchingSupportingDataSource.roleForFetching === "company")
         customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 

@@ -39,12 +39,15 @@ public class EmployeeService {
             ModelAndView modelAndView = staticUtilMethods
                 .customResponsiveModelView(request, model, "manage-employee");
 
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            //--Data for AddingEmployeeForm component.
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
+
             //--Company-role can't add employees, so we don't need to prepare under those data variables.
             if (userInfo.getRole().equals(RoleEnum.CONGTY))
                 return modelAndView;
-
-            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
-            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
             //--If there's an error when handle data with DB, take the submitted-employee-info and give it back to this page
             Employee employee = (Employee) model.asMap().get("submittedEmployee");
@@ -59,9 +62,6 @@ public class EmployeeService {
                 //--Give the auto-generated employeeId to user.
                 modelAndView.addObject("employee", Employee.builder().employeeId(nextEmployeeId).build());
             }
-
-            //--Data for AddingEmployeeForm component.
-            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
 
             //--Close Connection.
             connectionHolder.removeConnection();
