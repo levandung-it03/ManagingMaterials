@@ -487,7 +487,7 @@ async function CustomizeBuildingFormSpectator(dialogBuilders, observedForm = 'di
 
 function customizeRenderTableDataBySwitchingBranch(
     searchingSupportingDataSource,
-    selectTagSelector='div.table-tools .right-grid select[name=searchingBranch]'
+    selectTagSelector='div.table-tools .select-branch-to-search select[name=searchingBranch]'
 ) {
     const selectTag = $(selectTagSelector)
     selectTag.value = selectTag.getAttribute("data");

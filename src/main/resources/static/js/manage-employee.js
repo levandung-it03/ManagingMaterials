@@ -192,7 +192,7 @@ function GeneralMethods() {
             objectsQuantity: 0,
             searchingField: "employeeId",
             searchingValue: "",
-            $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim()
+            branch: $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim(),
         },
 
         //--Main fields for searching-action.
