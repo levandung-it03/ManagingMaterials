@@ -37,10 +37,11 @@ async function ListComponent(searchingSupportingDataSource) {
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
-    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
+    if (searchingSupportingDataSource.roleForFetching !== 'company')
+        customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 
 function GeneralMethods() {
@@ -49,10 +50,11 @@ function GeneralMethods() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddWarehouseComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-warehouse",
+        updatingAction: `/service/v1/${roleForFetching}/update-warehouse`,
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {}
     };
@@ -63,43 +65,42 @@ function GeneralMethods() {
             objectsQuantity: 0,
             searchingField: "warehouseId",
             searchingValue: "",
-            branch: $('.table-tools .select-branch-to-search select').value,
+            branch: $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim(),
         },
 
         //--Main fields for searching-action.
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-warehouse-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-warehouse-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.warehouseId}">
                 <td plain-value="${row.warehouseId}" class="warehouseId">${row.warehouseId}</td>
                 <td plain-value="${row.warehouseName}" class="warehouseName">${row.warehouseName}</td>
                 <td plain-value="${row.address}" class="address">${row.address}</td>
-                <td class="table-row-btn update">
-                    <a id="${row.warehouseId}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </a>
+                ${roleForFetching !== "company" ? `<td class="table-row-btn update">
+                    <a id="${row.warehouseId}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 <td class="table-row-btn delete">
                     <button name="deleteBtn" value="${row.warehouseId}">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
-                </td>
+                </td>` : ""}
             </tr>`
     };
     GeneralMethods();
-    AddWarehouseComponent();
     CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "kho",
-            callModulesOfExtraFeatures: () => {
+            callModulesOfExtraFeatures: (roleForFetching) => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent(
-                    'div.center-page_list',
-                    updatingSupportingDataSource
-                );
+                if (roleForFetching !== 'company')
+                    customizeGeneratingFormUpdateEvent(
+                        'div.center-page_list',
+                        updatingSupportingDataSource
+                    );
             }
         }
     );
     await ListComponent(searchingSupportingDataSource);
+    if (roleForFetching !== 'company')  AddWarehouseComponent();
 })();

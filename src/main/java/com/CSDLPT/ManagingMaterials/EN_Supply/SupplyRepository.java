@@ -1,6 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Supply;
 
-import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.EN_Account.RoleEnum;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ReqDtoTicketsForDetailSuppliesReport;
 import com.CSDLPT.ManagingMaterials.EN_Supply.dtos.ResDtoTicketsForDetailSuppliesReport;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 @Repository
@@ -130,46 +127,37 @@ public class SupplyRepository {
 
     public List<ResDtoTicketsForDetailSuppliesReport> findTicketsForDetailSuppliesReport(
         DBConnectionHolder connectHolder,
-        ReqDtoTicketsForDetailSuppliesReport requiredInfoToSearchDetailSupplies
+        ReqDtoTicketsForDetailSuppliesReport requiredInfoToSearchDetailSupplies,
+        Integer employeeId
     ) {
         List<ResDtoTicketsForDetailSuppliesReport> resultList = new ArrayList<>();
-        long mls = System.currentTimeMillis();
-        for (int i = 1; i <= 30; i++) {
-            LocalDateTime time = staticUtilMethods.milisToLocalDateTime(mls);
-            resultList.add(ResDtoTicketsForDetailSuppliesReport.builder()
-                .month(time.getMonthValue() + "/" + time.getYear())
-                .supplyName("Một đống xà phòng" + i % 3)
-                .totalSuppliesQuantity(10)
-                .totalPrices(100000 * 10d)
-                .build());
-            mls += 24 * 60 * 60 * 1000 * 4;
+        try {
+            //--Prepare data to execute Query Statement.
+            CallableStatement statement = connectHolder.getConnection()
+                .prepareCall("{call SP_FIND_TICKETS_FOR_DETAIL_SUPPLIES_REPORT(?, ?, ?, ?)}");
+
+            statement.setString(1, requiredInfoToSearchDetailSupplies.getTicketsType());
+            statement.setDate(2, staticUtilMethods
+                .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getStartingDate()));
+            statement.setDate(3, staticUtilMethods
+                .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getEndingDate()));
+            statement.setString(4, employeeId.toString());
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                resultList.add(ResDtoTicketsForDetailSuppliesReport.builder()
+                    .month(resultSet.getString("THANG"))
+                    .supplyName(resultSet.getString("TENVT"))
+                    .totalSuppliesQuantity(resultSet.getInt("TONGSOLUONG"))
+                    .totalPrices(resultSet.getDouble("TONGTRIGIA"))
+                    .build());
+            }
+
+            //--Close all connection.
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'findTicketsForDetailSuppliesReport' of SupplyRepository: " + e);
         }
-//        try {
-//            //--Prepare data to execute Query Statement.
-//            CallableStatement statement = connectHolder.getConnection()
-//                .prepareCall("{call SP_FIND_TICKETS_FOR_DETAIL_SUPPLIES_REPORT(?, ?, ?)}");
-//
-//            statement.setString(1, requiredInfoToSearchDetailSupplies.getTicketsType());
-//            statement.setDate(2, staticUtilMethods
-//                .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getStartingDate()));
-//            statement.setDate(3, staticUtilMethods
-//                .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getEndingDate()));
-//
-//            ResultSet resultSet = statement.executeQuery();
-//            while (resultSet.next()) {
-//                resultList.add(ResDtoTicketsForDetailSuppliesReport.builder()
-//                    .month(resultSet.getString("THANG"))
-//                    .supplyName(resultSet.getString("TENVT"))
-//                    .totalSuppliesQuantity(resultSet.getInt("TONGSOLUONG"))
-//                    .totalPrices(resultSet.getDouble("TONGTRIGIA"))
-//                    .build());
-//            }
-//
-//            //--Close all connection.
-//            statement.close();
-//        } catch (SQLException e) {
-//            logger.info("Error In 'findTicketsForDetailSuppliesReport' of SupplyRepository: " + e);
-//        }
         return resultList;
     }
 

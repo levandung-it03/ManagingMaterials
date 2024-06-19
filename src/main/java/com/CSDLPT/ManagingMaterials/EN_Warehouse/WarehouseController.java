@@ -24,19 +24,23 @@ import java.util.Set;
 @RequiredArgsConstructor
 @RequestMapping("")
 public class WarehouseController {
-    private final WarehouseService.BranchServices branchServices;
+    private final WarehouseService.AuthenticatedServices authenticatedServices;
     private final Logger logger;
     private final Validator hibernateValidator;
 
-    /** Spring MVC: Branch-role controllers **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/warehouse/manage-warehouse")
+    @GetMapping({"/branch/warehouse/manage-warehouse",
+        "/company/warehouse/manage-warehouse",
+        "/user/warehouse/manage-warehouse"})
     public ModelAndView getManageWarehousePage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getManageWarehousePage(request, model);
+        return authenticatedServices.getManageWarehousePage(request, model);
     }
 
     /*_____________RequestMethod.POST: Warehouse-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-warehouse-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-warehouse-by-values",
+        "${url.post.company.prefix.v1}/find-warehouse-by-values",
+        "${url.post.user.prefix.v1}/find-warehouse-by-values"})
     public ResponseEntity<ResDtoRetrievingData<Warehouse>> findingWarehousesByValues(
         @RequestBody ReqDtoRetrievingData<Warehouse> searchingObject,
         HttpServletRequest request
@@ -44,14 +48,14 @@ public class WarehouseController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findWarehouse(request, searchingObject));
+                .body(authenticatedServices.findWarehouse(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-warehouse")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-warehouse", "${url.post.user.prefix.v1}/add-warehouse"})
     public String addWarehouse(
         @ModelAttribute("warehouse") Warehouse warehouse,
         HttpServletRequest request,
@@ -66,7 +70,7 @@ public class WarehouseController {
         }
 
         try {
-            branchServices.addWarehouse(request, warehouse);
+            authenticatedServices.addWarehouse(request, warehouse);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException ignored) {
             redirectAttributes.addFlashAttribute("submittedWarehouse", warehouse);
@@ -81,7 +85,7 @@ public class WarehouseController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-warehouse")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-warehouse", "${url.post.user.prefix.v1}/update-warehouse"})
     public String updateWarehouse(
         @ModelAttribute("warehouse") Warehouse warehouse,
         HttpServletRequest request,
@@ -89,7 +93,7 @@ public class WarehouseController {
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
-            branchServices.updateWarehouse(warehouse, request);
+            authenticatedServices.updateWarehouse(warehouse, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
@@ -104,7 +108,7 @@ public class WarehouseController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-warehouse")
+    @PostMapping({"${url.post.branch.prefix.v1}/delete-warehouse", "${url.post.user.prefix.v1}/delete-warehouse"})
     public String deleteWarehouse(
         @RequestParam("deleteBtn") String warehouseId,
         HttpServletRequest request,
@@ -112,7 +116,7 @@ public class WarehouseController {
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
-            branchServices.deleteWarehouse(warehouseId, request);
+            authenticatedServices.deleteWarehouse(warehouseId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");

@@ -1,7 +1,5 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail;
 
-import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportation;
-import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.dtos.ReqDtoSuppliesImportation;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,19 +24,23 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class SuppliesImportationDetailController {
-    private final SuppliesImportationDetailService.BranchServices branchServices;
+    private final SuppliesImportationDetailService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
-    /** Spring MVC: Branch-role controllers **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/supplies-importation-detail/manage-supplies-importation-detail")
+    @GetMapping({"/branch/supplies-importation-detail/manage-supplies-importation-detail",
+        "/company/supplies-importation-detail/manage-supplies-importation-detail",
+        "/user/supplies-importation-detail/manage-supplies-importation-detail"})
     public ModelAndView getManageSuppliesImportationDetailPage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getManageSuppliesImportationDetailPage(request, model);
+        return authenticatedServices.getManageSuppliesImportationDetailPage(request, model);
     }
 
     /*_____________RequestMethod.POST: Supplies-Importation-Detail-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-supplies-importation-detail-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-supplies-importation-detail-by-values",
+        "${url.post.company.prefix.v1}/find-supplies-importation-detail-by-values",
+        "${url.post.user.prefix.v1}/find-supplies-importation-detail-by-values"})
     public ResponseEntity<ResDtoRetrievingData<SuppliesImportationDetail>> findingSuppliesImportationsDetailByValues(
         @RequestBody ReqDtoRetrievingData<SuppliesImportationDetail> searchingObject,
         HttpServletRequest request
@@ -46,14 +48,15 @@ public class SuppliesImportationDetailController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findingSuppliesImportationsDetail(request, searchingObject));
+                .body(authenticatedServices.findingSuppliesImportationsDetail(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-supplies-importation-detail")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-supplies-importation-detail",
+        "${url.post.user.prefix.v1}/add-supplies-importation-detail"})
     public String addSuppliesImportationsDetail(
         @ModelAttribute("importationDetail") SuppliesImportationDetail importationDetail,
         HttpServletRequest request,
@@ -68,7 +71,7 @@ public class SuppliesImportationDetailController {
         }
 
         try {
-            branchServices.addSuppliesImportationDetail(importationDetail, request);
+            authenticatedServices.addSuppliesImportationDetail(importationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
@@ -81,7 +84,8 @@ public class SuppliesImportationDetailController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-supplies-importation-detail")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-supplies-importation-detail",
+        "${url.post.user.prefix.v1}/update-supplies-importation-detail"})
     public String updateSuppliesImportationsDetail(
         @ModelAttribute("importationDetail") SuppliesImportationDetail importationDetail,
         HttpServletRequest request,
@@ -96,7 +100,7 @@ public class SuppliesImportationDetailController {
         }
 
         try {
-            branchServices.updateSuppliesImportationDetail(importationDetail, request);
+            authenticatedServices.updateSuppliesImportationDetail(importationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");

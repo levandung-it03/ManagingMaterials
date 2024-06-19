@@ -40,8 +40,6 @@ async function ListComponentForSuppliesImportationDetail(searchingSupportingData
 
     customizeSearchingListEvent(searchingSupportingDataSource);
     customizeSortingListEvent();
-
-    customizeSubmitFormAction('div.center-page_list form', { mockTag: { isValid: true } });
 }
 
 function GeneralMethods() {
@@ -50,10 +48,11 @@ function GeneralMethods() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSuppliesImportationDetailComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-supplies-importation-detail",
+        updatingAction: `/service/v1/${roleForFetching}/update-supplies-importation-detail`,
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {
             (function customizeSupplyIdInputTagToServeUpdatingAction() {
@@ -82,8 +81,9 @@ function GeneralMethods() {
         },
 
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-supplies-importation-detail-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-supplies-importation-detail-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.suppliesImportationId}">
                 <td plain-value="${row.suppliesImportationId}" class="suppliesImportationId">${row.suppliesImportationId}</td>
@@ -99,33 +99,39 @@ function GeneralMethods() {
     };
 
     GeneralMethods();
-    AddSuppliesImportationDetailComponent();
     CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "phiếu",
             callModulesOfExtraFeatures: () => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
+                if (roleForFetching !== "company")
+                    customizeGeneratingFormUpdateEvent(
+                        'div.center-page_list',
+                        updatingSupportingDataSource
+                    );
             }
         },
         "div.center-page_list"
     );
-    await CustomizeBuildingFormSpectator(
-        async () => {
-            await new SupplyDialog(
-                'div.select-dialog table tbody',
-                "branch",
-                `orderId:${$('span.orderIdAsFk').textContent.toUpperCase().trim()}`,
-                function moreActionCallback(trSelectedDom) {
-                    $('.center-page_adding-form input[name=suppliesQuantity]').value
-                        = $('.center-page_adding-form input[name=suppliesQuantityFromOrderDetailAsFk]').value
-                        = trSelectedDom.querySelector('td.suppliesQuantityFromOrderDetailAsFk').textContent.trim();
-                },
-                "/find-supply-by-values-for-order-detail"
-            ).customizeToggleOpeningFormDialogDataSupporter();
-        },
-        'div.center-page_adding-form'
-    );
     await ListComponentForSuppliesImportationDetail(searchingSupportingDataSource);
+    if (roleForFetching !== "company") {
+        AddSuppliesImportationDetailComponent();
+        await CustomizeBuildingFormSpectator(
+            async () => {
+                await new SupplyDialog(
+                    'div.select-dialog table tbody',
+                    roleForFetching,
+                    `orderId:${$('span.orderIdAsFk').textContent.toUpperCase().trim()}`,
+                    function moreActionCallback(trSelectedDom) {
+                        $('.center-page_adding-form input[name=suppliesQuantity]').value
+                            = $('.center-page_adding-form input[name=suppliesQuantityFromOrderDetailAsFk]').value
+                            = trSelectedDom.querySelector('td.suppliesQuantityFromOrderDetailAsFk').textContent.trim();
+                    },
+                    "/find-supply-by-values-for-order-detail"
+                ).customizeToggleOpeningFormDialogDataSupporter();
+            },
+            'div.center-page_adding-form'
+        );
+    }
 })();

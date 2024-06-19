@@ -1,11 +1,8 @@
 package com.CSDLPT.ManagingMaterials.EN_Order;
 
-import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ReqDtoReportForEmployeeActivities;
-import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ReqDtoOrder;
 import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ResDtoOrderWithImportantInfo;
 import com.CSDLPT.ManagingMaterials.EN_Order.dtos.ResDtoReportForOrderDontHaveImport;
-import com.CSDLPT.ManagingMaterials.EN_SuppliesExportation.dtos.ReqDtoSuppliesExportation;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,23 +26,27 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class OrderController {
-    private final OrderService.BranchServices branchServices;
+    private final OrderService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
-    /** Spring MVC: Branch-role controllers **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/order/manage-order")
+    @GetMapping({"/branch/order/manage-order", "/company/order/manage-order", "/user/order/manage-order"})
     public ModelAndView getManageOrderPage(HttpServletRequest request, Model model) {
-        return branchServices.getManageOrderPage(request, model);
+        return authenticatedServices.getManageOrderPage(request, model);
     }
-    @GetMapping("/branch/order/report-for-order-dont-have-import")
+    @GetMapping({"/branch/order/report-for-order-dont-have-import",
+        "/company/order/report-for-order-dont-have-import",
+        "/user/order/report-for-order-dont-have-import"})
     public ModelAndView getReportForOrderDontHaveImportPage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getReportForOrderDontHaveImportPage(request, model);
+        return authenticatedServices.getReportForOrderDontHaveImportPage(request, model);
     }
 
     /*_____________RequestMethod.POST: Order-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-order-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-order-by-values",
+        "${url.post.company.prefix.v1}/find-order-by-values",
+        "${url.post.user.prefix.v1}/find-order-by-values"})
     public ResponseEntity<ResDtoRetrievingData<ResDtoOrderWithImportantInfo>> findingOrdersByValues(
         @RequestBody ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject,
         HttpServletRequest request
@@ -53,13 +54,15 @@ public class OrderController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findOrder(request, searchingObject));
+                .body(authenticatedServices.findOrder(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
-    @PostMapping("${url.post.branch.prefix.v1}/find-order-dont-have-import-for-report")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-order-dont-have-import-for-report",
+        "${url.post.company.prefix.v1}/find-order-dont-have-import-for-report",
+        "${url.post.user.prefix.v1}/find-order-dont-have-import-for-report"})
     public ResponseEntity<ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport>> findAllOrderDontHaveImport(
         @RequestBody ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject,
         HttpServletRequest request
@@ -67,13 +70,15 @@ public class OrderController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findAllOrderDontHaveImport(request, searchingObject));
+                .body(authenticatedServices.findAllOrderDontHaveImport(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-    @PostMapping("${url.post.branch.prefix.v1}/find-order-for-supplies-importation-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-order-for-supplies-importation-by-values",
+        "${url.post.company.prefix.v1}/find-order-for-supplies-importation-by-values",
+        "${url.post.user.prefix.v1}/find-order-for-supplies-importation-by-values"})
     public ResponseEntity<ResDtoRetrievingData<ResDtoOrderWithImportantInfo>> findOrderToServeSuppliesImportation(
         @RequestBody ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject,
         HttpServletRequest request
@@ -81,14 +86,14 @@ public class OrderController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findOrderToServeSuppliesImportation(request, searchingObject));
+                .body(authenticatedServices.findOrderToServeSuppliesImportation(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-order")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-order", "${url.post.user.prefix.v1}/add-order"})
     public String addOrder(
         @ModelAttribute("order") ReqDtoOrder order,
         HttpServletRequest request,
@@ -103,7 +108,7 @@ public class OrderController {
         }
 
         try {
-            branchServices.addOrder(order, request);
+            authenticatedServices.addOrder(order, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (NoSuchElementException | DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
@@ -116,7 +121,7 @@ public class OrderController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-order")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-order", "${url.post.user.prefix.v1}/update-order"})
     public String updateOrder(
         @ModelAttribute("order") ReqDtoOrder order,
         HttpServletRequest request,
@@ -130,7 +135,7 @@ public class OrderController {
         }
 
         try {
-            branchServices.updateOrder(order, request);
+            authenticatedServices.updateOrder(order, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
@@ -141,14 +146,14 @@ public class OrderController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-order")
+    @PostMapping({"${url.post.branch.prefix.v1}/delete-order", "${url.post.user.prefix.v1}/delete-order"})
     public String deleteOrder(
         @RequestParam("deleteBtn") String orderId,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         try {
-            branchServices.deleteOrder(orderId, request);
+            authenticatedServices.deleteOrder(orderId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_order_01");

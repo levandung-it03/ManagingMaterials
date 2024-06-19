@@ -33,7 +33,6 @@ function AddSuppliesImportationComponent() {
     customizeValidateEventInputTags(validatingBlocks);
     customizeSubmitFormAction('div.center-page_adding-form form', validatingBlocks);
     recoveryAllSelectTagData();
-    customizeRenderTableDataBySwitchingBranch();
     customizeAutoFormatStrongInputTextEvent();
 }
 
@@ -42,10 +41,12 @@ async function ListComponentForSuppliesImportation(searchingSupportingDataSource
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
-    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent();
 
-    customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
+    customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}})
+
+    if (searchingSupportingDataSource.roleForFetching !== 'company')
+        customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 
 function GeneralMethods() {
@@ -54,10 +55,11 @@ function GeneralMethods() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSuppliesImportationComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-supplies-importation",
+        updatingAction: `/service/v1/${roleForFetching}/update-supplies-importation`,
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {}
     };
@@ -69,12 +71,13 @@ function GeneralMethods() {
             objectsQuantity: 0,
             searchingField: "suppliesImportationId",
             searchingValue: "",
-            branch: $('.table-tools .select-branch-to-search select').value,
+            branch: $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim(),
         },
 
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-supplies-importation-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-supplies-importation-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.orderId}">
                 <td plain-value="${row.suppliesImportationId}" class="suppliesImportationId">${row.suppliesImportationId}</td>
@@ -87,46 +90,55 @@ function GeneralMethods() {
                 </td>
                 <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
                 <td class="table-row-btn detail">
-                    <a href="/branch/supplies-importation-detail/manage-supplies-importation-detail?suppliesImportationId=${row.suppliesImportationId}">
+                    <a href="/${roleForFetching}/supplies-importation-detail/manage-supplies-importation-detail?suppliesImportationId=${row.suppliesImportationId}">
                         <i class="fa-solid fa-eye"></i>
                     </a>
                 </td>
-                <td class="table-row-btn update">
-                    <a id="${row.suppliesImportationId}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </a>
+                ${roleForFetching !== "company" ? `<td class="table-row-btn update">
+                    <a id="${row.suppliesImportationId}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 <td class="table-row-btn delete">
                     <button name="deleteBtn" value="${row.suppliesImportationId}">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
-                </td>
+                </td>` : ""}
             </tr>`
     };
     GeneralMethods();
-    AddSuppliesImportationComponent();
     CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "phiếu",
-            callModulesOfExtraFeatures: () => {
+            callModulesOfExtraFeatures: (roleForFetching) => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
+                if (roleForFetching !== 'company')
+                    customizeGeneratingFormUpdateEvent(
+                        'div.center-page_list',
+                        updatingSupportingDataSource
+                    );
             }
         }
     );
-    await CustomizeBuildingFormSpectator(
-        async () => {
-            await new OrderDialog(
-                'div#select-dialog_order table tbody',
-                'branch'
-            ).customizeToggleOpeningFormDialogDataSupporter('div#select-dialog_order');
-            await new WarehouseDialog(
-                'div#select-dialog_warehouse table tbody',
-                'branch'
-            ).customizeToggleOpeningFormDialogDataSupporter('div#select-dialog_warehouse');
-        },
-        'div.center-page_adding-form'
-    );
     await ListComponentForSuppliesImportation(searchingSupportingDataSource);
+    if (roleForFetching !== 'company') {
+        AddSuppliesImportationComponent();
+        await CustomizeBuildingFormSpectator(
+            async () => {
+                await new OrderDialog(
+                    'div#select-dialog_order table tbody',
+                    roleForFetching,
+                    null,
+                    function moreActionCallback(trSelectedDom) {
+                        $('.center-page_adding-form input[name=warehouseIdAsFk]').value
+                            = trSelectedDom.querySelector('td.warehouseIdAsFk').textContent.split("-")[0].trim();
+                    },
+                ).customizeToggleOpeningFormDialogDataSupporter('div#select-dialog_order');
+                await new WarehouseDialog(
+                    'div#select-dialog_warehouse table tbody',
+                    roleForFetching
+                ).customizeToggleOpeningFormDialogDataSupporter('div#select-dialog_warehouse');
+            },
+            'div.center-page_adding-form'
+        );
+    }
 })();

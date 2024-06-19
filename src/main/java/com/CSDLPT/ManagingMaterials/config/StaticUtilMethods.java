@@ -92,6 +92,7 @@ public class StaticUtilMethods {
             case "createdDate", "NGAY" -> List.of("NGAY", "createdDate", DATE_TYPE);
             case "suppliesQuantity", "SOLUONG" -> List.of("SOLUONG", "suppliesQuantity", NUM_TYPE);
             case "price", "DONGIA" -> List.of("DONGIA", "price", NUM_TYPE);
+            case "employeeFullName", "HOTEN" -> List.of("HOTEN", "employeeFullName", STR_TYPE);
 
             //--OrderDetail(CTDDH) Entity
             case "orderDetailId", "CTDDH" -> List.of("CTDDH", "OrderDetailFromFk.CTDDH", "OrderDetailFromFk", STR_TYPE);
@@ -127,7 +128,7 @@ public class StaticUtilMethods {
             .toArray();
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("GMT-17"));
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+7"));
         //--Tháng (0-indexed)
         calendar.set(dateAsArr[2], dateAsArr[1] - 1, dateAsArr[0]);
 

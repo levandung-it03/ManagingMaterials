@@ -37,7 +37,7 @@ public class OrderService {
 
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final OrderRepository orderRepository;
@@ -54,6 +54,10 @@ public class OrderService {
             //--Check if there's a response SuppliesExportation to map into adding-form when an error occurred.
             ReqDtoOrder order = (ReqDtoOrder) model.asMap().get("submittedOrder");
             if (order != null) modelAndView.addObject("order", order);
+
+            //--Prepare branches-list for several pages
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
 
             return modelAndView;
         }
@@ -176,21 +180,31 @@ public class OrderService {
             //--Close connection
             connectHolder.removeConnection();
         }
+
         public ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport> findAllOrderDontHaveImport(
             HttpServletRequest request,
             ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject
-        ) throws SQLException {
+        ) throws SQLException, NoSuchFieldException {
             //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
             DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
-            ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport> result = new ResDtoRetrievingData<>();
-            result.setResultDataSet(orderRepository.findAllOrderDontHaveImport(connectionHolder, searchingObject));
+            searchingObject.setObjectType(ResDtoOrderWithImportantInfo.class);
+            searchingObject.setSortingCondition(" ORDER BY MasoDDH ASC");
+
+            ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport> result = orderRepository
+                .findAllOrderDontHaveImport(connectionHolder, searchingObject);
 
             //--Close Connection.
             connectionHolder.removeConnection();
 
             return result;
         }
+    }
+
+
+    @Service
+    public static class BranchServices {
+
     }
 
     @Service

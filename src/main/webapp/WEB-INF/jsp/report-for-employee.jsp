@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/report-for-employee.css">
 </head>
 <body>
+    <span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
     <%@ include file="/WEB-INF/jsp/header.jsp" %>
     <div id="message-block">
         <c:if test="${errorMessage != null}">
@@ -41,7 +42,7 @@
                     <div class="select-branch-to-search">
                         <fieldset>
                             <legend>Chi nhánh</legend>
-                            <select name="searchingBranch" disabled="${userInfo.role == 'CONGTY' ? 'fasle' : 'true'}"
+                            <select name="searchingBranch" ${userInfo.role.getJavaRole() == 'company' ? '' : 'disabled'}
                                 data="${userInfo.branch}">
                                 <c:forEach items="${branchesList}" var="branch">
                                     <option value="${branch.trim()}">${branch.trim()}</option>

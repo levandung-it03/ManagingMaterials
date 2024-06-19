@@ -23,19 +23,23 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class OrderDetailController {
-    private final OrderDetailService.BranchServices branchServices;
+    private final OrderDetailService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
-    /** Spring MVC: Branch-role controllers **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/order-detail/manage-order-detail")
+    @GetMapping({"/branch/order-detail/manage-order-detail",
+        "/company/order-detail/manage-order-detail",
+        "/user/order-detail/manage-order-detail"})
     public ModelAndView getManageOrderDetailPage(HttpServletRequest request, Model model) {
-        return branchServices.getManageOrderDetailPage(request, model);
+        return authenticatedServices.getManageOrderDetailPage(request, model);
     }
 
     /*_____________RequestMethod.POST: OrderDetail-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-order-detail-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-order-detail-by-values",
+        "${url.post.company.prefix.v1}/find-order-detail-by-values",
+        "${url.post.user.prefix.v1}/find-order-detail-by-values"})
     public ResponseEntity<ResDtoRetrievingData<OrderDetail>> findingOrderDetailsByValues(
         @RequestBody ReqDtoRetrievingData<OrderDetail> searchingObject,
         HttpServletRequest request
@@ -43,14 +47,15 @@ public class OrderDetailController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findingOrderDetail(request, searchingObject));
+                .body(authenticatedServices.findingOrderDetail(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-order-detail")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-order-detail",
+        "${url.post.user.prefix.v1}/add-order-detail"})
     public String addOrderDetail(
         @ModelAttribute("orderDetail") OrderDetail orderDetail,
         HttpServletRequest request,
@@ -65,7 +70,7 @@ public class OrderDetailController {
         }
 
         try {
-            branchServices.addOrderDetail(orderDetail, request);
+            authenticatedServices.addOrderDetail(orderDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
@@ -78,7 +83,8 @@ public class OrderDetailController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-order-detail")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-order-detail",
+        "${url.post.user.prefix.v1}/update-order-detail"})
     public String updateOrderDetail(
         @ModelAttribute("orderDetail") OrderDetail orderDetail,
         HttpServletRequest request,
@@ -93,7 +99,7 @@ public class OrderDetailController {
         }
 
         try {
-            branchServices.updateOrderDetail(orderDetail, request);
+            authenticatedServices.updateOrderDetail(orderDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (SQLIntegrityConstraintViolationException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_orderDetail_01");
@@ -105,15 +111,15 @@ public class OrderDetailController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-order-detail")
+    @PostMapping({"${url.post.branch.prefix.v1}/delete-order-detail",
+        "${url.post.user.prefix.v1}/delete-order-detail"})
     public String deleteOrderDetail(
         @RequestParam("deleteBtn") String orderDetailId,
-        @RequestParam("supplyId") String supplyId,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         try {
-            branchServices.deleteOrderDetail(orderDetailId, supplyId, request);
+            authenticatedServices.deleteOrderDetail(orderDetailId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");

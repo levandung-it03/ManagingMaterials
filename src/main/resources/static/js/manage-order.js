@@ -37,10 +37,11 @@ async function ListComponentForOrder(searchingSupportingDataSource) {
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
-    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
+    if (searchingSupportingDataSource.roleForFetching === "company")
+        customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 
 function GeneralMethods() {
@@ -49,10 +50,11 @@ function GeneralMethods() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddOrderComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-order",
+        updatingAction: `/service/v1/${roleForFetching}/update-order`,
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {}
     };
@@ -64,12 +66,13 @@ function GeneralMethods() {
             objectsQuantity: 0,
             searchingField: "orderId",
             searchingValue: "",
-            branch: $('.table-tools .select-branch-to-search select').value,
+            branch: $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim(),
         },
 
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-order-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-order-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.orderId.trim()}">
                 <td plain-value="${row.orderId}" class="orderId">${row.orderId}</td>
@@ -82,43 +85,45 @@ function GeneralMethods() {
                 </td>
                 <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
                 <td class="table-row-btn detail">
-                    <a href="/branch/order-detail/manage-order-detail?orderId=${row.orderId}">
+                    <a href="/${roleForFetching}/order-detail/manage-order-detail?orderId=${row.orderId}">
                         <i class="fa-solid fa-eye"></i>
                     </a>
                 </td>
-                <td class="table-row-btn update">
-                    <a id="${row.orderId}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </a>
+                ${roleForFetching !== "company" ? `<td class="table-row-btn update">
+                    <a id="${row.orderId}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 <td class="table-row-btn delete">
-                    <button name="deleteBtn" value="${row.orderId}">
-                        <i class="fa-regular fa-trash-can"></i>
-                    </button>
-                </td>
+                    <button name="deleteBtn" value="${row.orderId}"><i class="fa-regular fa-trash-can"></i></button>
+                </td>` : ""}
             </tr>`
     };
 
     GeneralMethods();
-    AddOrderComponent();
     CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "đơn hàng",
-            callModulesOfExtraFeatures: () => {
+            callModulesOfExtraFeatures: (roleForFetching) => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
+                if (roleForFetching !== "company")
+                    customizeGeneratingFormUpdateEvent(
+                        'div.center-page_list',
+                        updatingSupportingDataSource
+                    );
             }
         }
     );
-    await CustomizeBuildingFormSpectator(
-        async () => {
-            await new WarehouseDialog(
-                'div.select-dialog table tbody',
-                'branch'
-            ).customizeToggleOpeningFormDialogDataSupporter();
-        },
-        'div.center-page_adding-form'
-    );
     await ListComponentForOrder(searchingSupportingDataSource);
+    if (roleForFetching !== "company") {
+        AddOrderComponent();
+        await CustomizeBuildingFormSpectator(
+            async () => {
+                await new WarehouseDialog(
+                    'div.select-dialog table tbody',
+                    roleForFetching
+                ).customizeToggleOpeningFormDialogDataSupporter();
+            },
+            'div.center-page_adding-form'
+        );
+    }
 })();

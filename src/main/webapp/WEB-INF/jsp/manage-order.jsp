@@ -13,8 +13,17 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-order.css">
+    <c:if test="${userInfo.role.getJavaRole() == 'company'}">
+        <style>
+            .center-page_list table tr th#supplier,
+            .center-page_list table tr td.supplier {
+                width: calc(20% + 2*8%);
+            }
+        </style>
+    </c:if>
 </head>
 <body>
+    <span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
     <%@ include file="/WEB-INF/jsp/header.jsp" %>
     <div id="message-block">
         <c:if test="${errorMessage != null}">
@@ -31,34 +40,36 @@
         </c:if>
     </div>
     <div class="center-page">
-        <div class="center-page_adding-form">
-            <form action="/service/v1/branch/add-order" method="post" modelAttribute="order">
-                <div class="form-input" id="orderId">
-                    <fieldset>
-                        <legend>Mã đơn đặt hàng</legend>
-                        <input name="orderId" type="text" value="${order.orderId}" maxlength="8" required/>
-                    </fieldset>
-                    <div class="form_text-input_err-message"></div>
-                </div>
-                <div class="form-input strong-text" id="supplier">
-                    <fieldset>
-                        <legend>Nhà cung cấp</legend>
-                        <input name="supplier" type="text" value="${order.supplier}" maxlength="100" required/>
-                    </fieldset>
-                    <div class="form_text-input_err-message"></div>
-                </div>
-                <div class="form-input" id="warehouseIdAsFk">
-                    <fieldset>
-                        <legend>Mã kho</legend>
-                        <input name="warehouseIdAsFk" type="text" value="${order.warehouseIdAsFk}" maxlength="4"
-                               required/>
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </fieldset>
-                </div>
-                <div id="rest-components-for-updating"></div>
-                <input type="submit" value="Thêm đơn đặt hàng">
-            </form>
-        </div>
+        <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+            <div class="center-page_adding-form">
+                <form action="/service/v1/${userInfo.role.getJavaRole()}/add-order" method="post" modelAttribute="order">
+                    <div class="form-input" id="orderId">
+                        <fieldset>
+                            <legend>Mã đơn đặt hàng</legend>
+                            <input name="orderId" type="text" value="${order.orderId}" maxlength="8" required/>
+                        </fieldset>
+                        <div class="form_text-input_err-message"></div>
+                    </div>
+                    <div class="form-input strong-text" id="supplier">
+                        <fieldset>
+                            <legend>Nhà cung cấp</legend>
+                            <input name="supplier" type="text" value="${order.supplier}" maxlength="100" required/>
+                        </fieldset>
+                        <div class="form_text-input_err-message"></div>
+                    </div>
+                    <div class="form-input" id="warehouseIdAsFk">
+                        <fieldset>
+                            <legend>Mã kho</legend>
+                            <input name="warehouseIdAsFk" type="text" value="${order.warehouseIdAsFk}" maxlength="4"
+                                   required readonly/>
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </fieldset>
+                    </div>
+                    <div id="rest-components-for-updating"></div>
+                    <input type="submit" value="Thêm đơn đặt hàng">
+                </form>
+            </div>
+        </c:if>
         <div class="center-page_list">
             <div class="table-tools">
                 <div class="table-description">
@@ -69,7 +80,7 @@
                     <div class="select-branch-to-search">
                         <fieldset>
                             <legend>Chi nhánh</legend>
-                            <select name="searchingBranch" disabled="${userInfo.role == 'CONGTY' ? 'fasle' : 'true'}" data="${userInfo.branch}">
+                            <select name="searchingBranch" ${userInfo.role.getJavaRole() == 'company' ? '' : 'disabled'} data="${userInfo.branch}">
                                 <c:forEach items="${branchesList}" var="branch">
                                     <option value="${branch.trim()}">${branch.trim()}</option>
                                 </c:forEach>
@@ -90,7 +101,7 @@
                     </div>
                 </div>
             </div>
-            <form action="/service/v1/branch/delete-order" method="POST">
+            <form action="/service/v1/${userInfo.role.getJavaRole()}/delete-order" method="POST">
                 <table>
                     <thead>
                     <tr>
@@ -115,8 +126,10 @@
                             <i class="fa-solid fa-arrow-down-a-z"></i>
                         </th>
                         <th id="detail">Chi tiết</th>
-                        <th id="update">Cập nhật</th>
-                        <th id="delete">Xoá</th>
+                        <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+                            <th id="update">Cập nhật</th>
+                            <th id="delete">Xoá</th>
+                        </c:if>
                     </tr>
                     </thead>
                     <tbody></tbody>
@@ -127,34 +140,36 @@
             </div>
         </div>
     </div>
-    <div class="select-dialog closed">
-        <div class="select-dialog-container">
-            <span class="form-title">Kho</span>
-            <table>
-                <thead>
-                <tr>
-                    <th id="warehouseId">
-                        Mã
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="warehouseName">
-                        Tên kho
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                    <th id="address">
-                        Địa chỉ
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                    </th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <div class="table-footer">
-                <div class="table-footer_main"></div>
+    <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+        <div class="select-dialog closed">
+            <div class="select-dialog-container">
+                <span class="form-title">Kho</span>
+                <table>
+                    <thead>
+                    <tr>
+                        <th id="warehouseId">
+                            Mã
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="warehouseName">
+                            Tên kho
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                        <th id="address">
+                            Địa chỉ
+                            <i class="fa-solid fa-arrow-down-a-z"></i>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div class="table-footer">
+                    <div class="table-footer_main"></div>
+                </div>
+                <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
             </div>
-            <div class="closing-dialog-btn"><i class="fa-solid fa-xmark"></i></div>
         </div>
-    </div>
+    </c:if>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/base.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/Dialogs.js"></script>
     <script type="application/javascript" src="${pageContext.request.contextPath}/js/manage-order.js"></script>

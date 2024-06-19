@@ -26,31 +26,34 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class SupplyController {
-    private final SupplyService.BranchServices branchServices;
+    private final SupplyService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
-    /**
-     * Spring MVC: Branch-role controllers
-     **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/supply/manage-supply")
+    @GetMapping({"/branch/supply/manage-supply", "/company/supply/manage-supply","/user/supply/manage-supply"})
     public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getManageSupplyPage(request, model);
+        return authenticatedServices.getManageSupplyPage(request, model);
     }
-
-    @GetMapping("/branch/supply/report-for-supply")
+    @GetMapping({"/branch/supply/report-for-supply",
+        "/company/supply/report-for-supply",
+        "/user/supply/report-for-supply"})
     public ModelAndView getReportForSupplyPage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getReportForSupplyPage(request, model);
+        return authenticatedServices.getReportForSupplyPage(request, model);
     }
 
-    @GetMapping("/branch/supply/report-for-detail-supplies-interact-info")
+    @GetMapping({"/branch/supply/report-for-detail-supplies-interact-info",
+        "/company/supply/report-for-detail-supplies-interact-info",
+        "/user/supply/report-for-detail-supplies-interact-info"})
     public ModelAndView getReportForDetailSuppliesInteractInfoPage(HttpServletRequest request, Model model) throws SQLException {
-        return branchServices.getReportForDetailSuppliesInteractInfoPage(request, model);
+        return authenticatedServices.getReportForDetailSuppliesInteractInfoPage(request, model);
     }
 
     /*_____________RequestMethod.POST: Supply-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-supply-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-supply-by-values",
+        "${url.post.company.prefix.v1}/find-supply-by-values",
+        "${url.post.user.prefix.v1}/find-supply-by-values"})
     public ResponseEntity<ResDtoRetrievingData<Supply>> findingSuppliesByValues(
         @RequestBody ReqDtoRetrievingData<Supply> searchingObject,
         HttpServletRequest request
@@ -58,14 +61,16 @@ public class SupplyController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findSupply(request, searchingObject));
+                .body(authenticatedServices.findSupply(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/find-supply-by-values-for-order-detail")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-supply-by-values-for-order-detail",
+        "${url.post.company.prefix.v1}/find-supply-by-values-for-order-detail",
+        "${url.post.user.prefix.v1}/find-supply-by-values-for-order-detail"})
     public ResponseEntity<ResDtoRetrievingData<ResDtoSupplyForImportToBuildDialog>> findSupplyForOrderDetail(
         @RequestBody ReqDtoRetrievingData<ResDtoSupplyForImportToBuildDialog> searchingObject,
         HttpServletRequest request
@@ -73,14 +78,16 @@ public class SupplyController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findSupplyForOrderDetail(request, searchingObject));
+                .body(authenticatedServices.findSupplyForOrderDetail(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/find-tickets-for-detail-supplies-report")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-tickets-for-detail-supplies-report",
+        "${url.post.company.prefix.v1}/find-tickets-for-detail-supplies-report",
+        "${url.post.user.prefix.v1}/find-tickets-for-detail-supplies-report"})
     public ResponseEntity<ResDtoRetrievingData<ResDtoTicketsForDetailSuppliesReport>> findingTicketsForDetailSuppliesReport(
         @RequestBody ReqDtoTicketsForDetailSuppliesReport searchingObject,
         HttpServletRequest request
@@ -88,14 +95,15 @@ public class SupplyController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findTicketsForDetailSuppliesReport(request, searchingObject));
+                .body(authenticatedServices.findTicketsForDetailSuppliesReport(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-supply")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-supply",
+        "${url.post.user.prefix.v1}/add-supply"})
     public String addSupply(
         @ModelAttribute("supply") Supply supply,
         HttpServletRequest request,
@@ -110,7 +118,7 @@ public class SupplyController {
         }
 
         try {
-            branchServices.addSupply(request, supply);
+            authenticatedServices.addSupply(request, supply);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (DuplicateKeyException ignored) {
             redirectAttributes.addFlashAttribute("submittedSupply", supply);
@@ -125,7 +133,8 @@ public class SupplyController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-supply")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-supply",
+        "${url.post.user.prefix.v1}/update-supply"})
     public String updateSupply(
         @ModelAttribute("supply") Supply supply,
         HttpServletRequest request,
@@ -133,7 +142,7 @@ public class SupplyController {
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
-            branchServices.updateSupply(supply, request);
+            authenticatedServices.updateSupply(supply, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");
@@ -148,7 +157,8 @@ public class SupplyController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-supply")
+    @PostMapping({"${url.post.branch.prefix.v1}/delete-supply",
+        "${url.post.user.prefix.v1}/delete-supply"})
     public String deleteSupply(
         @RequestParam("deleteBtn") String supplyId,
         HttpServletRequest request,
@@ -156,7 +166,7 @@ public class SupplyController {
     ) {
         final String standingUrl = request.getHeader("Referer");
         try {
-            branchServices.deleteSupply(supplyId, request);
+            authenticatedServices.deleteSupply(supplyId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");

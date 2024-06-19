@@ -15,12 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 public class WarehouseService {
 
     @Service
     @RequiredArgsConstructor
-    public static class BranchServices {
+    public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final WarehouseRepository warehouseRepository;
         private final FindingActionService findingActionService;
@@ -81,7 +82,7 @@ public class WarehouseService {
 
             //--Check If 'MAKHO' is already existing or not.
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectionHolder, warehouse.getWarehouseId()))
-                throw new DuplicateKeyException("Updated Warehouse Id not found!");
+                throw new NoSuchElementException("Updated Warehouse Id not found!");
 
             if (warehouseRepository.update(connectionHolder, warehouse) == 0)
                 throw new SQLException("There's an error with SQL Server!");
@@ -96,11 +97,16 @@ public class WarehouseService {
 
             //--Check If 'MAKHO' is already existing or not.
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectionHolder, warehouseId))
-                throw new DuplicateKeyException("Deleted Warehouse Id not found!");
+                throw new NoSuchElementException("Deleted Warehouse Id not found!");
 
             if (warehouseRepository.delete(connectionHolder, warehouseId) == 0)
                 throw new SQLException("Something wrong happened in your DBMS");
         }
+    }
+
+    @Service
+    public static class BranchServices {
+
     }
 
     @Service

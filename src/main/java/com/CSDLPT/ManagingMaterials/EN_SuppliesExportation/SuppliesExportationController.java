@@ -24,16 +24,18 @@ import java.util.Set;
 @Controller
 @RequiredArgsConstructor
 public class SuppliesExportationController {
-    private final SuppliesExportationService.BranchServices branchServices;
+    private final SuppliesExportationService.AuthenticatedServices authenticatedServices;
     private final Validator hibernateValidator;
     private final Logger logger;
 
-    /** Spring MVC: Branch-role controllers **/
+    /** Spring MVC: Auth-role controllers **/
     /*_____________RequestMethod.GET: Header-pages_____________*/
-    @GetMapping("/branch/supplies-exportation/manage-supplies-exportation")
+    @GetMapping({"/branch/supplies-exportation/manage-supplies-exportation",
+        "/company/supplies-exportation/manage-supplies-exportation",
+        "/user/supplies-exportation/manage-supplies-exportation"})
     public ModelAndView getManageSuppliesExportationPage(HttpServletRequest request, Model model) {
         try {
-            return branchServices.getManageSuppliesExportationPage(request, model);
+            return authenticatedServices.getManageSuppliesExportationPage(request, model);
         } catch (Exception e) {
             logger.info("Error from 'getManageSuppliesExportationPage' in 'SuppliesExportationController': " + e);
             return null;
@@ -41,7 +43,9 @@ public class SuppliesExportationController {
     }
     
     /*_____________RequestMethod.POST: Supplies-Exportation-entity-interaction_____________*/
-    @PostMapping("${url.post.branch.prefix.v1}/find-supplies-exportation-by-values")
+    @PostMapping({"${url.post.branch.prefix.v1}/find-supplies-exportation-by-values",
+        "${url.post.company.prefix.v1}/find-supplies-exportation-by-values",
+        "${url.post.user.prefix.v1}/find-supplies-exportation-by-values"})
     public ResponseEntity<ResDtoRetrievingData<ResDtoExportationWithImportationInfo>> findingSuppliesExportationByValues(
         @RequestBody ReqDtoRetrievingData<ResDtoExportationWithImportationInfo> searchingObject,
         HttpServletRequest request
@@ -49,14 +53,15 @@ public class SuppliesExportationController {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(branchServices.findingSuppliesExportation(request, searchingObject));
+                .body(authenticatedServices.findingSuppliesExportation(request, searchingObject));
         } catch (Exception e) {
             logger.info(e.toString());
             return null;
         }
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/add-supplies-exportation")
+    @PostMapping({"${url.post.branch.prefix.v1}/add-supplies-exportation",
+        "${url.post.user.prefix.v1}/add-supplies-exportation"})
     public String addSuppliesImportation(
         @ModelAttribute("suppliesExportation") ReqDtoSuppliesExportation exportation,
         HttpServletRequest request,
@@ -71,7 +76,7 @@ public class SuppliesExportationController {
         }
 
         try {
-            branchServices.addSuppliesExportation(exportation, request);
+            authenticatedServices.addSuppliesExportation(exportation, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
         } catch (NoSuchElementException | DuplicateKeyException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
@@ -84,7 +89,8 @@ public class SuppliesExportationController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/update-supplies-exportation")
+    @PostMapping({"${url.post.branch.prefix.v1}/update-supplies-exportation",
+        "${url.post.user.prefix.v1}/update-supplies-exportation"})
     public String updateSuppliesImportation(
         @ModelAttribute("suppliesExportation") ReqDtoSuppliesExportation exportation,
         HttpServletRequest request,
@@ -98,7 +104,7 @@ public class SuppliesExportationController {
         }
 
         try {
-            branchServices.updateSuppliesExportation(exportation, request);
+            authenticatedServices.updateSuppliesExportation(exportation, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
@@ -109,14 +115,15 @@ public class SuppliesExportationController {
         return "redirect:" + standingUrl;
     }
 
-    @PostMapping("${url.post.branch.prefix.v1}/delete-supplies-exportation")
+    @PostMapping({"${url.post.branch.prefix.v1}/delete-supplies-exportation",
+        "${url.post.user.prefix.v1}/delete-supplies-exportation"})
     public String deleteSuppliesExportation(
         @RequestParam("deleteBtn") String exportationId,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         try {
-            branchServices.deleteSuppliesExportation(exportationId, request);
+            authenticatedServices.deleteSuppliesExportation(exportationId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
@@ -126,6 +133,4 @@ public class SuppliesExportationController {
         }
         return "redirect:" + request.getHeader("Referer");
     }
-
-
 }

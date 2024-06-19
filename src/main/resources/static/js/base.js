@@ -469,7 +469,7 @@ function CustomizeFetchingActionSpectator(
         generatePaginationBar(observedTableContainer, searchingSupportingDataSource);
 
         //--Call all rest custom modules.
-        await moreFeatures.callModulesOfExtraFeatures();
+        await moreFeatures.callModulesOfExtraFeatures(searchingSupportingDataSource.roleForFetching);
 
         //--Configure the observer to observe changes to the table's child list
     }).observe($(observedTableContainer + ' tbody'), {childList: true, subtree: true});
@@ -487,7 +487,7 @@ async function CustomizeBuildingFormSpectator(dialogBuilders, observedForm = 'di
 
 function customizeRenderTableDataBySwitchingBranch(
     searchingSupportingDataSource,
-    selectTagSelector='div.table-tools .right-grid select[name=searchingBranch]'
+    selectTagSelector='div.table-tools .select-branch-to-search select[name=searchingBranch]'
 ) {
     const selectTag = $(selectTagSelector)
     selectTag.value = selectTag.getAttribute("data");

@@ -14,13 +14,13 @@ function GeneralMethods() {
     customizeClosingNoticeMessageEvent();
 }
 
-async function CustomizeExportationFileModules() {
+async function CustomizeExportationFileModules(roleForFetching) {
     const pdfFilesExporter = new PdfFilesExportation();
     const previewInfoContainer = 'div.preview-table-container';
     const fetchingConfigObject = {
         previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Danh sách hoạt động nhân viên',
-        fetchDataAction: "/service/v1/branch/find-all-employee-activities-for-report",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-all-employee-activities-for-report`,
         usefulVariablesStorage: { statisticInfoOfEachMonth: {} },
         fieldObjects: [
             {cssName: "createdDate", utf8Name: "Ngày tạo"},
@@ -196,6 +196,7 @@ async function CustomizeExportationFileModules() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const searchingSupportingDataSource = {
         //--Initialize field-values for firstly fetch action.
         data: {
@@ -203,11 +204,12 @@ async function CustomizeExportationFileModules() {
             objectsQuantity: 0,
             searchingField: "employeeId",
             searchingValue: "",
-            branch: $('.table-tools .select-branch-to-search select').value,
+            branch: $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim(),
         },
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-employee-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-employee-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.employeeId}">
                 <td plain-value="${row.employeeId}" class="employeeId">${row.employeeId}</td>
@@ -232,5 +234,5 @@ async function CustomizeExportationFileModules() {
         }
     );
     await ListComponent(searchingSupportingDataSource);
-    await CustomizeExportationFileModules();
+    await CustomizeExportationFileModules(roleForFetching);
 })();

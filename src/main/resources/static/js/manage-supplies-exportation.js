@@ -37,10 +37,11 @@ async function ListComponentForSuppliesExportation(searchingSupportingDataSource
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
-    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
+    if (searchingSupportingDataSource.roleForFetching !== "company")
+        customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 
 function GeneralMethods() {
@@ -49,10 +50,11 @@ function GeneralMethods() {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSuppliesExportationComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
-        updatingAction: "/service/v1/branch/update-supplies-exportation",
+        updatingAction: `/service/v1/${roleForFetching}/update-supplies-exportation`,
         componentsForUpdating: [],
         moreActions: (updatedObjectRow) => {}
     };
@@ -63,12 +65,13 @@ function GeneralMethods() {
             objectsQuantity: 0,
             searchingField: "suppliesExportationId",
             searchingValue: "",
-            branch: $('.table-tools .select-branch-to-search select').value,
+            branch: $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim(),
         },
 
         //--Main fields for searching-action.
+        roleForFetching: roleForFetching,
         tableBody: $('div.center-page_list table tbody'),
-        fetchDataAction: "/service/v1/branch/find-supplies-exportation-by-values",
+        fetchDataAction: `/service/v1/${roleForFetching}/find-supplies-exportation-by-values`,
         rowFormattingEngine: (row) => `
             <tr id="${row.suppliesExportationId.trim()}">
                 <td plain-value="${row.suppliesExportationId}" class="suppliesExportationId">${row.suppliesExportationId}</td>
@@ -81,44 +84,48 @@ function GeneralMethods() {
                 </td>
                 <td plain-value="${row.createdDate}" class="createdDate">${row.createdDate}</td>
                 <td class="table-row-btn detail">
-                    <a href="/branch/supplies-exportation-detail/manage-supplies-exportation-detail?suppliesExportationId=${row.suppliesExportationId}">
+                    <a href="/${roleForFetching}/supplies-exportation-detail/manage-supplies-exportation-detail?suppliesExportationId=${row.suppliesExportationId}">
                         <i class="fa-solid fa-eye"></i>
                     </a>
                 </td>
-                <td class="table-row-btn update">
-                    <a id="${row.suppliesExportationId}">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                    </a>
+                ${roleForFetching !== "company" ? `<td class="table-row-btn update">
+                    <a id="${row.suppliesExportationId}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 <td class="table-row-btn delete">
                     <button name="deleteBtn" value="${row.suppliesExportationId}">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
-                </td>
+                </td>` : ""}
             </tr>`
     };
 
     GeneralMethods();
-    AddSuppliesExportationComponent();
-
     CustomizeFetchingActionSpectator(
         searchingSupportingDataSource,
         {
             tableLabel: "phiếu",
-            callModulesOfExtraFeatures: () => {
+            callModulesOfExtraFeatures: (roleForFetching) => {
                 //--Re-customize the listener of all updating-buttons.
-                customizeGeneratingFormUpdateEvent('div.center-page_list', updatingSupportingDataSource);
+                if (roleForFetching !== 'company') {
+                    customizeGeneratingFormUpdateEvent(
+                        'div.center-page_list',
+                        updatingSupportingDataSource
+                    );
+                }
             }
         }
     );
-    await CustomizeBuildingFormSpectator(
-        async () => {
-            await new WarehouseDialog(
-                'div.select-dialog table tbody',
-                "branch"
-            ).customizeToggleOpeningFormDialogDataSupporter();
-        },
-        'div.center-page_adding-form'
-    );
     await ListComponentForSuppliesExportation(searchingSupportingDataSource);
+    if (roleForFetching !== 'company') {
+        AddSuppliesExportationComponent();
+        await CustomizeBuildingFormSpectator(
+            async () => {
+                await new WarehouseDialog(
+                    'div.select-dialog table tbody',
+                    roleForFetching
+                ).customizeToggleOpeningFormDialogDataSupporter();
+            },
+            'div.center-page_adding-form'
+        );
+    }
 })();

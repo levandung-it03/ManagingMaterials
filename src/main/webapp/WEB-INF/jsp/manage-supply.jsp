@@ -13,8 +13,17 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/base.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/manage-supply.css">
+    <c:if test="${userInfo.role.getJavaRole() == 'company'}">
+        <style>
+            .center-page_list table tr th#supplyName,
+            .center-page_list table tr td.supplyName {
+                width: calc(30% + 2*8%);
+            }
+        </style>
+    </c:if>
 </head>
 <body>
+<span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
 <%--    <%@ include file="/WEB-INF/jsp/category.jsp" %>--%>
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
 <div id="message-block">
@@ -32,40 +41,42 @@
     </c:if>
 </div>
 <div class="center-page">
-    <div class="center-page_adding-form">
-        <form action="/service/v1/branch/add-supply" method="post" modelAttribute="supply">
-            <div class="form-input" id="supplyId">
-                <fieldset>
-                    <legend>Mã vật tư</legend>
-                    <input name="supplyId" type="text" value="${supply.supplyId}" maxlength="4" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="supplyName">
-                <fieldset>
-                    <legend>Tên vật tư</legend>
-                    <input name="supplyName" type="text" value="${supply.supplyName}" maxlength="30" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input strong-text" id="unit">
-                <fieldset>
-                    <legend>Đơn vị tính</legend>
-                    <input name="unit" type="text" value="${supply.unit}" maxlength="15" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div class="form-input" id="quantityInStock">
-                <fieldset>
-                    <legend>Số lượng tồn</legend>
-                    <input name="quantityInStock" type="number" value="${supply.quantityInStock}" min="0" required/>
-                </fieldset>
-                <div class="form_text-input_err-message"></div>
-            </div>
-            <div id="rest-components-for-updating"></div>
-            <input type="submit" value="Thêm vật tư">
-        </form>
-    </div>
+    <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+        <div class="center-page_adding-form">
+            <form action="/service/v1/${userInfo.role.getJavaRole()}/add-supply" method="post" modelAttribute="supply">
+                <div class="form-input" id="supplyId">
+                    <fieldset>
+                        <legend>Mã vật tư</legend>
+                        <input name="supplyId" type="text" value="${supply.supplyId}" maxlength="4" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="supplyName">
+                    <fieldset>
+                        <legend>Tên vật tư</legend>
+                        <input name="supplyName" type="text" value="${supply.supplyName}" maxlength="30" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input strong-text" id="unit">
+                    <fieldset>
+                        <legend>Đơn vị tính</legend>
+                        <input name="unit" type="text" value="${supply.unit}" maxlength="15" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div class="form-input" id="quantityInStock">
+                    <fieldset>
+                        <legend>Số lượng tồn</legend>
+                        <input name="quantityInStock" type="number" value="${supply.quantityInStock}" min="0" required/>
+                    </fieldset>
+                    <div class="form_text-input_err-message"></div>
+                </div>
+                <div id="rest-components-for-updating"></div>
+                <input type="submit" value="Thêm vật tư">
+            </form>
+        </div>
+    </c:if>
     <div class="center-page_list">
         <div class="table-tools">
             <div class="table-description">
@@ -76,7 +87,7 @@
                 <div class="select-branch-to-search">
                     <fieldset>
                         <legend>Chi nhánh</legend>
-                        <select name="searchingBranch" disabled="${userInfo.role == 'CONGTY' ? 'fasle' : 'true'}" data="${userInfo.branch}">
+                        <select name="searchingBranch" ${userInfo.role.getJavaRole() == 'company' ? '' : 'disabled'} data="${userInfo.branch}">
                             <c:forEach items="${branchesList}" var="branch">
                                 <option value="${branch.trim()}">${branch.trim()}</option>
                             </c:forEach>
@@ -96,7 +107,7 @@
                 </div>
             </div>
         </div>
-        <form action="/service/v1/branch/delete-supply" method="POST">
+        <form action="/service/v1/${userInfo.role.getJavaRole()}/delete-supply" method="POST">
             <table>
                 <thead>
                 <tr>
@@ -116,8 +127,10 @@
                         Số lượng tồn
                         <i class="fa-solid fa-arrow-down-a-z"></i>
                     </th>
-                    <th id="update">Cập nhật</th>
-                    <th id="delete">Xoá</th>
+                    <c:if test="${userInfo.role.getJavaRole() != 'company'}">
+                        <th id="update">Cập nhật</th>
+                        <th id="delete">Xoá</th>
+                    </c:if>
                 </tr>
                 </thead>
                 <tbody></tbody>
