@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesExportation;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.RoleEnum;
 import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesExportation.dtos.ReqDtoSuppliesExportation;
@@ -61,11 +62,16 @@ public class SuppliesExportationService {
             searchingObject.setSearchingTable("PhieuXuat");
             searchingObject.setSearchingTableIdName("MAPX");
             searchingObject.setSortingCondition("ORDER BY MAPX ASC");
-            searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
+
+            ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
+            List<InnerJoinObject> joinObjects = List.of(
                 InnerJoinObject.builder().left("PhieuXuat").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV").build(),
                 InnerJoinObject.builder().left("PhieuXuat").right("Kho").fields("MAKHO, TENKho").bridge("MAKHO").build()
-            )));
-
+            );
+            if (userInfo.getRole().equals(RoleEnum.CONGTY))
+                if (!searchingObject.getBranch().isEmpty() && !userInfo.getBranch().equals(searchingObject.getBranch()))
+                    joinObjects.forEach(obj -> obj.setDifferentBranch(true));
+            searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(joinObjects));
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }
 
