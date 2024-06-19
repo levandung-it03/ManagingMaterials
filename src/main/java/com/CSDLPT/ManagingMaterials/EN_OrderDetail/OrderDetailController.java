@@ -115,12 +115,11 @@ public class OrderDetailController {
         "${url.post.user.prefix.v1}/delete-order-detail"})
     public String deleteOrderDetail(
         @RequestParam("deleteBtn") String orderDetailId,
-        @RequestParam("supplyId") String supplyId,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
         try {
-            authenticatedServices.deleteOrderDetail(orderDetailId, supplyId, request);
+            authenticatedServices.deleteOrderDetail(orderDetailId, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_entity_01");

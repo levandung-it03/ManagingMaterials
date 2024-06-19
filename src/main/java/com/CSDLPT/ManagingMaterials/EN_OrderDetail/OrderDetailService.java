@@ -120,11 +120,14 @@ public class OrderDetailService {
         }
 
         public void deleteOrderDetail(
-            String orderId,
-            String supplyId,
+            String orderDetailId,
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+
+            //--Get orderId and supplyId form orderDetailId
+            String orderId = orderDetailId.split("-")[0];
+            String supplyId = orderDetailId.split("-")[1];
 
             if (orderDetailRepository.findById(connectHolder, orderId, supplyId).isEmpty())
                 throw new NoSuchElementException("Order-Detail not found");

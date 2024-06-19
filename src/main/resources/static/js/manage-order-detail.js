@@ -90,8 +90,7 @@ function GeneralMethods() {
                     <a id="${row.orderId} ${row.supplyId}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 <td class="table-row-btn delete">
-                    <button name="deleteBtn" value="${row.orderId.trim()}">
-                        <input name="supplyId" type="text" value="${row.supplyId.trim()}" hidden/>
+                    <button name="deleteBtn" value="${row.orderId.trim()}-${row.supplyId.trim()}">
                         <i class="fa-regular fa-trash-can"></i>
                     </button>
                 </td>` : ""}
