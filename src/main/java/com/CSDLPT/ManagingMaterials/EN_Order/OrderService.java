@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_Order;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.RoleEnum;
 import com.CSDLPT.ManagingMaterials.EN_Branch.BranchRepository;
 import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ReqDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
@@ -22,6 +23,7 @@ import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -38,6 +40,8 @@ public class OrderService {
     @Service
     @RequiredArgsConstructor
     public static class AuthenticatedServices {
+        @Value("${mssql.database.name}")
+        private String databaseName;
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final OrderRepository orderRepository;
@@ -87,11 +91,20 @@ public class OrderService {
             searchingObject.setSearchingTable("DatHang");
             searchingObject.setSearchingTableIdName("MasoDDH");
             searchingObject.setSortingCondition("ORDER BY MasoDDH ASC");
-            searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
-                InnerJoinObject.builder().left("DatHang").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV").build(),
-                InnerJoinObject.builder().left("DatHang").right("Kho").fields("MAKHO, TENKho").bridge("MAKHO").build()
-            )));
 
+            ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
+            List<InnerJoinObject> joinObjects = List.of(
+                InnerJoinObject.builder()
+                    .databaseName(databaseName).left("DatHang").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV")
+                    .build(),
+                InnerJoinObject.builder()
+                    .databaseName(databaseName).left("DatHang").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO")
+                    .build()
+            );
+            if (userInfo.getRole().equals(RoleEnum.CONGTY))
+                if (!searchingObject.getBranch().isEmpty() && !userInfo.getBranch().equals(searchingObject.getBranch()))
+                    joinObjects.forEach(obj -> obj.setDifferentBranch(true));
+            searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(joinObjects));
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }
 

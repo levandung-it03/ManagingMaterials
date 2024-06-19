@@ -16,6 +16,7 @@ import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -30,6 +31,8 @@ public class SuppliesImportationService {
     @Service
     @RequiredArgsConstructor
     public static class AuthenticatedServices {
+        @Value("${mssql.database.name}")
+        private String databaseName;
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesImportationRepository suppliesImportationRepository;
@@ -68,12 +71,10 @@ public class SuppliesImportationService {
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             List<InnerJoinObject> joinObjects = List.of(
                 InnerJoinObject.builder()
-                    .databaseName(staticUtilMethods.getDatabaseName())
-                    .left("PhieuNhap").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV")
+                    .databaseName(databaseName).left("PhieuNhap").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV")
                     .build(),
                 InnerJoinObject.builder()
-                    .databaseName(staticUtilMethods.getDatabaseName())
-                    .left("PhieuNhap").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO")
+                    .databaseName(databaseName).left("PhieuNhap").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO")
                     .build()
             );
             if (userInfo.getRole().equals(RoleEnum.CONGTY))

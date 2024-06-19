@@ -86,15 +86,21 @@
     <div class="chart-container">
         <h3>Tổng hợp nhập xuất trong năm 2023</h3>
         <div id=""></div>
-        <canvas id="monthly-comparison-chart"></canvas>
+        <div class="chartBox">
+            <canvas id="monthly-comparison-chart"></canvas>
+        </div>
     </div>
     <div class="chart-container">
         <h3>Xu hướng nhập và xuất của từng vật tư</h3>
-        <canvas id="trend-comparison-chart"></canvas>
+        <div class="chartBox">
+            <canvas id="trend-comparison-chart"></canvas>
+        </div>
     </div>
     <div class="chart-container">
         <h3>Tỉ lệ tồn kho của các vật tư</h3>
-        <canvas id="inventory-percentage-chart"></canvas>
+        <div class="chartBox" style="width: 80%; margin: 0 auto">
+            <canvas id="inventory-percentage-chart" height="300" width="600"></canvas>
+        </div>
     </div>
 </div>
 </body>
@@ -154,6 +160,11 @@
                 plugins: {
                     legend: {
                         display: true,
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
                     },
                 },
                 scales: {
@@ -219,6 +230,15 @@
                         },
                     },
                 },
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
             },
         });
     }
@@ -240,7 +260,19 @@
         new Chart("inventory-percentage-chart", {
             type: "pie",
             data: inventoryPercentageData,
-            options: {},
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            },
         });
     }
 
