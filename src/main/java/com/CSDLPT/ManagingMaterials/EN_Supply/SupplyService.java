@@ -31,7 +31,7 @@ public class SupplyService {
         private final FindingActionService findingActionService;
         private final BranchRepository branchRepository;
 
-        public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) throws SQLException {
+        public ModelAndView getManageSupplyPage(HttpServletRequest request, Model model) {
             //--Prepare common-components of ModelAndView if we need.
             ModelAndView modelAndView = staticUtilMethods
                 .customResponsiveModelView(request, model, "manage-supply");
@@ -39,12 +39,6 @@ public class SupplyService {
             //--If there's an error when handle data with DB, take the submitted-supply-info and give it back to this page
             Supply supply = (Supply) model.asMap().get("submittedSupply");
             if (supply != null) modelAndView.addObject("supply", supply);
-
-            //--Prepare branches-list for several pages
-            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
-            ;
-            connectionHolder.removeConnection();
 
             return modelAndView;
         }

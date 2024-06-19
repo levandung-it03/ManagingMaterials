@@ -55,6 +55,10 @@ public class OrderService {
             ReqDtoOrder order = (ReqDtoOrder) model.asMap().get("submittedOrder");
             if (order != null) modelAndView.addObject("order", order);
 
+            //--Prepare branches-list for several pages
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            modelAndView.addObject("branchesList", branchRepository.findAllBranchIds(connectionHolder));
+
             return modelAndView;
         }
 

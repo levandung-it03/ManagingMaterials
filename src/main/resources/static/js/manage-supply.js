@@ -46,8 +46,6 @@ async function ListComponent(searchingSupportingDataSource) {
     customizeSortingListEvent();
 
     customizeSubmitFormAction('div.center-page_list form', {mockTag: {isValid: true}});
-    if (searchingSupportingDataSource.roleForFetching !== 'company')
-        customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 
 function GeneralMethods() {
