@@ -25,7 +25,7 @@ public class HomePageService {
         searchingObject.setSearchingTable("VATTU");
         searchingObject.setSearchingTableIdName("MAVT");
 
-        return findingActionService.countAllByCondition(connectionHolder, searchingObject, null);
+        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "1=1");
     }
 
     public Integer getTotalRevenueOfBranch(HttpServletRequest request) {
@@ -52,7 +52,7 @@ public class HomePageService {
         searchingObject.setSearchingTable("PHIEUXUAT");
         searchingObject.setSearchingTableIdName("MAPX");
 
-        return findingActionService.countAllByCondition(connectionHolder, searchingObject, null);
+        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "1=1");
     }
 
     public Integer countNumberOfImportation(HttpServletRequest request) {
@@ -62,7 +62,7 @@ public class HomePageService {
         searchingObject.setSearchingTable("PHIEUNHAP");
         searchingObject.setSearchingTableIdName("MAPN");
 
-        return findingActionService.countAllByCondition(connectionHolder, searchingObject, null);
+        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "1=1");
     }
 
     public Integer countNumberOfOrder(HttpServletRequest request) {
@@ -72,7 +72,7 @@ public class HomePageService {
         searchingObject.setSearchingTable("DATHANG");
         searchingObject.setSearchingTableIdName("MADDH");
 
-        return findingActionService.countAllByCondition(connectionHolder, searchingObject, null);
+        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "1=1");
     }
 
     public Integer countNumberOfOrderWithoutImportation(HttpServletRequest request) {
