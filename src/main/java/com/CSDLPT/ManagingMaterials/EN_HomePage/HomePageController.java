@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 
 @Controller
@@ -26,13 +28,13 @@ public class HomePageController {
         ModelAndView modelAndView = staticUtilMethods.customResponsiveModelView(request, model, "home");
 
         int numberOfSupply = this.homePageService.countNumberOfSupply(request);
-        int totalRevenue = this.homePageService.getTotalRevenueOfBranch(request);
+        double totalRevenue = this.homePageService.getTotalRevenueOfBranch(request);
         int numberOfEmployee = this.homePageService.countNumberOfEmployee(request);
         int numberOfExportation = this.homePageService.countNumberOfExportation(request);
         int numberOfOrderWithoutImportation = this.homePageService.countNumberOfOrderWithoutImportation(request);
 
         modelAndView.addObject("numberOfSupply", numberOfSupply);
-        modelAndView.addObject("totalRevenue", totalRevenue);
+        modelAndView.addObject("totalRevenue", formatVND(totalRevenue));
         modelAndView.addObject("numberOfEmployee", numberOfEmployee);
         modelAndView.addObject("numberOfExportation", numberOfExportation);
         modelAndView.addObject("numberOfOrderWithoutImportation", numberOfOrderWithoutImportation);
@@ -64,5 +66,18 @@ public class HomePageController {
     public ResponseEntity<SupplyTrendDto> findSupplyTrend(HttpServletRequest request) {
         SupplyTrendDto supplyTrendDto = this.homePageService.getSupplyTrend(request);
         return ResponseEntity.ok(supplyTrendDto);
+    }
+
+    private String formatVND(double amount) {
+        // Define a custom pattern for VND
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator(',');
+        symbols.setDecimalSeparator('.');
+        symbols.setCurrencySymbol("₫");
+
+        DecimalFormat vndFormat = new DecimalFormat("#,##0.00 ¤", symbols);
+
+        // Format the amount
+        return vndFormat.format(amount);
     }
 }

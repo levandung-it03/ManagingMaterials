@@ -25,7 +25,7 @@ public class ReportRepository {
         try {
             String callSPStatement = "{call SP_REPORT_OF_PERCENTAGE_OF_IMPORT_AND_EXPORT(?, ?)}";
             PreparedStatement statement = connectionHolder.getConnection().prepareStatement(callSPStatement);
-            statement.setDate(1,  fromDate);
+            statement.setDate(1, fromDate);
             statement.setDate(2, toDate);
             ResultSet resultSet = statement.executeQuery();
 
