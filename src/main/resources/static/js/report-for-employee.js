@@ -3,8 +3,10 @@ async function ListComponent(searchingSupportingDataSource) {
     await fetchingPaginatedDataAndMapIntoTable(searchingSupportingDataSource);
 
     customizeSearchingListEvent(searchingSupportingDataSource);
-    customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
     customizeSortingListEvent('div.center-page_list table');
+
+    if (searchingSupportingDataSource.roleForFetching === "company")
+        customizeRenderTableDataBySwitchingBranch(searchingSupportingDataSource);
 }
 
 function GeneralMethods() {
@@ -25,7 +27,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
             currentPage: 0,
             searchingField: "employeeId",
             searchingValue: "",
-            branch: $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim(),
+            branch: $('div.table-tools .right-grid select[name=searchingBranch]').value.trim(),
         },
         fieldObjects: [
             {cssName: "employeeId", utf8Name: "Mã"},
