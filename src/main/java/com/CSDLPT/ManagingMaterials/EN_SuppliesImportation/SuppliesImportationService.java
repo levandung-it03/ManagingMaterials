@@ -66,7 +66,7 @@ public class SuppliesImportationService {
             searchingObject.setObjectType(ResDtoImportationWithImportationInfo.class);
             searchingObject.setSearchingTable("PhieuNhap");
             searchingObject.setSearchingTableIdName("MAPN");
-            searchingObject.setSortingCondition("ORDER BY MAPN ASC");
+            searchingObject.setSortingCondition("ORDER BY MAPN DESC");
 
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             List<InnerJoinObject> joinObjects = List.of(

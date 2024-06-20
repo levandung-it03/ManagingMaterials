@@ -141,13 +141,13 @@ public class SupplyRepository {
                 .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getStartingDate()));
             statement.setDate(3, staticUtilMethods
                 .dateUtilToSqlDate(requiredInfoToSearchDetailSupplies.getEndingDate()));
-            statement.setString(4, employeeId.toString());
+            statement.setInt(4, employeeId);
 
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 resultList.add(ResDtoTicketsForDetailSuppliesReport.builder()
-                    .month(resultSet.getString("THANG"))
                     .supplyName(resultSet.getString("TENVT"))
+                    .month(resultSet.getString("THANG"))
                     .totalSuppliesQuantity(resultSet.getInt("TONGSOLUONG"))
                     .totalPrices(resultSet.getDouble("TONGTRIGIA"))
                     .build());

@@ -90,7 +90,7 @@ public class OrderService {
             searchingObject.setObjectType(ResDtoOrderWithImportantInfo.class);
             searchingObject.setSearchingTable("DatHang");
             searchingObject.setSearchingTableIdName("MasoDDH");
-            searchingObject.setSortingCondition("ORDER BY MasoDDH ASC");
+            searchingObject.setSortingCondition("ORDER BY MasoDDH DESC");
 
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             List<InnerJoinObject> joinObjects = List.of(
@@ -116,7 +116,7 @@ public class OrderService {
             searchingObject.setObjectType(ResDtoOrderWithImportantInfo.class);
             searchingObject.setSearchingTable("DatHang");
             searchingObject.setSearchingTableIdName("MasoDDH");
-            searchingObject.setSortingCondition("ORDER BY NGAY ASC");
+            searchingObject.setSortingCondition("ORDER BY NGAY DESC");
             searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
                 InnerJoinObject.builder().left("DatHang").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV").build(),
                 InnerJoinObject.builder().left("DatHang").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO").build()

@@ -84,7 +84,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
             _this.statisticComponents = [
                 `<div class="preview-table-container_statistic">
                     <span><b>Tổng toàn bộ trị giá </b>: ${
-                        _this.usefulVariablesStorage.statisticInfoOfAllMonth.totalPrices
+                        VNDCurrencyFormatEngine(_this.usefulVariablesStorage.statisticInfoOfAllMonth.totalPrices, true)
                     }</span>
                 </div>`,
             ];
@@ -105,6 +105,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
                         && startingDateValue
                         && endingDateValue
                         && (startingDateValue <= endingDateValue)
+                        && (new Date(endingDateValue) <= new Date())
                     )) throw new Error("Invalid values");
 
                     //--Prepare data to fetch.

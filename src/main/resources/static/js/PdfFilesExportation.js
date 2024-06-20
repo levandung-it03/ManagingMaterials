@@ -199,6 +199,8 @@ class PdfFilesExportation {
                 }
             },
         });
+        //--Update margins.top to the end of the table
+        margins.top = doc.autoTable.previous.finalY + 10;
 
         //--Add statistic
         doc.setFontSize(12);
