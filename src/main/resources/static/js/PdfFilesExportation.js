@@ -146,7 +146,7 @@ class PdfFilesExportation {
             theme: 'grid',
             styles: { cellPadding: 1, fontSize: 10, halign: 'left', font: 'Arial', fontStyle: 'normal' },
             margin: margins,
-            didDrawCell: (data) => {
+            willDrawCell: (data) => {
                 //--Colors the header-separator.
                 Object.entries(data.row.cells).forEach(pair => {
                     const text = [...pair[1].text].reduce((res, text) => res + text, "").trim();
@@ -154,6 +154,8 @@ class PdfFilesExportation {
                     //--Hiding empty-separator
                     if (text == "-") pair[1].styles.textColor = 255;
                 });
+            },
+            didDrawCell: (data) => {
                 //--When the iterator reach the last cell of each row.
                 if (data.column.index === headData.length - 1) {
                     //--If this line is the last line, stop halding method to prevent exception.
