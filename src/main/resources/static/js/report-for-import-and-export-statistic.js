@@ -51,10 +51,10 @@ async function ReportHandler() {
             //--Prepare data for preview-statistic.
             _this.statisticComponents = [
                 `<div class="preview-table-container_statistic">
-                    <div><b>Tổng nhập</b>: ${formattedTotalImport} VND</div>
+                    <span><b>Tổng nhập</b>: ${formattedTotalImport} VND</span>
                 </div>`,
                 `<div class="preview-table-container_statistic">
-                    <div><b>Tổng xuất</b>: ${formattedTotalExport} VND</div>
+                    <span><b>Tổng xuất</b>: ${formattedTotalExport} VND</span>
                 </div>`,
             ];
         },

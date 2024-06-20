@@ -23,16 +23,16 @@ import java.util.stream.IntStream;
 public class HomePageRepository {
     private final Logger logger;
 
-    public Integer calculateTotalImport(HttpServletRequest request) {
+    public double calculateTotalImport(HttpServletRequest request) {
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-        int result = -1;
+        double result = -1;
         try {
             PreparedStatement statement = connectionHolder.getConnection()
                     .prepareStatement("SELECT TONG_NHAP = SUM(CTPN.SOLUONG * CTPN.DONGIA) FROM CTPN");
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                result = resultSet.getInt("TONG_NHAP");
+                result = resultSet.getDouble("TONG_NHAP");
             }
 
             //--Close all connection.
@@ -45,16 +45,16 @@ public class HomePageRepository {
         return result;
     }
 
-    public Integer calculateTotalExport(HttpServletRequest request) {
+    public double calculateTotalExport(HttpServletRequest request) {
         DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
-        int result = -1;
+        double result = -1;
         try {
             PreparedStatement statement = connectionHolder.getConnection()
                     .prepareStatement("SELECT TONG_XUAT = SUM(CTPX.SOLUONG * CTPX.DONGIA) FROM CTPX");
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                result = resultSet.getInt("TONG_XUAT");
+                result = resultSet.getDouble("TONG_XUAT");
             }
 
             //--Close all connection.

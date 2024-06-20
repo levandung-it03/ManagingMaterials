@@ -109,7 +109,6 @@
 <script>
     async function fetchData(resource) {
         const url = window.location.origin + "/service/v1/${userInfo.role.getJavaRole()}" + resource;
-        console.log("url:", url);
         const payload = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},

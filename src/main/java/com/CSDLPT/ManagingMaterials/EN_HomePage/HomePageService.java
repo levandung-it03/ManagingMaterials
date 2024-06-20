@@ -29,9 +29,9 @@ public class HomePageService {
         return findingActionService.countAllByCondition(connectionHolder, searchingObject, "WHERE 1 = ?");
     }
 
-    public Integer getTotalRevenueOfBranch(HttpServletRequest request) {
-        Integer totalImport = this.homePageRepository.calculateTotalImport(request);
-        Integer totalExport = this.homePageRepository.calculateTotalExport(request);
+    public double getTotalRevenueOfBranch(HttpServletRequest request) {
+        double totalImport = this.homePageRepository.calculateTotalImport(request);
+        double totalExport = this.homePageRepository.calculateTotalExport(request);
         return totalExport - totalImport;
     }
 
