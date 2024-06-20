@@ -69,7 +69,7 @@ function GeneralMethods() {
             objectsQuantity: 0,
             searchingField: "supplyId",
             searchingValue: "",
-            branch: $('div.table-tools .right-grid select[name=searchingBranch]').getAttribute("data").trim(),
+            branch: "",
         },
 
         //--Main fields for searching-action.

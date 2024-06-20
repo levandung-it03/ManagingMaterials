@@ -64,7 +64,7 @@ public class SuppliesExportationService {
             searchingObject.setObjectType(ResDtoExportationWithImportationInfo.class);
             searchingObject.setSearchingTable("PhieuXuat");
             searchingObject.setSearchingTableIdName("MAPX");
-            searchingObject.setSortingCondition("ORDER BY MAPX DSC");
+            searchingObject.setSortingCondition("ORDER BY MAPX DESC");
 
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             List<InnerJoinObject> joinObjects = List.of(

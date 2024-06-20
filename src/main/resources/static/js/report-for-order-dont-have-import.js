@@ -46,7 +46,33 @@ async function CustomizeExportationFileModules(roleForFetching) {
                 <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
                 <td plain-value="${row.price}" class="price">${row.price}</td>
             </tr>`,
-        moreFeatures: () => {
+        moreFeatures: async () =>  {
+            const result = await pdfFilesExporter.fetchDataForReporter(fetchingConfigObject)
+            const tbody = document.createElement("tbody")
+            tbody.innerHTML = result
+            const rows = tbody.querySelectorAll('tr');
+            let previousOrderId = '';
+            let orderIdCell, createdDateCell, supplierCell, employeeFullNameCell;
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td')
+                const orderId = cells[0].getAttribute('plain-value');
+                if (orderId === previousOrderId) {
+                    // If the orderId is the same as the previous row, merge cells
+                    cells.forEach((cell,index) => {
+                        cell.style.borderTop = '0'
+                        if (index < 4) cell.textContent = ''
+                    })
+                } else {
+                    // If the orderId is different, update the previous cells
+                    orderIdCell = cells[0]
+                    createdDateCell = cells[1]
+                    supplierCell = cells[2]
+                    employeeFullNameCell = cells[3]
+                    previousOrderId = orderId;
+                }
+            });
+            const exportTable = $('.exporting-table-css tbody')
+            exportTable.innerHTML = tbody.innerHTML
         },
     };
 

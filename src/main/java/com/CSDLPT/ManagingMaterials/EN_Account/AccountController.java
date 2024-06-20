@@ -11,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -59,7 +56,7 @@ public class AccountController {
     @PostMapping({"${url.post.branch.prefix.v1}/add-account",
         "${url.post.company.prefix.v1}/add-account"})
     public String addAccount(
-        @RequestBody ReqDtoAddingAccount account,
+        @ModelAttribute ReqDtoAddingAccount account,
         HttpServletRequest request,
         RedirectAttributes redirectAttributes
     ) {
