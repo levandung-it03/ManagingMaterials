@@ -84,6 +84,9 @@ div.center-page_adding-form form input[type=submit] {
 }
 
 /*--Customize Supply List--*/
+.center-page_list .table-tools .right-grid {
+    flex-direction: row-reverse;
+}
 div#supply-list {
     /*background: blue;*/
 }
