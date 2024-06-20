@@ -128,6 +128,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
                         && startingDateValue
                         && endingDateValue
                         && (startingDateValue <= endingDateValue)
+                        && (new Date(endingDateValue) <= new Date())
                     )) throw new Error("Invalid values");
 
                     //--Prepare data to fetch.
