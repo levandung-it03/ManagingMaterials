@@ -42,7 +42,7 @@ public class HomePageService {
         searchingObject.setSearchingTable("NHANVIEN");
         searchingObject.setSearchingTableIdName("MANV");
         searchingObject.setSearchingValue("0");
-        String searchingCondition = "TRANGTHAIXOA = ?";
+        String searchingCondition = "WHERE TRANGTHAIXOA = ?";
 
         return findingActionService.countAllByCondition(connectionHolder, searchingObject, searchingCondition);
     }
@@ -74,7 +74,7 @@ public class HomePageService {
 
         ReqDtoRetrievingData<Supply> searchingObject = new ReqDtoRetrievingData<>();
         searchingObject.setSearchingTable("DATHANG");
-        searchingObject.setSearchingTableIdName("MADDH");
+        searchingObject.setSearchingTableIdName("MasoDDH");
         searchingObject.setSearchingValue("1");
 
         return findingActionService.countAllByCondition(connectionHolder, searchingObject, "WHERE 1 = ?");
