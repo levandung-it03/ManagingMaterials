@@ -24,8 +24,9 @@ public class HomePageService {
         ReqDtoRetrievingData<Supply> searchingObject = new ReqDtoRetrievingData<>();
         searchingObject.setSearchingTable("VATTU");
         searchingObject.setSearchingTableIdName("MAVT");
+        searchingObject.setSearchingValue("1");
 
-        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "1=1");
+        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "WHERE 1 = ?");
     }
 
     public Integer getTotalRevenueOfBranch(HttpServletRequest request) {
@@ -40,7 +41,8 @@ public class HomePageService {
         ReqDtoRetrievingData<Supply> searchingObject = new ReqDtoRetrievingData<>();
         searchingObject.setSearchingTable("NHANVIEN");
         searchingObject.setSearchingTableIdName("MANV");
-        String searchingCondition = "TRANGTHAIXOA = 0";
+        searchingObject.setSearchingValue("0");
+        String searchingCondition = "TRANGTHAIXOA = ?";
 
         return findingActionService.countAllByCondition(connectionHolder, searchingObject, searchingCondition);
     }
@@ -51,8 +53,9 @@ public class HomePageService {
         ReqDtoRetrievingData<Supply> searchingObject = new ReqDtoRetrievingData<>();
         searchingObject.setSearchingTable("PHIEUXUAT");
         searchingObject.setSearchingTableIdName("MAPX");
+        searchingObject.setSearchingValue("1");
 
-        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "1=1");
+        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "WHERE 1 = ?");
     }
 
     public Integer countNumberOfImportation(HttpServletRequest request) {
@@ -61,8 +64,9 @@ public class HomePageService {
         ReqDtoRetrievingData<Supply> searchingObject = new ReqDtoRetrievingData<>();
         searchingObject.setSearchingTable("PHIEUNHAP");
         searchingObject.setSearchingTableIdName("MAPN");
+        searchingObject.setSearchingValue("1");
 
-        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "1=1");
+        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "WHERE 1 = ?");
     }
 
     public Integer countNumberOfOrder(HttpServletRequest request) {
@@ -71,8 +75,9 @@ public class HomePageService {
         ReqDtoRetrievingData<Supply> searchingObject = new ReqDtoRetrievingData<>();
         searchingObject.setSearchingTable("DATHANG");
         searchingObject.setSearchingTableIdName("MADDH");
+        searchingObject.setSearchingValue("1");
 
-        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "1=1");
+        return findingActionService.countAllByCondition(connectionHolder, searchingObject, "WHERE 1 = ?");
     }
 
     public Integer countNumberOfOrderWithoutImportation(HttpServletRequest request) {

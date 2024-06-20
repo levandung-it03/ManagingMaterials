@@ -52,7 +52,8 @@ async function ReportHandler() {
             _this.statisticComponents = [
                 `<div class="preview-table-container_statistic">
                     <div><b>Tổng nhập</b>: ${formattedTotalImport} VND</div>
-                    </br>
+                </div>`,
+                `<div class="preview-table-container_statistic">
                     <div><b>Tổng xuất</b>: ${formattedTotalExport} VND</div>
                 </div>`,
             ];
