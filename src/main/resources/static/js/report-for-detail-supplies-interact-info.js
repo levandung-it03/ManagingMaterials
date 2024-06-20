@@ -10,10 +10,6 @@ async function CustomizeExportationFileModules(roleForFetching) {
         previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Danh sách chi tiết số lượng - trị giá hàng nhập hoặc xuất',
         fetchDataAction: `/service/v1/${roleForFetching}/find-tickets-for-detail-supplies-report`,
-        usefulVariablesStorage: {
-            statisticInfoOfEachMonth: {},
-            statisticInfoOfAllMonth: { totalPrices: 0 }
-        },
         fieldObjects: [
             {cssName: "supplyName", utf8Name: "Tên vật tư"},
             {cssName: "totalSuppliesQuantity", utf8Name: "Tổng số lượng"},
@@ -126,6 +122,11 @@ async function CustomizeExportationFileModules(roleForFetching) {
                             <span><b>Ngày kết thúc </b>: ${endingDateValue}</span>
                         </div>`,
                     ];
+                    //--Re-initialize each time open preview page.
+                    fetchingConfigObject.usefulVariablesStorage = {
+                        statisticInfoOfEachMonth: {},
+                        statisticInfoOfAllMonth: { totalPrices: 0 }
+                    };
 
                     //--Build preview table data.
                     await pdfFilesExporter.buildPreviewPages(fetchingConfigObject)

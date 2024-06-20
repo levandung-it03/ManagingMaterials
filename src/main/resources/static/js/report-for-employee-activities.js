@@ -21,7 +21,6 @@ async function CustomizeExportationFileModules(roleForFetching) {
         previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Danh sách hoạt động nhân viên',
         fetchDataAction: `/service/v1/${roleForFetching}/find-all-employee-activities-for-report`,
-        usefulVariablesStorage: { statisticInfoOfEachMonth: {} },
         fieldObjects: [
             {cssName: "createdDate", utf8Name: "Ngày tạo"},
             {cssName: "ticketId", utf8Name: "Mã phiếu"},
@@ -168,6 +167,8 @@ async function CustomizeExportationFileModules(roleForFetching) {
                     ];
                     //--Prepare data for preview-statistic.
                     fetchingConfigObject.statisticComponents = [];
+                    //--Re-initialize each time open preview page.
+                    fetchingConfigObject.usefulVariablesStorage = { statisticInfoOfEachMonth: {} };
 
                     //--Build preview table data.
                     await pdfFilesExporter.buildPreviewPages(fetchingConfigObject)
