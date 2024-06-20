@@ -94,7 +94,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
 
                         //--Customize clicking-pdf-exporting-btn event.
                         $('.report-supporting-buttons_exporting-report').addEventListener("click", () =>
-                            pdfFilesExporter.exportToPdfFile(previewInfoContainer + ' table'));
+                            pdfFilesExporter.exportToPdfFile(previewInfoContainer + ' table','striped'));
 
                     })
                     .catch(err => console.log("Error when building-preview-page: " + err));
