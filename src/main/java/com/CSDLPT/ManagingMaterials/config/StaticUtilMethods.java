@@ -20,8 +20,6 @@ import java.util.*;
 @Component
 @RequiredArgsConstructor
 public class StaticUtilMethods {
-    @Value("${mssql.database.name}")
-    private static String databaseName;
     private final Map<String, String> responseMessages;
     public static final String NUM_TYPE = "NUMBER";
     public static final String STR_TYPE = "TEXT";
@@ -144,7 +142,4 @@ public class StaticUtilMethods {
         return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }
 
-    public String getDatabaseName() {
-        return this.getDatabaseName();
-    }
 }

@@ -15,6 +15,7 @@ import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -29,6 +30,8 @@ public class SuppliesExportationService {
     @Service
     @RequiredArgsConstructor
     public static class AuthenticatedServices {
+        @Value("${mssql.database.name}")
+        private String databaseName;
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesExportationRepository suppliesExportationRepository;
@@ -66,12 +69,10 @@ public class SuppliesExportationService {
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             List<InnerJoinObject> joinObjects = List.of(
                 InnerJoinObject.builder()
-                    .databaseName(staticUtilMethods.getDatabaseName())
-                    .left("PhieuXuat").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV")
+                    .databaseName(databaseName).left("PhieuXuat").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV")
                     .build(),
                 InnerJoinObject.builder()
-                    .databaseName(staticUtilMethods.getDatabaseName())
-                    .left("PhieuXuat").right("Kho").fields("MAKHO, TENKho")
+                    .databaseName(databaseName).left("PhieuXuat").right("Kho").fields("MAKHO, TENKho")
                     .bridge("MAKHO").build()
             );
             if (userInfo.getRole().equals(RoleEnum.CONGTY))
@@ -109,6 +110,7 @@ public class SuppliesExportationService {
             //--Close connection
             connectHolder.removeConnection();
         }
+
         public void updateSuppliesExportation(
             ReqDtoSuppliesExportation exportation,
             HttpServletRequest request

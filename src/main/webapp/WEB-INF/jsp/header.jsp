@@ -10,6 +10,7 @@
     </c:if>
     <div class="header-wrapper center">
         <ul id="nav" class="center">
+            <li><a href="/home">TRANG CHỦ</a></li>
             <li><a href="/${userInfo.role.getJavaRole()}/employee/manage-employee">NHÂN VIÊN</a></li>
             <li><a href="/${userInfo.role.getJavaRole()}/supply/manage-supply">VẬT TƯ</a></li>
             <li><a href="/${userInfo.role.getJavaRole()}/warehouse/manage-warehouse">KHO</a></li>

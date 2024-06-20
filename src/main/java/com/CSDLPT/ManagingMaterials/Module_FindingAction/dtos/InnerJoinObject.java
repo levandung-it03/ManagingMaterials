@@ -24,15 +24,12 @@ public class InnerJoinObject {
     public String buildQuery() throws NoSuchFieldException {
         StaticUtilMethods staticUtilMethods = new StaticUtilMethods(null);
         String subNameOfRightEntity = staticUtilMethods.columnNameStaticDictionary(this.right).get(2);
-        if (isDifferentBranch) {
-            this.setRight("LINK1." + databaseName + ".DBO." + this.getRight());
-            this.setLeft("LINK1." + databaseName + ".DBO." + this.getLeft());
-        }
+        String linker = isDifferentBranch ? ("LINK1." + databaseName + ".DBO.") : "";
         
         //--INNER JOIN (SELECT %s FROM %s%s) AS %s ON %s.%s = %s.%s
         return String.format(this.queryFormat,
         //--Inside the parentheses (selecting right entity)
-            this.fields, this.right,
+            this.fields, (linker + this.right),
             this.rightEntityConditions == null ? "" : " WHERE " + this.rightEntityConditions,
         //--Sub-name of the selecting result.
             subNameOfRightEntity,
