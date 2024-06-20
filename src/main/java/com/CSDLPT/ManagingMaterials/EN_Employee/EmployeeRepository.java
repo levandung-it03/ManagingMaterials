@@ -115,7 +115,10 @@ public class EmployeeRepository {
     public int delete(DBConnectionHolder connectionHolder, int employeeId) {
         int result = 0;
         try {
-            CallableStatement statement = connectionHolder.getConnection().prepareCall("{call SP_DELETE_EMPLOYEE(?)}");
+            String updateEmployeeDeleteStatusQuery = "UPDATE NHANVIEN SET TRANGTHAIXOA = 1 WHERE MANV = ?";
+            CallableStatement statement = connectionHolder.getConnection()
+                    .prepareCall(updateEmployeeDeleteStatusQuery);
+//                    .prepareCall("{call SP_DELETE_EMPLOYEE(?)}");
             statement.setInt(1, employeeId);
 
             //--Retrieve affected rows to know if our Query worked correctly.
