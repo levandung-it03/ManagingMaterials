@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 public class AccountService {
 
@@ -61,8 +62,14 @@ public class AccountService {
             //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
             DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
 
-            if (accountRepository.save(connectionHolder, account) == 0)
-                throw new DuplicateKeyException("Something wrong when adding new Account");
+            ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
+            if (userInfo.getRole().equals(RoleEnum.CONGTY) && !account.getRole().equals("CONGTY"))
+                throw new SQLIntegrityConstraintViolationException();
+
+            if (account.getRole().equals("CONGTY") && !userInfo.getRole().equals(RoleEnum.CONGTY))
+                throw new SQLIntegrityConstraintViolationException();
+
+            accountRepository.save(connectionHolder, account);
 
             //--Close Connection.
             connectionHolder.removeConnection();

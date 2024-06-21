@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.SQLException;
 import java.util.Set;
 
 @Controller
@@ -70,8 +71,8 @@ public class AccountController {
         try {
             authenticatedServices.addAccount(request, account);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
-        } catch (DuplicateKeyException ignored) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_account_02");
+        } catch (SQLException ignored) {
+            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
         } catch (Exception ignored) {
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
         }

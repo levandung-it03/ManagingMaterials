@@ -19,7 +19,7 @@ public class ReqDtoAddingAccount {
     @Min(value = 1, message = "error_entity_03")
     private Integer employeeId;
 
-    @Pattern(regexp = "^(CHINHANH|USER)$", message = "error_entity_03")
+    @Pattern(regexp = "^(CHINHANH|USER|CONGTY)$", message = "error_entity_03")
     private String role;
 
     @NotBlank(message = "error_account_01")

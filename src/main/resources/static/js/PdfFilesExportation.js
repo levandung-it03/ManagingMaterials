@@ -108,7 +108,7 @@ class PdfFilesExportation {
 
     }
 
-    exportToPdfFile(tableDataSourceSelector) {
+    exportToPdfFile(tableDataSourceSelector,theme = "grid") {
         const headData = [...$$(tableDataSourceSelector + ' thead tr th')].map(cell => cell.textContent.trim());
         const bodyData = [...$$(tableDataSourceSelector + ' tbody tr')]
             .map(rowAsDOM => [...rowAsDOM.querySelectorAll('td')].map(cellAsDOM => cellAsDOM.textContent.trim()));
@@ -143,17 +143,20 @@ class PdfFilesExportation {
         doc.autoTable({
             body: bodyData,
             head: [headData],
-            theme: 'grid',
+            headStyles: {fillColor : [93, 190, 157]},
+            theme: theme,
             styles: { cellPadding: 1, fontSize: 10, halign: 'left', font: 'Arial', fontStyle: 'normal' },
             margin: margins,
             willDrawCell: (data) => {
                 //--Colors the header-separator.
-                Object.entries(data.row.cells).forEach(pair => {
-                    const text = [...pair[1].text].reduce((res, text) => res + text, "").trim();
-                    if (text === "") pair[1].styles.fillColor = 200;
-                    //--Hiding empty-separator
-                    if (text == "-") pair[1].styles.textColor = 255;
-                });
+                if (theme == "grid"){
+                    Object.entries(data.row.cells).forEach(pair => {
+                        const text = [...pair[1].text].reduce((res, text) => res + text, "").trim();
+                        if (text === "") pair[1].styles.fillColor = 200;
+                        //--Hiding empty-separator
+                        if (text == "-") pair[1].styles.textColor = 255;
+                    });
+                }
             },
             didDrawCell: (data) => {
                 //--When the iterator reach the last cell of each row.
