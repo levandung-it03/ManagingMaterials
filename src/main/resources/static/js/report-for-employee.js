@@ -27,7 +27,6 @@ async function CustomizeExportationFileModules(roleForFetching) {
             currentPage: 0,
             searchingField: "employeeId",
             searchingValue: "",
-            branch: $('div.table-tools .right-grid select[name=searchingBranch]').value.trim(),
         },
         fieldObjects: [
             {cssName: "employeeId", utf8Name: "Mã"},
@@ -67,7 +66,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
                 ];
                 //--Prepare data for preview-statistic.
                 fetchingConfigObject.statisticComponents = [];
-
+                fetchingConfigObject.dataObject.branch = $('div.table-tools .right-grid select[name=searchingBranch]').value.trim();
                 //--Build preview table data.
                 await pdfFilesExporter.buildPreviewPages(fetchingConfigObject)
                     .then(() => {
