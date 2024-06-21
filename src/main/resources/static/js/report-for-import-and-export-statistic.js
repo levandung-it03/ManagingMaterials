@@ -3,13 +3,14 @@ function GeneralMethodsHandler() {
     customizeClosingNoticeMessageEvent();
 }
 
-async function ReportHandler() {
+async function ReportHandler(roleForFetching) {
     const pdfFilesExporter = new PdfFilesExportation();
     const previewInfoContainer = 'div.preview-table-container';
     const fetchingConfigObject = {
         previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Tổng hợp nhập xuất',
-        fetchDataAction: "/service/v1/branch/import-and-export-statistic",
+        // TODO: remove the context path prefix when transfer code to main project
+        fetchDataAction: `/service/v1/${roleForFetching}/import-and-export-statistic`,
         usefulVariablesStorage: {
             totalImport: 0,
             totalExport: 0,
@@ -44,19 +45,71 @@ async function ReportHandler() {
                         </tr>`;
             })();
         },
-        moreFeatures: () => {
-            const _this = fetchingConfigObject;
-            const formattedTotalImport = VNDCurrencyFormatEngine(_this.usefulVariablesStorage.totalImport, false);
-            const formattedTotalExport = VNDCurrencyFormatEngine(_this.usefulVariablesStorage.totalExport, false);
-            //--Prepare data for preview-statistic.
-            _this.statisticComponents = [
-                `<div class="preview-table-container_statistic">
-                    <span><b>Tổng nhập</b>: ${formattedTotalImport} VND</span>
-                </div>`,
-                `<div class="preview-table-container_statistic">
-                    <span><b>Tổng xuất</b>: ${formattedTotalExport} VND</span>
-                </div>`,
-            ];
+        moreFeatures: async () => {
+            const result = await pdfFilesExporter.fetchDataForReporter(fetchingConfigObject);
+            const tbody = document.createElement("tbody");
+            tbody.innerHTML = result;
+
+            const toInt = (str) => parseInt(str.replace(/,/g, ''), 10);
+            var totalImport = 0;
+            var totalExport = 0;
+            const rows = tbody.querySelectorAll('tr');
+            rows.forEach((row, index) => {
+                const columns = row.querySelectorAll('td');
+                columns.forEach((column, index) => {
+                    if (index === 1) {
+                        totalImport += toInt(column.innerText);
+                    }
+                    if (index == 3) {
+                        totalExport += toInt(column.innerText);
+                    }
+                })
+            })
+
+            const formattedTotalImport = VNDCurrencyFormatEngine(totalImport, false);
+            const formattedTotalExport = VNDCurrencyFormatEngine(totalExport, false);
+
+            var lastRow = tbody.insertRow();
+            lastRow.setAttribute("index", "last-row");
+            lastRow.setAttribute("class", "preview-row-data");
+
+            var firstColumn = lastRow.insertCell(0);
+            firstColumn.setAttribute("plain-value", "Tổng cộng");
+            firstColumn.setAttribute("class", "columnData");
+            firstColumn.style.textAlign = "left";
+            firstColumn.style.paddingLeft = "10px";
+            firstColumn.innerHTML = "Tổng cộng";
+
+            var secondColumn = lastRow.insertCell(1);
+            secondColumn.setAttribute("plain-value", formattedTotalImport);
+            secondColumn.setAttribute("class", "columnData");
+            secondColumn.style.textAlign = "left";
+            secondColumn.style.paddingLeft = "10px";
+            secondColumn.innerHTML = formattedTotalImport + " VND";
+
+            var thirdColumn = lastRow.insertCell(2);
+            thirdColumn.setAttribute("plain-value", "");
+            thirdColumn.setAttribute("class", "columnData");
+            thirdColumn.style.textAlign = "left";
+            thirdColumn.style.paddingLeft = "10px";
+            thirdColumn.innerHTML = "";
+
+            var fourthColumn = lastRow.insertCell(3);
+            fourthColumn.setAttribute("plain-value", formattedTotalExport);
+            fourthColumn.setAttribute("class", "columnData");
+            fourthColumn.style.textAlign = "left";
+            fourthColumn.style.paddingLeft = "10px";
+            fourthColumn.innerHTML = formattedTotalExport + " VND";
+
+            var fifthColumn = lastRow.insertCell(4);
+            fifthColumn.setAttribute("plain-value", "");
+            fifthColumn.setAttribute("class", "columnData");
+            fifthColumn.style.textAlign = "left";
+            fifthColumn.style.paddingLeft = "10px";
+            fifthColumn.innerHTML = "";
+
+            const exportTable = $('.exporting-table-css tbody');
+            exportTable.innerHTML = tbody.innerHTML;
         },
     };
 
@@ -85,6 +138,11 @@ async function ReportHandler() {
                             <span><b>TỪ </b>${beginDate} ĐẾN ${endDate}</span>
                         </div>`,
                     ];
+
+                    fetchingConfigObject.usefulVariablesStorage = {
+                        totalImport: 0,
+                        totalExport: 0,
+                    };
 
                     //--Build preview table data.
                     await pdfFilesExporter.buildPreviewPages(fetchingConfigObject)
