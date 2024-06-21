@@ -3,6 +3,7 @@ package com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail;
 import com.CSDLPT.ManagingMaterials.EN_Order.OrderRepository;
 import com.CSDLPT.ManagingMaterials.EN_OrderDetail.dtos.ReqDtoDataForDetail;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportationRepository;
+import com.CSDLPT.ManagingMaterials.EN_Supply.SupplyRepository;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
@@ -29,6 +30,7 @@ public class SuppliesImportationDetailService {
         private final FindingActionService findingActionService;
         private final SuppliesImportationDetailRepository suppliesImportationDetailRepository;
         private final SuppliesImportationRepository suppliesImportationRepository;
+        private final SupplyRepository supplyRepository;
 
         public ModelAndView getManageSuppliesImportationDetailPage(HttpServletRequest request, Model model) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
@@ -89,10 +91,13 @@ public class SuppliesImportationDetailService {
             if (suppliesImportationDetailRepository.findById(connectHolder,
                 importationDetail.getSuppliesImportationId(), importationDetail.getSupplyId()
             ).isPresent())
-                throw new DuplicateKeyException("This Supply Id is already existing in Sup-Import-List in DB");
+                throw new DuplicateKeyException("error_supply_01");
+
+            if (!supplyRepository.isExistingSupplyBySupplyId(connectHolder,importationDetail.getSupplyId()))
+                throw new NoSuchElementException("error_supply_04");
 
             int addRes = suppliesImportationDetailRepository.saveByStoredProc(connectHolder, importationDetail);
-            if (addRes == -1)   throw new NoSuchElementException("SupplyId is invalid");
+            if (addRes == -1)   throw new NoSuchElementException("error_entity_03");
             if (addRes == 0)    throw new SQLException("Something wrong in your application");
 
             //--Close connection

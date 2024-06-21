@@ -48,6 +48,7 @@ public class ApplicationConfig {
         messagePairs.put("error_supply_01", "Mã vật tư hoặc tên vật tư đã tồn tại!");
         messagePairs.put("error_supply_02", "Vật tư đang được sử dụng!");
         messagePairs.put("error_supply_03", "Vật tư có số lượng tồn quá thấp, hoặc vượt quá số lượng từ đơn đặt hàng!");
+        messagePairs.put("error_supply_04", "Không tìm thấy Vật Tư");
 
         messagePairs.put("error_warehouse_01", "Mã kho hoặc tên kho đã tồn tại!");
         messagePairs.put("error_warehouse_02", "Không tìm thấy Mã Kho");

@@ -73,10 +73,8 @@ public class SuppliesImportationDetailController {
         try {
             authenticatedServices.addSuppliesImportationDetail(importationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
-        } catch (DuplicateKeyException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
-        } catch (NoSuchElementException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
+        } catch (NoSuchElementException | DuplicateKeyException e) {
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
         } catch (Exception e) {
             logger.info("Error from AddSuppliesImportationDetailController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");

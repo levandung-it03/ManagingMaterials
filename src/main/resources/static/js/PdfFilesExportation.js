@@ -56,6 +56,7 @@ class PdfFilesExportation {
     async buildPreviewPages(fetchingConfigObject) {
         let tablePreviewContainer = $(fetchingConfigObject.previewInfoContainer);
 
+        console.log(fetchingConfigObject)
         //--Close component on the screen if it doesn't.
         if (!tablePreviewContainer.classList.contains('closed'))
             tablePreviewContainer.classList.add('closed');

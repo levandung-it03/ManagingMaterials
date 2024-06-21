@@ -4,6 +4,7 @@ import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportation;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportationRepository;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail.SuppliesImportationDetail;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail.SuppliesImportationDetailRepository;
+import com.CSDLPT.ManagingMaterials.EN_Supply.SupplyRepository;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.EN_OrderDetail.dtos.ReqDtoDataForDetail;
@@ -30,6 +31,7 @@ public class OrderDetailService {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final OrderDetailRepository orderDetailRepository;
+        private final SupplyRepository supplyRepository;
         private final SuppliesImportationRepository suppliesImportationRepository;
         private final SuppliesImportationDetailRepository suppliesImportationDetailRepository;
 
@@ -85,7 +87,10 @@ public class OrderDetailService {
             if (orderDetailRepository.findById(connectHolder,
                 orderDetail.getOrderId(), orderDetail.getSupplyId()
             ).isPresent())
-                throw new DuplicateKeyException("This Supply Id is already existing in Order-Detail-List in DB");
+                throw new DuplicateKeyException("error_supply_01");
+
+            if (!supplyRepository.isExistingSupplyBySupplyId(connectHolder,orderDetail.getSupplyId()))
+                throw new NoSuchElementException("error_supply_04");
 
             orderDetailRepository.save(connectHolder, orderDetail);
             //--Close connection

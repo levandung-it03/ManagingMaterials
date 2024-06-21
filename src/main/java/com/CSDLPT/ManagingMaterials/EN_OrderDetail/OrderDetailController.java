@@ -72,8 +72,8 @@ public class OrderDetailController {
         try {
             authenticatedServices.addOrderDetail(orderDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
-        } catch (DuplicateKeyException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
+        } catch (NoSuchElementException | DuplicateKeyException e) {
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
             redirectAttributes.addFlashAttribute("submittedOrderDetail", orderDetail);
         } catch (Exception e) {
             logger.info("Error from AddOrderDetailController: " + e);

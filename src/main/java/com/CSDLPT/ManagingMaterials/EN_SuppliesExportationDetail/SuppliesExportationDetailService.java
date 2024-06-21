@@ -1,6 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesExportationDetail;
 
 import com.CSDLPT.ManagingMaterials.EN_OrderDetail.dtos.ReqDtoDataForDetail;
+import com.CSDLPT.ManagingMaterials.EN_Supply.SupplyRepository;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.FindingActionService;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ResDtoRetrievingData;
@@ -25,6 +26,7 @@ public class SuppliesExportationDetailService {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
         private final SuppliesExportationDetailRepository suppliesExportationDetailRepository;
+        private final SupplyRepository supplyRepository;
 
         public ModelAndView getManageSuppliesExportationDetailPage(HttpServletRequest request, Model model) {
             //--Prepare a modelAndView object to symbolize the whole page.
@@ -78,11 +80,14 @@ public class SuppliesExportationDetailService {
             if (suppliesExportationDetailRepository.findById(connectHolder,
                 exportationDetail.getSuppliesExportationId(), exportationDetail.getSupplyId()
             ).isPresent())
-                throw new DuplicateKeyException("This Supply Id is already existing in Sup-Export-List in DB");
+                throw new DuplicateKeyException("error_supply_01");
+
+            if (!supplyRepository.isExistingSupplyBySupplyId(connectHolder,exportationDetail.getSupplyId()))
+                throw new NoSuchElementException("error_supply_04");
 
             int addRes = suppliesExportationDetailRepository.saveByStoredProc(connectHolder, exportationDetail);
             if (addRes == -2)   throw new SQLIntegrityConstraintViolationException("quantityInStock is not enough");
-            if (addRes == -1)   throw new NoSuchElementException("SupplyId is invalid");
+            if (addRes == -1)   throw new NoSuchElementException("error_entity_03");
             if (addRes == 0)    throw new SQLException("Something wrong in your application");
 
             //--Close connection

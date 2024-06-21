@@ -72,10 +72,8 @@ public class SuppliesExportationDetailController {
         try {
             authenticatedServices.addSuppliesExportationDetail(exportationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_add_01");
-        } catch (DuplicateKeyException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_supply_01");
-        } catch (NoSuchElementException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
+        } catch (NoSuchElementException | DuplicateKeyException e) {
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
         } catch (SQLIntegrityConstraintViolationException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_03");
         } catch (Exception e) {
