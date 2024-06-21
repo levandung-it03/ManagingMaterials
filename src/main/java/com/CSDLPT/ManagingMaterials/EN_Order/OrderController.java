@@ -158,7 +158,7 @@ public class OrderController {
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_order_01");
         } catch (SQLException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_order_04");
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
         } catch (Exception e) {
             logger.info("Error from DeleteSuppliesExportationController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");

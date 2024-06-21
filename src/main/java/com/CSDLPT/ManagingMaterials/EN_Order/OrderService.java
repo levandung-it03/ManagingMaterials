@@ -185,10 +185,10 @@ public class OrderService {
                 throw new NoSuchElementException("Order Id is invalid");
 
             if (suppliesImportationRepository.findById(connectHolder, orderId).isPresent())
-                throw new SQLIntegrityConstraintViolationException("Order already had corresponding Importation");
+                throw new SQLIntegrityConstraintViolationException("error_order_05");
 
             if (orderRepository.deleteById(connectHolder, orderId) == 0)
-                throw new SQLException("There's an error with SQL Server!");
+                throw new SQLException("error_order_04");
 
             //--Close connection
             connectHolder.removeConnection();

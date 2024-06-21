@@ -57,6 +57,7 @@ public class ApplicationConfig {
         messagePairs.put("error_order_02", "Mã Đơn Đặt Hàng được cung cấp đã được lập Phiếu Nhập");
         messagePairs.put("error_order_03", "Mã Đơn Đặt Hàng đã tồn tại!");
         messagePairs.put("error_order_04", "Không thể thao tác do Đơn Đặt Hàng đã có các Chi Tiết Đơn Đặt Hàng");
+        messagePairs.put("error_order_05", "Không thể xoá Đơn Đặt Hàng do đã tồn tại Phiếu Nhập tương ứng");
 
         messagePairs.put("error_orderDetail_01", "Không thể cập nhật do số lượng đặt bé hơn số lượng từ Chi Tiết Phiếu Nhập");
         messagePairs.put("error_orderDetail_02", "Không thể xóa do có Chi Tiết Phiếu Nhập liên quan");
