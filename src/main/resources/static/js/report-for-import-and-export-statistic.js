@@ -171,6 +171,7 @@ async function ReportHandler(roleForFetching) {
 }
 
 (async function main() {
+    const roleForFetching = getRoleFromJsp();
     GeneralMethodsHandler();
-    await ReportHandler();
+    await ReportHandler(roleForFetching);
 })();
