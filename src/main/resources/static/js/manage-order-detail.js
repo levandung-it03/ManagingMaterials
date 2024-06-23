@@ -46,6 +46,7 @@ function GeneralMethods() {
 (async function main() {
     const roleForFetching = getRoleFromJsp();
     const employeeIdLoggingIn = getEmployeeIdLoggingInFromJsp();
+    const employeeIdFromHeader = $('.avatar .account-info span#employeeId').textContent.split(": ")[1].trim();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddOrderDetailComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
@@ -87,7 +88,7 @@ function GeneralMethods() {
                 <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
                 <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
                 <td plain-value="${row.price}" class="price">${VNDCurrencyFormatEngine(row.price)}</td>
-                ${(roleForFetching !== "company" && employeeIdLoggingIn == row.employeeIdAsFk) ?
+                ${(roleForFetching !== "company" && employeeIdLoggingIn == employeeIdFromHeader) ?
                 `<td class="table-row-btn update">
                     <a id="${row.orderId} ${row.supplyId}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>

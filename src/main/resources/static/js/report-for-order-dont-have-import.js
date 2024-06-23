@@ -44,7 +44,9 @@ async function CustomizeExportationFileModules(roleForFetching) {
                 <td plain-value="${row.employeeFullName}" class="employeeFullName">${row.employeeFullName}</td>
                 <td plain-value="${row.supplyName}" class="supplyName">${row.supplyName}</td>
                 <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
-                <td plain-value="${row.price}" class="price">${row.price}</td>
+                <td plain-value="${VNDCurrencyFormatEngine(row.price, false)}" class="price">
+                    ${VNDCurrencyFormatEngine(row.price, false)}
+                </td>
             </tr>`,
         moreFeatures: async () =>  {
             const result = await pdfFilesExporter.fetchDataForReporter(fetchingConfigObject)
@@ -128,7 +130,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
                 <td plain-value="${row.employeeFullName}" class="employeeFullName">${row.employeeFullName}</td>
                 <td plain-value="${row.supplyName}" class="supplyName">${row.supplyName}</td>
                 <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
-                <td plain-value="${row.price}" class="price">${row.price}</td>
+                <td plain-value="${VNDCurrencyFormatEngine(row.price, false)}" class="price">${VNDCurrencyFormatEngine(row.price, false)}</td>
             </tr>`,
     };
 
