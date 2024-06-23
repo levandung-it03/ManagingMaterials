@@ -42,6 +42,9 @@
         </c:if>
     </div>
     <div class="center-page">
+        <c:if test="${userInfo.role.getJavaRole() == 'company'}">
+            <input name="suppliesImportationId" type="text" value="${importationDetail.suppliesImportationId}" disabled hidden/>
+        </c:if>
         <c:if test="${userInfo.role.getJavaRole() != 'company'}">
             <div class="center-page_adding-form">
                 <form action="/service/v1/${userInfo.role.getJavaRole()}/add-supplies-importation-detail" method="post" modelAttribute="importationDetail">
