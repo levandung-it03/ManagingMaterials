@@ -1,5 +1,6 @@
 package com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Order.OrderRepository;
 import com.CSDLPT.ManagingMaterials.EN_OrderDetail.dtos.ReqDtoDataForDetail;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportationRepository;
@@ -86,13 +87,22 @@ public class SuppliesImportationDetailService {
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             importationDetail.trimAllFieldValues();
 
+            //--Check if CTPN is already existing.
             if (suppliesImportationDetailRepository.findById(connectHolder,
                 importationDetail.getSuppliesImportationId(), importationDetail.getSupplyId()
             ).isPresent())
                 throw new DuplicateKeyException("error_supply_01");
 
+            //--Check if MAPN is not existing, or doesn't belong to employee who is logging-in.
+            if (suppliesImportationRepository.findBySuppliesImportationIdAndEmployeeId(
+                connectHolder, importationDetail.getSuppliesImportationId(), currentUserInfo.getEmployeeId()
+            ).isEmpty())
+                throw new NoSuchElementException("error_suppliesImportation_03");
+
+            //--Check if MAVT doesn't exist.
             if (!supplyRepository.isExistingSupplyBySupplyId(connectHolder,importationDetail.getSupplyId()))
                 throw new NoSuchElementException("error_supply_04");
 
@@ -109,13 +119,20 @@ public class SuppliesImportationDetailService {
             HttpServletRequest request
         ) throws Exception {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             importationDetail.trimAllFieldValues();
 
             //--Check if importation detail is existed
-            Optional<SuppliesImportationDetail> currentImportDetail = suppliesImportationDetailRepository
-                .findById(connectHolder, importationDetail.getSuppliesImportationId(), importationDetail.getSupplyId());
-            if (currentImportDetail.isEmpty())
+            if (suppliesImportationDetailRepository.findById(
+                connectHolder, importationDetail.getSuppliesImportationId(), importationDetail.getSupplyId()
+            ).isEmpty())
                 throw new NoSuchElementException("Supplies-Importation-Detail not found");
+
+            //--Check if MAPN is not existing, or doesn't belong to employee who is logging-in.
+            if (suppliesImportationRepository.findBySuppliesImportationIdAndEmployeeId(
+                connectHolder, importationDetail.getSuppliesImportationId(), currentUserInfo.getEmployeeId()
+            ).isEmpty())
+                throw new NoSuchElementException("error_suppliesImportation_03");
 
             int updateRes = suppliesImportationDetailRepository.updateByStoredProc(connectHolder, importationDetail);
             if (updateRes == 0)     throw new SQLException("Some thing wrong with application");
