@@ -47,6 +47,12 @@ function getRoleFromJsp(roleContainerTagSelector="span.hiddenRole") {
     return role;
 }
 
+function getEmployeeIdLoggingInFromJsp(idContainerTagSelector="span.hiddenEmployeeId") {
+    const id = $(idContainerTagSelector).textContent.toLowerCase().trim();
+    $(idContainerTagSelector).outerHTML = "";
+    return id;
+}
+
 function VNDCurrencyFormatEngine(salary, hasCurrency=true) {
     const salaryAsString = salary + "";
     let result = "";

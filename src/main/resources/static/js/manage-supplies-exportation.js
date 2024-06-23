@@ -51,6 +51,7 @@ function GeneralMethods() {
 
 (async function main() {
     const roleForFetching = getRoleFromJsp();
+    const employeeIdLoggingIn = getEmployeeIdLoggingInFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSuppliesExportationComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
@@ -88,7 +89,8 @@ function GeneralMethods() {
                         <i class="fa-solid fa-eye"></i>
                     </a>
                 </td>
-                ${roleForFetching !== "company" ? `<td class="table-row-btn update">
+                ${(roleForFetching !== "company" && employeeIdLoggingIn == row.employeeIdAsFk) ?
+                `<td class="table-row-btn update">
                     <a id="${row.suppliesExportationId}"><i class="fa-regular fa-pen-to-square"></i></a>
                 </td>
                 <td class="table-row-btn delete">

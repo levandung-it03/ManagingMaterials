@@ -49,6 +49,7 @@ function GeneralMethods() {
 
 (async function main() {
     const roleForFetching = getRoleFromJsp();
+    const employeeIdLoggingIn = getEmployeeIdLoggingInFromJsp();
     const updatingSupportingDataSource = {
         addingFormCustomizer: AddSuppliesExportationDetailComponent,
         plainAddingForm: $('div.center-page div.center-page_adding-form form'),
@@ -90,7 +91,8 @@ function GeneralMethods() {
                 <td plain-value="${row.supplyId}" class="supplyId">${row.supplyId}</td>
                 <td plain-value="${row.suppliesQuantity}" class="suppliesQuantity">${row.suppliesQuantity}</td>
                 <td plain-value="${row.price}" class="price">${VNDCurrencyFormatEngine(row.price)}</td>
-                ${roleForFetching !== "company" ? `<td class="table-row-btn update">
+                ${(roleForFetching !== "company" && employeeIdLoggingIn == row.employeeIdAsFk) ?
+                `<td class="table-row-btn update">
                     <a id="${row.suppliesExportationId}">
                         <i class="fa-regular fa-pen-to-square"></i>
                     </a>

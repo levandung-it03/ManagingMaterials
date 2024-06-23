@@ -24,6 +24,7 @@
 </head>
 <body>
     <span class="hiddenRole" style="display:none">${userInfo.role.getJavaRole()}</span>
+    <span class="hiddenEmployeeId" style="display:none">${userInfo.employeeId}</span>
     <%--    <%@ include file="/WEB-INF/jsp/category.jsp" %>--%>
     <%@ include file="/WEB-INF/jsp/header.jsp" %>
     <div id="message-block">
