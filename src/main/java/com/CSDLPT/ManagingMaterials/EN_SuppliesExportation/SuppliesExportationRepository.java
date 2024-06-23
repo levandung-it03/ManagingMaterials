@@ -40,6 +40,36 @@ public class SuppliesExportationRepository {
         return result;
     }
 
+    public Optional<SuppliesExportation> findBySuppliesExportationIdAndEmployeeId(
+        DBConnectionHolder conHolder,
+        String exportationId,
+        Integer employeeId
+    ) {
+        Optional<SuppliesExportation> result = Optional.empty();
+        try {
+            PreparedStatement statement = conHolder.getConnection()
+                .prepareStatement("SELECT TOP 1 * FROM PhieuXuat WHERE MAPX=? AND MANV=?");
+            statement.setString(1, exportationId);
+            statement.setInt(2, employeeId);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                result = Optional.of(SuppliesExportation.builder()
+                    .suppliesExportationId(resultSet.getString("MAPX"))
+                    .warehouseId(resultSet.getString("MAKHO"))
+                    .employeeId(resultSet.getInt("MANV"))
+                    .customerFullName(resultSet.getString("HOTENKH"))
+                    .createdDate(resultSet.getDate("NGAY"))
+                    .build());
+
+            //--Close all connection.
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'findBySuppliesExportationIdAndEmployeeId' of SuppliesExportationRepository: " + e);
+        }
+        return result;
+    }
+
     public boolean isExistingSuppliesExportationBySuppliesExportationId(DBConnectionHolder conHolder, String exportationId) {
         //--Using a 'result' var to make our logic easily to control.
         boolean result = false;

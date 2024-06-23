@@ -129,6 +129,10 @@ public class SuppliesImportationService {
                 currentUserInfo.getEmployeeId()).isEmpty())
                 throw new NoSuchElementException("error_order_01");
 
+            if (suppliesImportationRepository.findBySuppliesImportationIdAndEmployeeId(connectHolder,
+                importation.getSuppliesImportationId(), currentUserInfo.getEmployeeId()).isEmpty())
+                throw new NoSuchElementException("error_order_01");
+
             if (suppliesImportationRepository.findByOrderIdToServeUpdate(
                 connectHolder, importation.getSuppliesImportationId(), importation.getOrderId()
             ).isPresent())
@@ -152,9 +156,11 @@ public class SuppliesImportationService {
 
         public void deleteSuppliesImportation(String importationId, HttpServletRequest request) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
-            if (suppliesImportationRepository.findById(connectHolder, importationId).isEmpty())
-                throw new NoSuchElementException("error_suppliesImportation_02");
+            if (suppliesImportationRepository.findBySuppliesImportationIdAndEmployeeId(connectHolder, importationId,
+                currentUserInfo.getEmployeeId()).isEmpty())
+                throw new NoSuchElementException("error_order_01");
 
             if (suppliesImportationDetailRepository.existBySuppliesImportationId(connectHolder, importationId))
                 throw new NoSuchElementException("error_suppliesImportation_04");

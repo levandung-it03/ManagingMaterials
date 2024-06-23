@@ -87,6 +87,36 @@ public class SuppliesImportationRepository {
         return result;
     }
 
+    public Optional<SuppliesImportation> findBySuppliesImportationIdAndEmployeeId(
+        DBConnectionHolder conHolder,
+        String importationId,
+        Integer employeeId
+    ) {
+        Optional<SuppliesImportation> result = Optional.empty();
+        try {
+            PreparedStatement statement = conHolder.getConnection()
+                .prepareStatement("SELECT TOP 1 * FROM PhieuNhap WHERE MAPN=? AND MANV=?");
+            statement.setString(1, importationId);
+            statement.setInt(2, employeeId);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                result = Optional.of(SuppliesImportation.builder()
+                    .suppliesImportationId(resultSet.getString("MAPN"))
+                    .warehouseId(resultSet.getString("MAKHO"))
+                    .employeeId(resultSet.getInt("MANV"))
+                    .orderId(resultSet.getString("MasoDDH"))
+                    .createdDate(resultSet.getDate("NGAY"))
+                    .build());
+
+            //--Close all connection.
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'findBySuppliesImportationIdAndEmployeeId' of SuppliesImportationRepository: " + e);
+        }
+        return result;
+    }
+
     public int updateById(DBConnectionHolder conHolder, SuppliesImportation importation) {
         int result = 0;
         try {

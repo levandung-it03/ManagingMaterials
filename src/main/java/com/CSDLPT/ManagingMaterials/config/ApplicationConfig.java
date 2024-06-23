@@ -70,6 +70,7 @@ public class ApplicationConfig {
         messagePairs.put("error_suppliesExportation_01", "Mã Phiếu Xuất đã tồn tại!");
         messagePairs.put("error_suppliesExportation_02", "Không tìm thấy Mã Phiếu Xuất");
         messagePairs.put("error_suppliesExportation_03", "Không thể thao tác do Phiếu Xuất đã có các Chi tiết Phiếu Xuất");
+        messagePairs.put("error_suppliesExportation_04", "Không tìm thấy Mã Phiếu Xuất của Nhân viên đã tạo");
 
         return messagePairs;
     }

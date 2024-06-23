@@ -116,10 +116,12 @@ public class SuppliesExportationService {
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             exportation.trimAllFieldValues();
 
-            if (suppliesExportationRepository.findById(connectHolder, exportation.getSuppliesExportationId()).isEmpty())
-                throw new NoSuchElementException("error_suppliesExportation_02");
+            if (suppliesExportationRepository.findBySuppliesExportationIdAndEmployeeId(connectHolder,
+                exportation.getSuppliesExportationId(), currentUserInfo.getEmployeeId()).isEmpty())
+                throw new NoSuchElementException("error_suppliesExportation_04");
 
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, exportation.getWarehouseIdAsFk()))
                 throw new NoSuchElementException("error_warehouse_02");
@@ -142,9 +144,11 @@ public class SuppliesExportationService {
 
         public void deleteSuppliesExportation(String exportationId, HttpServletRequest request) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
-            if (suppliesExportationRepository.findById(connectHolder, exportationId).isEmpty())
-                throw new NoSuchElementException("error_suppliesExportation_02");
+            if (suppliesExportationRepository.findBySuppliesExportationIdAndEmployeeId(connectHolder, exportationId,
+                currentUserInfo.getEmployeeId()).isEmpty())
+                throw new NoSuchElementException("error_suppliesExportation_04");
 
             if (suppliesExportationDetailRepository.existBySuppliesExportationId(connectHolder, exportationId))
                 throw new NoSuchElementException("error_suppliesExportation_03");

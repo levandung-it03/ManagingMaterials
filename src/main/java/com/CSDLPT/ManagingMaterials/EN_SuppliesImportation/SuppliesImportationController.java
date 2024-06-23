@@ -124,8 +124,6 @@ public class SuppliesImportationController {
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_delete_01");
         } catch (NoSuchElementException e) {
             redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
-        } catch (SQLIntegrityConstraintViolationException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_suppliesImportation_03");
         } catch (Exception e) {
             logger.info("Error from UpdateSuppliesImportationController: " + e);
             redirectAttributes.addFlashAttribute("errorCode", "error_systemApplication_01");
