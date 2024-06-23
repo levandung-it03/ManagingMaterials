@@ -96,9 +96,10 @@ public class SuppliesImportationService {
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseIdAsFk()))
                 throw new NoSuchElementException("error_warehouse_02");
 
-            if (orderRepository.findByOrderIdAndEmployeeId(connectHolder, importation.getOrderId(),
-                currentUserInfo.getEmployeeId()).isEmpty())
-                throw new NoSuchElementException("error_order_01");
+            if (orderRepository.findByOrderIdAndEmployeeId(
+                connectHolder, importation.getOrderId(), currentUserInfo.getEmployeeId()
+            ).isEmpty())
+                throw new NoSuchElementException("error_order_06");
 
             if (suppliesImportationRepository.findByOrderId(connectHolder, importation.getOrderId()).isPresent())
                 throw new DuplicateKeyException("error_order_02");
@@ -125,9 +126,10 @@ public class SuppliesImportationService {
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseIdAsFk()))
                 throw new NoSuchElementException("error_warehouse_02");
 
-            if (orderRepository.findByOrderIdAndEmployeeId(connectHolder, importation.getOrderId(),
-                currentUserInfo.getEmployeeId()).isEmpty())
-                throw new NoSuchElementException("error_order_01");
+            if (orderRepository.findByOrderIdAndEmployeeId(
+                connectHolder, importation.getOrderId(), currentUserInfo.getEmployeeId()
+            ).isEmpty())
+                throw new NoSuchElementException("error_order_06");
 
             if (suppliesImportationRepository.findBySuppliesImportationIdAndEmployeeId(connectHolder,
                 importation.getSuppliesImportationId(), currentUserInfo.getEmployeeId()).isEmpty())

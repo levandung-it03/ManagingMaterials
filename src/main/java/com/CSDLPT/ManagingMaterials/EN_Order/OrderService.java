@@ -90,6 +90,22 @@ public class OrderService {
             searchingObject.setObjectType(ResDtoOrderWithImportantInfo.class);
             searchingObject.setSearchingTable("DatHang");
             searchingObject.setSearchingTableIdName("MasoDDH");
+            searchingObject.setSortingCondition("ORDER BY NGAY DESC");
+            searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
+                InnerJoinObject.builder().left("DatHang").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV").build(),
+                InnerJoinObject.builder().left("DatHang").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO").build()
+            )));
+            return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
+        }
+
+        public ResDtoRetrievingData<ResDtoOrderWithImportantInfo> findOrderToServeSuppliesImportation(
+            HttpServletRequest request,
+            ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject
+        ) throws SQLException, NoSuchFieldException {
+            //--Preparing data to fetch.
+            searchingObject.setObjectType(ResDtoOrderWithImportantInfo.class);
+            searchingObject.setSearchingTable("DatHang");
+            searchingObject.setSearchingTableIdName("MasoDDH");
             searchingObject.setSortingCondition("ORDER BY MasoDDH DESC");
 
             ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
@@ -106,23 +122,7 @@ public class OrderService {
                     joinObjects.forEach(obj -> obj.setDifferentBranch(true));
             searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(joinObjects));
             //--Just show Orders that it's created by logging-in employee.
-            searchingObject.setMoreCondition("MANV=" + userInfo.getEmployeeId());
-            return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
-        }
-
-        public ResDtoRetrievingData<ResDtoOrderWithImportantInfo> findOrderToServeSuppliesImportation(
-            HttpServletRequest request,
-            ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject
-        ) throws SQLException, NoSuchFieldException {
-            //--Preparing data to fetch.
-            searchingObject.setObjectType(ResDtoOrderWithImportantInfo.class);
-            searchingObject.setSearchingTable("DatHang");
-            searchingObject.setSearchingTableIdName("MasoDDH");
-            searchingObject.setSortingCondition("ORDER BY NGAY DESC");
-            searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(List.of(
-                InnerJoinObject.builder().left("DatHang").right("NhanVien").fields("MANV, HO, TEN").bridge("MANV").build(),
-                InnerJoinObject.builder().left("DatHang").right("Kho").fields("MAKHO, TENKHO").bridge("MAKHO").build()
-            )));
+            searchingObject.setMoreCondition("EmployeeFromFk.MANV=" + userInfo.getEmployeeId());
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }
 
