@@ -71,8 +71,6 @@ public class ApplicationConfig {
         messagePairs.put("error_suppliesExportation_02", "Không tìm thấy Mã Phiếu Xuất");
         messagePairs.put("error_suppliesExportation_03", "Không thể thao tác do Phiếu Xuất đã có các Chi tiết Phiếu Xuất");
 
-        messagePairs.put("ngu", "ngu vai cac!");
-
         return messagePairs;
     }
 

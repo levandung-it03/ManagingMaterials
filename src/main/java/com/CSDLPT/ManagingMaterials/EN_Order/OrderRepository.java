@@ -73,6 +73,32 @@ public class OrderRepository {
         return result;
     }
 
+    public Optional<Order> findByOrderIdAndEmployeeId(DBConnectionHolder conHolder, String orderId, Integer employeeId) {
+        Optional<Order> result = Optional.empty();
+        try {
+            PreparedStatement statement = conHolder.getConnection()
+                .prepareStatement("SELECT TOP 1 * FROM DatHang WHERE MasoDDH=? AND MANV=?");
+            statement.setString(1, orderId);
+            statement.setInt(2, employeeId);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next())
+                result = Optional.of(Order.builder()
+                    .orderId(resultSet.getString("MasoDDH"))
+                    .warehouseId(resultSet.getString("MAKHO"))
+                    .supplier(resultSet.getString("NhaCC"))
+                    .employeeId(resultSet.getInt("MANV"))
+                    .createdDate(resultSet.getDate("NGAY"))
+                    .build());
+
+            //--Close all connection.
+            statement.close();
+        } catch (Exception e) {
+            logger.info("Error In 'findByEmployeeId' of OrderRepository: " + e);
+        }
+        return result;
+    }
+
     public ResDtoRetrievingData<ResDtoReportForOrderDontHaveImport> findAllOrderDontHaveImport(
         DBConnectionHolder connectHolder,
         ReqDtoRetrievingData<ResDtoOrderWithImportantInfo> searchingObject

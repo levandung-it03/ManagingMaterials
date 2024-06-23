@@ -86,6 +86,7 @@ public class SuppliesImportationService {
 
         public void addSuppliesImportation(ReqDtoSuppliesImportation importation, HttpServletRequest request) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             importation.trimAllFieldValues();
 
             if (suppliesImportationRepository
@@ -95,13 +96,13 @@ public class SuppliesImportationService {
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseIdAsFk()))
                 throw new NoSuchElementException("error_warehouse_02");
 
-            if (orderRepository.findById(connectHolder, importation.getOrderId()).isEmpty())
+            if (orderRepository.findByOrderIdAndEmployeeId(connectHolder, importation.getOrderId(),
+                currentUserInfo.getEmployeeId()).isEmpty())
                 throw new NoSuchElementException("error_order_01");
 
             if (suppliesImportationRepository.findByOrderId(connectHolder, importation.getOrderId()).isPresent())
                 throw new DuplicateKeyException("error_order_02");
 
-            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             //--May throw SQLException if id is already existing.
             suppliesImportationRepository.save(connectHolder, SuppliesImportation.builder()
                 .suppliesImportationId(importation.getSuppliesImportationId())
@@ -118,12 +119,14 @@ public class SuppliesImportationService {
 
         public void updateSuppliesImportation(ReqDtoSuppliesImportation importation, HttpServletRequest request) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             importation.trimAllFieldValues();
 
             if (!warehouseRepository.isExistingWarehouseByWarehouseId(connectHolder, importation.getWarehouseIdAsFk()))
                 throw new NoSuchElementException("error_warehouse_02");
 
-            if (orderRepository.findById(connectHolder, importation.getOrderId()).isEmpty())
+            if (orderRepository.findByOrderIdAndEmployeeId(connectHolder, importation.getOrderId(),
+                currentUserInfo.getEmployeeId()).isEmpty())
                 throw new NoSuchElementException("error_order_01");
 
             if (suppliesImportationRepository.findByOrderIdToServeUpdate(

@@ -105,6 +105,8 @@ public class OrderService {
                 if (!searchingObject.getBranch().isEmpty() && !userInfo.getBranch().equals(searchingObject.getBranch()))
                     joinObjects.forEach(obj -> obj.setDifferentBranch(true));
             searchingObject.setJoiningCondition(InnerJoinObject.mergeQuery(joinObjects));
+            //--Just show Orders that it's created by logging-in employee.
+            searchingObject.setMoreCondition("MANV=" + userInfo.getEmployeeId());
             return findingActionService.findingDataAndServePaginationBarFormat(request, searchingObject);
         }
 
