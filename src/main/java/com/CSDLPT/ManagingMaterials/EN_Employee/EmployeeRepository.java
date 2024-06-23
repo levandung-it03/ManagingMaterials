@@ -1,7 +1,9 @@
 package com.CSDLPT.ManagingMaterials.EN_Employee;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
 import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ReqDtoReportForEmployeeActivities;
 import com.CSDLPT.ManagingMaterials.EN_Employee.dtos.ResDtoReportForEmployeeActivities;
+import com.CSDLPT.ManagingMaterials.Module_FindingAction.dtos.ReqDtoRetrievingData;
 import com.CSDLPT.ManagingMaterials.config.StaticUtilMethods;
 import com.CSDLPT.ManagingMaterials.database.DBConnectionHolder;
 import lombok.RequiredArgsConstructor;
@@ -117,7 +119,7 @@ public class EmployeeRepository {
         try {
             String updateEmployeeDeleteStatusQuery = "UPDATE NHANVIEN SET TRANGTHAIXOA = 1 WHERE MANV = ?";
             CallableStatement statement = connectionHolder.getConnection()
-                    .prepareCall(updateEmployeeDeleteStatusQuery);
+                .prepareCall(updateEmployeeDeleteStatusQuery);
 //                    .prepareCall("{call SP_DELETE_EMPLOYEE(?)}");
             statement.setInt(1, employeeId);
 
@@ -127,6 +129,43 @@ public class EmployeeRepository {
             logger.info("Error In 'delete' of EmployeeRepository: " + e);
         }
         return result;
+    }
+
+
+    public List<Employee> findAllEmployeesByStoredProc(
+        DBConnectionHolder connectHolder,
+        String selectedBranch,
+        ResDtoUserInfo userInfo
+    ) {
+        List<Employee> resultList = new java.util.ArrayList<>(List.of());
+        try {
+            //--Prepare data to execute Query Statement.
+            CallableStatement statement = connectHolder.getConnection()
+                .prepareCall("{call SP_REPORT_EMPLOYEES_LIST(?, ?, ?)}");
+            statement.setInt(1, userInfo.getEmployeeId());
+            statement.setString(2, selectedBranch);
+            statement.setString(3, userInfo.getBranch());
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next())
+                resultList.add(Employee.builder()
+                    .identifier(resultSet.getString("CMND"))
+                    .employeeId(resultSet.getInt("MANV"))
+                    .lastName(resultSet.getString("HO"))
+                    .firstName(resultSet.getString("TEN"))
+                    .address(resultSet.getString("DIACHI"))
+                    .birthday(resultSet.getDate("NGAYSINH"))
+                    .salary(resultSet.getDouble("LUONG"))
+                    .branch(resultSet.getString("MACN"))
+                    .deletedStatus(resultSet.getInt("TrangThaiXoa"))
+                    .build());
+
+            //--Close all connection.
+            statement.close();
+        } catch (SQLException e) {
+            logger.info("Error In 'findAllEmployeesByStoredProc' of EmployeeRepository: " + e);
+        }
+        return resultList;
     }
 
     public List<ResDtoReportForEmployeeActivities> findAllEmployeeActivities(

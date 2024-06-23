@@ -20,7 +20,7 @@ async function CustomizeExportationFileModules(roleForFetching) {
     const fetchingConfigObject = {
         previewInfoContainer: previewInfoContainer,
         tablePreviewTitle: 'Danh sách nhân viên',
-        fetchDataAction: `/service/v1/${roleForFetching}/find-employee-by-values`,
+        fetchDataAction: `/service/v1/${roleForFetching}/find-employee-for-report`,
         usefulVariablesStorage: {},
         dataObject: {
             //--If page-number is "0", it's means that we will search all the list without pagination.

@@ -185,6 +185,24 @@ public class EmployeeService {
 
             return result;
         }
+
+        public ResDtoRetrievingData<Employee> findEmployeeForReport(
+            HttpServletRequest request,
+            ReqDtoRetrievingData<Employee> searchingObject
+        ) throws SQLException {
+            //--Get the Connection from 'request' as Redirected_Attribute from Interceptor.
+            DBConnectionHolder connectionHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo userInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
+
+            ResDtoRetrievingData<Employee> result = new ResDtoRetrievingData<>();
+            result.setResultDataSet(employeeRepository
+                .findAllEmployeesByStoredProc(connectionHolder, searchingObject.getBranch(), userInfo));
+
+            //--Close Connection.
+            connectionHolder.removeConnection();
+
+            return result;
+        }
     }
 
     @Service

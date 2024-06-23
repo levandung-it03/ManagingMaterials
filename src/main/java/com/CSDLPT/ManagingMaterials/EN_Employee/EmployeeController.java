@@ -69,6 +69,23 @@ public class EmployeeController {
         }
     }
 
+    @PostMapping({"${url.post.branch.prefix.v1}/find-employee-for-report",
+        "${url.post.company.prefix.v1}/find-employee-for-report",
+        "${url.post.user.prefix.v1}/find-employee-for-report"})
+    public ResponseEntity<ResDtoRetrievingData<Employee>> findingEmployeesForReport(
+        @RequestBody ReqDtoRetrievingData<Employee> searchingObject,
+        HttpServletRequest request
+    ) {
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(authenticatedServices.findEmployeeForReport(request, searchingObject));
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return null;
+        }
+    }
+
     @PostMapping({"${url.post.branch.prefix.v1}/find-all-employee-activities-for-report",
         "${url.post.company.prefix.v1}/find-all-employee-activities-for-report",
         "${url.post.user.prefix.v1}/find-all-employee-activities-for-report"})
