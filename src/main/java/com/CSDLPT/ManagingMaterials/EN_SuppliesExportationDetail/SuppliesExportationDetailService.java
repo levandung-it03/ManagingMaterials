@@ -118,7 +118,7 @@ public class SuppliesExportationDetailService {
             if (suppliesExportationDetailRepository.findById(
                 connectHolder, exportationDetail.getSuppliesExportationId(), exportationDetail.getSupplyId()
             ).isEmpty())
-                throw new NoSuchElementException("Supplies-Exportation-Detail not found");
+                throw new NoSuchElementException("error_entity_03");
 
             //--Check if MAPX is not existing, and not belong to employee who is logging-in.
             if (suppliesExportationRepository.findBySuppliesExportationIdAndEmployeeId(
@@ -128,7 +128,7 @@ public class SuppliesExportationDetailService {
 
             int updateRes = suppliesExportationDetailRepository.updateByStoredProc(connectHolder, exportationDetail);
             if (updateRes == -2)    throw new SQLIntegrityConstraintViolationException("quantityInStock is not enough");
-            if (updateRes == -1)    throw new NoSuchElementException("SupplyId is invalid");
+            if (updateRes == -1)    throw new NoSuchElementException("error_entity_03");
             if (updateRes == 0)     throw new SQLException("Something wrong in your application");
 
             suppliesExportationDetailRepository.update(connectHolder, exportationDetail);

@@ -101,7 +101,7 @@ public class SuppliesImportationDetailController {
             authenticatedServices.updateSuppliesImportationDetail(importationDetail, request);
             redirectAttributes.addFlashAttribute("succeedCode", "succeed_update_01");
         } catch (NoSuchElementException e) {
-            redirectAttributes.addFlashAttribute("errorCode", "error_entity_03");
+            redirectAttributes.addFlashAttribute("errorCode", e.getMessage());
         } catch (SQLIntegrityConstraintViolationException e) {
             redirectAttributes.addFlashAttribute("errorCode", "error_supply_03");
         } catch (Exception e) {

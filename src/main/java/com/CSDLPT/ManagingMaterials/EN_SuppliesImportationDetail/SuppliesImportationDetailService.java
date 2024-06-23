@@ -122,11 +122,11 @@ public class SuppliesImportationDetailService {
             ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             importationDetail.trimAllFieldValues();
 
-            //--Check if importation detail is existed
+            //--Check if importation detail doesn't exist.
             if (suppliesImportationDetailRepository.findById(
                 connectHolder, importationDetail.getSuppliesImportationId(), importationDetail.getSupplyId()
             ).isEmpty())
-                throw new NoSuchElementException("Supplies-Importation-Detail not found");
+                throw new NoSuchElementException("error_entity_03");
 
             //--Check if MAPN is not existing, or doesn't belong to employee who is logging-in.
             if (suppliesImportationRepository.findBySuppliesImportationIdAndEmployeeId(
@@ -136,7 +136,7 @@ public class SuppliesImportationDetailService {
 
             int updateRes = suppliesImportationDetailRepository.updateByStoredProc(connectHolder, importationDetail);
             if (updateRes == 0)     throw new SQLException("Some thing wrong with application");
-            if (updateRes == -1)    throw new NoSuchElementException("SupplyId not found");
+            if (updateRes == -1)    throw new NoSuchElementException("error_entity_03");
             if (updateRes == -2)    throw new SQLIntegrityConstraintViolationException("New suppliesQuantity value is invalid");
 
             //--Close connection
