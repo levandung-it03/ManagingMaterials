@@ -131,7 +131,7 @@ public class SuppliesImportationService {
 
             if (suppliesImportationRepository.findBySuppliesImportationIdAndEmployeeId(connectHolder,
                 importation.getSuppliesImportationId(), currentUserInfo.getEmployeeId()).isEmpty())
-                throw new NoSuchElementException("error_order_01");
+                throw new NoSuchElementException("error_suppliesImportation_03");
 
             if (suppliesImportationRepository.findByOrderIdToServeUpdate(
                 connectHolder, importation.getSuppliesImportationId(), importation.getOrderId()
@@ -160,7 +160,7 @@ public class SuppliesImportationService {
 
             if (suppliesImportationRepository.findBySuppliesImportationIdAndEmployeeId(connectHolder, importationId,
                 currentUserInfo.getEmployeeId()).isEmpty())
-                throw new NoSuchElementException("error_order_01");
+                throw new NoSuchElementException("error_suppliesImportation_03");
 
             if (suppliesImportationDetailRepository.existBySuppliesImportationId(connectHolder, importationId))
                 throw new NoSuchElementException("error_suppliesImportation_04");

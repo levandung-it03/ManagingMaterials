@@ -64,7 +64,7 @@ public class ApplicationConfig {
 
         messagePairs.put("error_suppliesImportation_01", "Mã Phiếu Nhập đã tồn tại!");
         messagePairs.put("error_suppliesImportation_02", "Không tìm thấy Mã Phiếu Nhập");
-        messagePairs.put("error_suppliesImportation_03", "Không thể xoá Phiếu Nhập do đã tồn tại Phiếu Xuất tương ứng");
+        messagePairs.put("error_suppliesImportation_03", "Không tìm thấy Mã Phiếu Nhập của Nhân viên đã tạo");
         messagePairs.put("error_suppliesImportation_04", "Không thể thao tác do Phiếu Nhập đã có các Chi tiết Phiếu Nhập");
 
         messagePairs.put("error_suppliesExportation_01", "Mã Phiếu Xuất đã tồn tại!");
