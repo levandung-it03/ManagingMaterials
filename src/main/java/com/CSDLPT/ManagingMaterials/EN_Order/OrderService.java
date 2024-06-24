@@ -157,10 +157,12 @@ public class OrderService {
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             order.trimAllFieldValues();
 
-            if (orderRepository.findById(connectHolder, order.getOrderId()).isEmpty())
-                throw new NoSuchElementException("error_order_01");
+            if (orderRepository.findByOrderIdAndEmployeeId(connectHolder, order.getOrderId(),
+                currentUserInfo.getEmployeeId()).isEmpty())
+                throw new NoSuchElementException("error_order_06");
 
             if (orderDetailRepository.existByOrderId(connectHolder, order.getOrderId()))
                 throw new NoSuchElementException("error_order_04");
@@ -182,9 +184,11 @@ public class OrderService {
 
         public void deleteOrder(String orderId, HttpServletRequest request) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
-            if (orderRepository.findById(connectHolder, orderId).isEmpty())
-                throw new NoSuchElementException("Order Id is invalid");
+            if (orderRepository.findByOrderIdAndEmployeeId(connectHolder, orderId,
+                currentUserInfo.getEmployeeId()).isEmpty())
+                throw new NoSuchElementException("error_order_06");
 
             if (suppliesImportationRepository.findById(connectHolder, orderId).isPresent())
                 throw new SQLIntegrityConstraintViolationException("error_order_05");

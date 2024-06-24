@@ -1,5 +1,7 @@
 package com.CSDLPT.ManagingMaterials.EN_OrderDetail;
 
+import com.CSDLPT.ManagingMaterials.EN_Account.dtos.ResDtoUserInfo;
+import com.CSDLPT.ManagingMaterials.EN_Order.OrderRepository;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportation;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportation.SuppliesImportationRepository;
 import com.CSDLPT.ManagingMaterials.EN_SuppliesImportationDetail.SuppliesImportationDetail;
@@ -30,6 +32,7 @@ public class OrderDetailService {
     public static class AuthenticatedServices {
         private final StaticUtilMethods staticUtilMethods;
         private final FindingActionService findingActionService;
+        private final OrderRepository orderRepository;
         private final OrderDetailRepository orderDetailRepository;
         private final SupplyRepository supplyRepository;
         private final SuppliesImportationRepository suppliesImportationRepository;
@@ -82,7 +85,13 @@ public class OrderDetailService {
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             orderDetail.trimAllFieldValues();
+
+            if (orderRepository.findByOrderIdAndEmployeeId(
+                connectHolder, orderDetail.getOrderId(), currentUserInfo.getEmployeeId()
+            ).isEmpty())
+                throw new NoSuchElementException("error_order_06");
 
             if (orderDetailRepository.findById(connectHolder,
                 orderDetail.getOrderId(), orderDetail.getSupplyId()
@@ -102,7 +111,13 @@ public class OrderDetailService {
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
             orderDetail.trimAllFieldValues();
+
+            if (orderRepository.findByOrderIdAndEmployeeId(
+                connectHolder, orderDetail.getOrderId(), currentUserInfo.getEmployeeId()
+            ).isEmpty())
+                throw new NoSuchElementException("error_order_06");
 
             //--Check if order already has importation and get importation id
             Optional<SuppliesImportation> importation = suppliesImportationRepository
@@ -129,10 +144,16 @@ public class OrderDetailService {
             HttpServletRequest request
         ) throws SQLException {
             DBConnectionHolder connectHolder = (DBConnectionHolder) request.getAttribute("connectionHolder");
+            ResDtoUserInfo currentUserInfo = (ResDtoUserInfo) request.getSession().getAttribute("userInfo");
 
             //--Get orderId and supplyId form orderDetailId
             String orderId = orderDetailId.split("-")[0];
             String supplyId = orderDetailId.split("-")[1];
+
+            if (orderRepository.findByOrderIdAndEmployeeId(
+                connectHolder, orderId, currentUserInfo.getEmployeeId()
+            ).isEmpty())
+                throw new NoSuchElementException("error_order_06");
 
             if (orderDetailRepository.findById(connectHolder, orderId, supplyId).isEmpty())
                 throw new NoSuchElementException("Order-Detail not found");
