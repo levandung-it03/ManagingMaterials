@@ -96,7 +96,6 @@ async function CustomizeExportationFileModules(roleForFetching) {
                     const ticketsTypeValue = $('.info-blocks select[name=ticketsType]').value.toUpperCase().trim();
                     const startingDateValue = $('.info-blocks input[name=startingDate]').value;
                     const endingDateValue = $('.info-blocks input[name=endingDate]').value;
-
                     if (!(ticketsTypeValue
                         && startingDateValue
                         && endingDateValue
